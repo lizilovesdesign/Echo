@@ -1,0 +1,316 @@
+/* Design Tokens - Generated CSS Variables */
+
+/* Typography Variables */
+:root {
+  /* display large */
+  --font-display-large-font-size: 64px;
+  --font-display-large-text-decoration: none;
+  --font-display-large-font-family: 'Satoshi', sans-serif;
+  --font-display-large-font-weight: 700;
+  --font-display-large-font-style: normal;
+  --font-display-large-font-stretch: normal;
+  --font-display-large-letter-spacing: -0.96px;
+  --font-display-large-line-height: 96px;
+  --font-display-large-paragraph-indent: 0px;
+  --font-display-large-paragraph-spacing: 0px;
+  --font-display-large-text-case: none;
+
+  /* display medium */
+  --font-display-medium-font-size: 54px;
+  --font-display-medium-text-decoration: none;
+  --font-display-medium-font-family: 'Satoshi', sans-serif;
+  --font-display-medium-font-weight: 700;
+  --font-display-medium-font-style: normal;
+  --font-display-medium-font-stretch: normal;
+  --font-display-medium-letter-spacing: -0.81px;
+  --font-display-medium-line-height: 81px;
+  --font-display-medium-paragraph-indent: 0px;
+  --font-display-medium-paragraph-spacing: 0px;
+  --font-display-medium-text-case: none;
+
+  /* display small */
+  --font-display-small-font-size: 40px;
+  --font-display-small-text-decoration: none;
+  --font-display-small-font-family: 'Satoshi', sans-serif;
+  --font-display-small-font-weight: 700;
+  --font-display-small-font-style: normal;
+  --font-display-small-font-stretch: normal;
+  --font-display-small-letter-spacing: -0.6px;
+  --font-display-small-line-height: 60px;
+  --font-display-small-paragraph-indent: 0px;
+  --font-display-small-paragraph-spacing: 0px;
+  --font-display-small-text-case: none;
+
+  /* headline large */
+  --font-headline-large-font-size: 40px;
+  --font-headline-large-text-decoration: none;
+  --font-headline-large-font-family: 'Satoshi', sans-serif;
+  --font-headline-large-font-weight: 500;
+  --font-headline-large-font-style: normal;
+  --font-headline-large-font-stretch: normal;
+  --font-headline-large-letter-spacing: -0.6px;
+  --font-headline-large-line-height: 60px;
+  --font-headline-large-paragraph-indent: 0px;
+  --font-headline-large-paragraph-spacing: 0px;
+  --font-headline-large-text-case: none;
+
+  /* headline medium */
+  --font-headline-medium-font-size: 32px;
+  --font-headline-medium-text-decoration: none;
+  --font-headline-medium-font-family: 'Satoshi', sans-serif;
+  --font-headline-medium-font-weight: 500;
+  --font-headline-medium-font-style: normal;
+  --font-headline-medium-font-stretch: normal;
+  --font-headline-medium-letter-spacing: -0.48px;
+  --font-headline-medium-line-height: 48px;
+  --font-headline-medium-paragraph-indent: 0px;
+  --font-headline-medium-paragraph-spacing: 0px;
+  --font-headline-medium-text-case: none;
+
+  /* headline small */
+  --font-headline-small-font-size: 24px;
+  --font-headline-small-text-decoration: none;
+  --font-headline-small-font-family: 'Satoshi', sans-serif;
+  --font-headline-small-font-weight: 500;
+  --font-headline-small-font-style: normal;
+  --font-headline-small-font-stretch: normal;
+  --font-headline-small-letter-spacing: -0.36px;
+  --font-headline-small-line-height: 36px;
+  --font-headline-small-paragraph-indent: 0px;
+  --font-headline-small-paragraph-spacing: 0px;
+  --font-headline-small-text-case: none;
+
+  /* title large */
+  --font-title-large-font-size: 32px;
+  --font-title-large-text-decoration: none;
+  --font-title-large-font-family: 'Satoshi', sans-serif;
+  --font-title-large-font-weight: 500;
+  --font-title-large-font-style: normal;
+  --font-title-large-font-stretch: normal;
+  --font-title-large-letter-spacing: -0.48px;
+  --font-title-large-line-height: 48px;
+  --font-title-large-paragraph-indent: 0px;
+  --font-title-large-paragraph-spacing: 0px;
+  --font-title-large-text-case: none;
+
+  /* title medium */
+  --font-title-medium-font-size: 28px;
+  --font-title-medium-text-decoration: none;
+  --font-title-medium-font-family: 'Satoshi', sans-serif;
+  --font-title-medium-font-weight: 500;
+  --font-title-medium-font-style: normal;
+  --font-title-medium-font-stretch: normal;
+  --font-title-medium-letter-spacing: -0.42px;
+  --font-title-medium-line-height: 42px;
+  --font-title-medium-paragraph-indent: 0px;
+  --font-title-medium-paragraph-spacing: 0px;
+  --font-title-medium-text-case: none;
+
+  /* title small */
+  --font-title-small-font-size: 20px;
+  --font-title-small-text-decoration: none;
+  --font-title-small-font-family: 'Satoshi', sans-serif;
+  --font-title-small-font-weight: 500;
+  --font-title-small-font-style: normal;
+  --font-title-small-font-stretch: normal;
+  --font-title-small-letter-spacing: -0.3px;
+  --font-title-small-line-height: 30px;
+  --font-title-small-paragraph-indent: 0px;
+  --font-title-small-paragraph-spacing: 0px;
+  --font-title-small-text-case: none;
+
+  /* body large */
+  --font-body-large-font-size: 16px;
+  --font-body-large-text-decoration: none;
+  --font-body-large-font-family: 'Satoshi', sans-serif;
+  --font-body-large-font-weight: 400;
+  --font-body-large-font-style: normal;
+  --font-body-large-font-stretch: normal;
+  --font-body-large-letter-spacing: -0.24px;
+  --font-body-large-line-height: 24px;
+  --font-body-large-paragraph-indent: 0px;
+  --font-body-large-paragraph-spacing: 0px;
+  --font-body-large-text-case: none;
+
+  /* body medium */
+  --font-body-medium-font-size: 14px;
+  --font-body-medium-text-decoration: none;
+  --font-body-medium-font-family: 'Satoshi', sans-serif;
+  --font-body-medium-font-weight: 400;
+  --font-body-medium-font-style: normal;
+  --font-body-medium-font-stretch: normal;
+  --font-body-medium-letter-spacing: -0.21px;
+  --font-body-medium-line-height: 21px;
+  --font-body-medium-paragraph-indent: 0px;
+  --font-body-medium-paragraph-spacing: 0px;
+  --font-body-medium-text-case: none;
+
+  /* body small */
+  --font-body-small-font-size: 12px;
+  --font-body-small-text-decoration: none;
+  --font-body-small-font-family: 'Satoshi', sans-serif;
+  --font-body-small-font-weight: 400;
+  --font-body-small-font-style: normal;
+  --font-body-small-font-stretch: normal;
+  --font-body-small-letter-spacing: -0.18px;
+  --font-body-small-line-height: 18px;
+  --font-body-small-paragraph-indent: 0px;
+  --font-body-small-paragraph-spacing: 0px;
+  --font-body-small-text-case: none;
+
+  /* label large */
+  --font-label-large-font-size: 16px;
+  --font-label-large-text-decoration: none;
+  --font-label-large-font-family: 'Satoshi', sans-serif;
+  --font-label-large-font-weight: 500;
+  --font-label-large-font-style: normal;
+  --font-label-large-font-stretch: normal;
+  --font-label-large-letter-spacing: -0.24px;
+  --font-label-large-line-height: 24px;
+  --font-label-large-paragraph-indent: 0px;
+  --font-label-large-paragraph-spacing: 0px;
+  --font-label-large-text-case: none;
+
+  /* label medium */
+  --font-label-medium-font-size: 14px;
+  --font-label-medium-text-decoration: none;
+  --font-label-medium-font-family: 'Satoshi', sans-serif;
+  --font-label-medium-font-weight: 500;
+  --font-label-medium-font-style: normal;
+  --font-label-medium-font-stretch: normal;
+  --font-label-medium-letter-spacing: -0.21px;
+  --font-label-medium-line-height: 21px;
+  --font-label-medium-paragraph-indent: 0px;
+  --font-label-medium-paragraph-spacing: 0px;
+  --font-label-medium-text-case: none;
+
+  /* label small */
+  --font-label-small-font-size: 12px;
+  --font-label-small-text-decoration: none;
+  --font-label-small-font-family: 'Satoshi', sans-serif;
+  --font-label-small-font-weight: 500;
+  --font-label-small-font-style: normal;
+  --font-label-small-font-stretch: normal;
+  --font-label-small-letter-spacing: -0.18px;
+  --font-label-small-line-height: 18px;
+  --font-label-small-paragraph-indent: 0px;
+  --font-label-small-paragraph-spacing: 0px;
+  --font-label-small-text-case: none;
+
+}
+
+/* Light Theme Color Roles */
+:root {
+  --color-primary: hsl(9, 100%, 70%);
+  --color-on-primary: hsl(0, 0%, 100%);
+  --color-primary-container: hsl(9, 100%, 83%);
+  --color-on-primary-container: hsl(8, 74%, 30%);
+  --color-secondary: hsl(9, 51%, 41%);
+  --color-on-secondary: hsl(0, 0%, 100%);
+  --color-secondary-container: hsl(9, 100%, 83%);
+  --color-on-secondary-container: hsl(9, 61%, 30%);
+  --color-tertiary: hsl(10, 30%, 40%);
+  --color-on-tertiary: hsl(0, 0%, 100%);
+  --color-tertiary-container: hsl(9, 89%, 82%);
+  --color-on-tertiary-container: hsl(10, 36%, 30%);
+  --color-error: hsl(3, 71%, 41%);
+  --color-on-error: hsl(0, 0%, 100%);
+  --color-error-container: hsl(3, 100%, 81%);
+  --color-on-error-container: hsl(3, 89%, 29%);
+  --color-background: hsl(7, 100%, 98%);
+  --color-on-background: hsl(9, 12%, 11%);
+  --color-surface: hsl(7, 100%, 98%);
+  --color-on-surface: hsl(9, 12%, 11%);
+  --color-surface-variant: hsl(0, 9%, 89%);
+  --color-on-surface-variant: hsl(0, 1%, 28%);
+  --color-outline: hsl(0, 1%, 47%);
+  --color-outline-variant: hsl(15, 4%, 78%);
+  --color-inverse-surface: hsl(8, 8%, 20%);
+  --color-inverse-on-surface: hsl(8, 65%, 95%);
+  --color-inverse-primary: hsl(9, 100%, 83%);
+  --color-surface-dim: hsl(8, 22%, 86%);
+  --color-surface-bright: hsl(7, 100%, 98%);
+  --color-surface-container-lowest: hsl(0, 0%, 100%);
+  --color-surface-container-low: hsl(8, 88%, 97%);
+  --color-surface-container: hsl(8, 52%, 94%);
+  --color-surface-container-high: hsl(8, 40%, 92%);
+  --color-surface-container-highest: hsl(8, 29%, 90%);
+}
+
+/* Dark Theme Color Roles */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: hsl(9, 100%, 70%);
+    --color-on-primary: hsl(5, 96%, 20%);
+    --color-primary-container: hsl(8, 74%, 30%);
+    --color-on-primary-container: hsl(8, 100%, 92%);
+    --color-secondary: hsl(9, 100%, 83%);
+    --color-on-secondary: hsl(8, 79%, 21%);
+    --color-secondary-container: hsl(9, 61%, 30%);
+    --color-on-secondary-container: hsl(8, 100%, 92%);
+    --color-tertiary: hsl(9, 89%, 82%);
+    --color-on-tertiary: hsl(10, 47%, 21%);
+    --color-tertiary-container: hsl(10, 36%, 30%);
+    --color-on-tertiary-container: hsl(8, 100%, 92%);
+    --color-error: hsl(3, 100%, 81%);
+    --color-on-error: hsl(3, 100%, 16%);
+    --color-error-container: hsl(3, 89%, 29%);
+    --color-on-error-container: hsl(3, 100%, 93%);
+    --color-background: hsl(9, 12%, 6%);
+    --color-on-background: hsl(8, 29%, 90%);
+    --color-surface: hsl(9, 12%, 6%);
+    --color-on-surface: hsl(8, 29%, 90%);
+    --color-surface-variant: hsl(0, 1%, 28%);
+    --color-on-surface-variant: hsl(15, 4%, 78%);
+    --color-outline: hsl(0, 1%, 57%);
+    --color-outline-variant: hsl(0, 1%, 28%);
+    --color-inverse-surface: hsl(8, 29%, 90%);
+    --color-inverse-on-surface: hsl(8, 8%, 20%);
+    --color-inverse-primary: hsl(8, 60%, 40%);
+    --color-surface-dim: hsl(9, 12%, 6%);
+    --color-surface-bright: hsl(8, 8%, 24%);
+    --color-surface-container-lowest: hsl(9, 12%, 4%);
+    --color-surface-container-low: hsl(9, 12%, 11%);
+    --color-surface-container: hsl(9, 12%, 12%);
+    --color-surface-container-high: hsl(8, 10%, 17%);
+    --color-surface-container-highest: hsl(8, 8%, 22%);
+  }
+}
+
+/* Class-based Dark Theme Selector */
+.dark, .dark-theme {
+  --color-primary: hsl(9, 100%, 70%);
+  --color-on-primary: hsl(5, 96%, 20%);
+  --color-primary-container: hsl(8, 74%, 30%);
+  --color-on-primary-container: hsl(8, 100%, 92%);
+  --color-secondary: hsl(9, 100%, 83%);
+  --color-on-secondary: hsl(8, 79%, 21%);
+  --color-secondary-container: hsl(9, 61%, 30%);
+  --color-on-secondary-container: hsl(8, 100%, 92%);
+  --color-tertiary: hsl(9, 89%, 82%);
+  --color-on-tertiary: hsl(10, 47%, 21%);
+  --color-tertiary-container: hsl(10, 36%, 30%);
+  --color-on-tertiary-container: hsl(8, 100%, 92%);
+  --color-error: hsl(3, 100%, 81%);
+  --color-on-error: hsl(3, 100%, 16%);
+  --color-error-container: hsl(3, 89%, 29%);
+  --color-on-error-container: hsl(3, 100%, 93%);
+  --color-background: hsl(9, 12%, 6%);
+  --color-on-background: hsl(8, 29%, 90%);
+  --color-surface: hsl(9, 12%, 6%);
+  --color-on-surface: hsl(8, 29%, 90%);
+  --color-surface-variant: hsl(0, 1%, 28%);
+  --color-on-surface-variant: hsl(15, 4%, 78%);
+  --color-outline: hsl(0, 1%, 57%);
+  --color-outline-variant: hsl(0, 1%, 28%);
+  --color-inverse-surface: hsl(8, 29%, 90%);
+  --color-inverse-on-surface: hsl(8, 8%, 20%);
+  --color-inverse-primary: hsl(8, 60%, 40%);
+  --color-surface-dim: hsl(9, 12%, 6%);
+  --color-surface-bright: hsl(8, 8%, 24%);
+  --color-surface-container-lowest: hsl(9, 12%, 4%);
+  --color-surface-container-low: hsl(9, 12%, 11%);
+  --color-surface-container: hsl(9, 12%, 12%);
+  --color-surface-container-high: hsl(8, 10%, 17%);
+  --color-surface-container-highest: hsl(8, 8%, 22%);
+}
