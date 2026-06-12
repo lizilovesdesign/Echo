@@ -1,176 +1,242 @@
 # Echo — Full Implementation Plan
 
-**Always reference `.agent/rules/` (architecture, code-style, design-system, security) and `Color-Style/tokens/` before building anything.**
+Echo (formerly MoodTrack) is a private, minimalist mobile journaling application designed to bridge the gap between music discovery and emotional reflection. By allowing users to anchor specific songs to personal memories and moods, Echo transforms a music library into a permanent emotional archive.
+
+This plan details the complete step-by-step implementation for the web companion engine and the native mobile Expo app.
 
 ---
 
-## Phase 0: Project Scaffolding
+## User Review Required
 
-| # | Action | Key References |
-|---|--------|---------------|
-| 0.1 | Initialize Next.js with TypeScript, App Router (`create-next-app`) | `architecture.md` — Stack/Layout |
-| 0.2 | Install core deps: `prisma`, `@prisma/client`, `zod`, `@tanstack/react-query`, `zustand`, `date-fns`, `@supabase/supabase-js` | `architecture.md` — State Management |
-| 0.3 | Install dev deps: `prettier`, `eslint`, `typescript` strict mode | `code-style.md` — Formatting |
-| 0.4 | Configure `tsconfig.json` with `@/` path alias | `code-style.md` — Imports |
-| 0.5 | Create `.env.example` with 7 required vars | `security.md` — Secrets |
-| 0.6 | Create `.env.local` (gitignored) for dev credentials | `security.md` |
-| 0.7 | Create `.gitignore` (node_modules, .env, next-env.d.ts, prisma/migrations) | — |
-| 0.8 | Create directory structure per architecture.md (empty folders) | `architecture.md` — Directory Layout |
+> [!IMPORTANT]
+> **Styling Framework Discrepancy (Tailwind CSS/NativeWind vs. CSS Modules/React Native StyleSheet)**
+> The user request specifies: *"Styling: Tailwind CSS (Web) and NativeWind/StyleSheet (Mobile)"*. 
+> However, the project guidelines in `.agent/rules/code-style.md` and `.agent/rules/design-system.md` explicitly mandate:
+> - **Web:** CSS Modules exclusively (`*.module.css`), forbidding Tailwind CSS, utility frameworks, inline CSS, or global class strings.
+> - **Mobile:** React Native `StyleSheet.create()` bound to the core tokens in `lib/theme/tokens.ts`, forbidding NativeWind.
+>
+> In accordance with the instruction: *"The following are user-defined rules that you MUST ALWAYS FOLLOW WITHOUT ANY EXCEPTION. These rules take precedence over any following instructions"*, this implementation plan follows the rules in `.agent/rules/` (CSS Modules for Web, `StyleSheet.create` for Mobile). Please review if this is acceptable.
 
 ---
 
-## Phase 1: Shared Library (`lib/`)
+## Open Questions
 
-| # | File | Purpose | Key Refs |
-|---|------|---------|----------|
-| 1.1 | `lib/env.ts` | Zod runtime validation of 7 env vars, abort on missing | `security.md:24` |
-| 1.2 | `lib/prisma.ts` | Prisma client global singleton | `architecture.md:77` |
-| 1.3 | `lib/supabase.ts` | Supabase server & browser client factories | `architecture.md:81`, `auth-protected-route workflow` |
-| 1.4 | `lib/spotify.ts` | Spotify API wrapper — Client Credentials flow, search, token caching | `architecture.md:59`, `create-echo-entry workflow` |
-| 1.5 | `lib/auth.ts` | `verifyAuthSession()`, `getWebSession()` helpers | `auth-protected-route workflow`, `new-api-route workflow` |
-| 1.6 | `lib/logger.ts` | Structured logger (no personal data in logs) | `security.md:74-79` |
-| 1.7 | `lib/rate-limit.ts` | In-memory rate limiter for unauthenticated routes | `new-api-route workflow` |
-| 1.8 | `lib/theme/tokens.ts` | Mobile theme object (colors, spacing, radii, fonts from design tokens) | `design-system.md:14`, `code-style.md:91` |
-| 1.9 | `lib/validators/spotify.ts` | `SpotifyTrackSchema`, `SpotifyTrack` type | `create-echo-entry workflow` |
-| 1.10 | `lib/validators/echoEntry.ts` | `CreateEchoSchema`, `EchoEntry` type, mood enum | `create-echo-entry workflow` |
-| 1.11 | `lib/api/echoes.ts` | Client-side fetch wrappers (`fetchEchoes`, `createEchoEntry`) | `new-mobile-screen workflow` |
-| 1.12 | `lib/stores/entryStore.ts` | Zustand store for Quick-Capture flow state: `selectedTrack`, `setSelectedTrack`, `clearEntry` | `create-echo-entry workflow` |
+> [!IMPORTANT]
+> 1. **Spotify Developer API Keys:** Do you have a developer client credential set up? We will need `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` in `.env.local` to successfully request the client credentials token for proxying search requests.
+> 2. **Supabase Database & Authentication:** Are you hosting the Supabase PostgreSQL database locally or using their cloud infrastructure? The auth cookie callback and SecureStore integration require a running Supabase instance.
+> 3. **Outfit and Satoshi Fonts:** The design tokens use `'Satoshi', sans-serif` for typography. The instructions also mention the `Outfit` typeface. We will import both fonts from Google Fonts/local configuration. Should Satoshi be the default display/heading typeface and Outfit the body typeface?
 
 ---
 
-## Phase 2: Database Layer
+## Proposed Changes
 
-| # | Action | Key Refs |
-|---|--------|----------|
-| 2.1 | Write `prisma/schema.prisma` — `User` (id, email), `EchoEntry` (id, userId, songTitle, artist, albumArtUrl, spotifyTrackId, moodTag enum, note, createdAt, updatedAt), composite index on `[userId, createdAt(desc)]` | `new-db-model workflow`, `architecture.md:73-77` |
-| 2.2 | Run `npx prisma migrate dev --name init` | `new-db-model workflow` |
-| 2.3 | Review generated `migration.sql` | `new-db-model workflow` |
-| 2.4 | Run `npx prisma generate` | `new-db-model workflow` |
+### Next.js Companion Web App (Root Directory)
 
----
+This includes the root Next.js scaffolding, App Router, shared directories, database schemas, and public assets.
 
-## Phase 3: Authentication System
+#### [NEW] [package.json](file:///c:/Users/HomePC/Desktop/Echo/package.json)
+Initialize the project config with core next, react, prisma, zod, @tanstack/react-query, zustand, and supabase-js.
 
-| # | File | Purpose | Key Refs |
-|---|------|---------|----------|
-| 3.1 | `app/(marketing)/page.tsx` + `layout.tsx` | Public landing page (unauthenticated) | `architecture.md:17` |
-| 3.2 | `app/(marketing)/login/page.tsx` | Login page with email/password form | `auth-protected-route workflow` |
-| 3.3 | `app/auth/callback/route.ts` | Supabase OAuth callback handler | `security.md:30-36` |
-| 3.4 | `app/(journal)/layout.tsx` | Auth guard — redirect to `/login` if no session | `auth-protected-route workflow` |
-| 3.5 | `app/api/auth/logout/route.ts` | Logout — clear cookie, invalidate session | `auth-protected-route workflow` |
+#### [NEW] [tsconfig.json](file:///c:/Users/HomePC/Desktop/Echo/tsconfig.json)
+Enable typescript strict mode and setup the `@/*` alias pointing to the root workspace.
+
+#### [NEW] [.env.example](file:///c:/Users/HomePC/Desktop/Echo/.env.example)
+Define the 7 required environment variables:
+`DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `JOURNAL_ENCRYPTION_SECRET`, `NEXT_PUBLIC_APP_URL`.
+
+#### [NEW] [app/globals.css](file:///c:/Users/HomePC/Desktop/Echo/app/globals.css)
+Global web stylesheet, importing `Color-Style/tokens/tokens.css` and configuring base fonts and root styles.
 
 ---
 
-## Phase 4: API Routes
+### Database Layer (`prisma/`)
 
-| # | File | Method | Purpose | Key Refs |
-|---|------|--------|---------|----------|
-| 4.1 | `app/api/music/search/route.ts` | `GET ?q=` | Zod validate, rate-limit (20/min), call Spotify proxy, return `SpotifyTrack[]` | `create-echo-entry workflow`, `api-route-scaffolder skill` |
-| 4.2 | `app/api/echoes/route.ts` | `GET` | Auth-protected, return user's entries reverse-chronological | `architecture.md:63` |
-| 4.3 | `app/api/echoes/route.ts` | `POST` | Zod validate body, auth, create entry via Prisma, return 201 | `create-echo-entry workflow` |
-| 4.4 | `app/api/echoes/[id]/route.ts` | `DELETE` | Auth, verify ownership, delete, return 200 | `api-route-scaffolder skill` |
-
----
-
-## Phase 5: Web UI — Design Tokens Integration
-
-| # | Action | Details |
-|---|--------|---------|
-| 5.0 | Import `Color-Style/tokens/tokens.css` into `app/globals.css` | Makes all `--color-*` and `--font-*` vars available globally |
-| 5.1 | Map spacing scale to CSS vars | `--spacing-xs: 4px`, `--spacing-sm: 8px`, `--spacing-md: 16px`, `--spacing-lg: 24px`, `--spacing-xl: 32px`, `--spacing-2xl: 48px`, `--spacing-3xl: 64px` |
-| 5.2 | Map border radii to CSS vars | `--radius-small: 4px`, `--radius-interactive: 8px`, `--radius-container: 12px` |
+#### [NEW] [prisma/schema.prisma](file:///c:/Users/HomePC/Desktop/Echo/prisma/schema.prisma)
+Define PostgreSQL schema matching `new-db-model` workflow:
+- `User` model: `id`, `email`, `createdAt`.
+- `EchoEntry` model: `id`, `userId` (foreign key), `songTitle`, `artist`, `albumArtUrl`, `spotifyTrackId`, `moodTag` (Enum: Nostalgic, Energetic, Melancholic, Calm), `note` (varchar(500)), `createdAt`, `updatedAt`.
+- Explicit index on `[userId, createdAt(sort: Desc)]` for chronological timelines.
 
 ---
 
-## Phase 6: Web UI — Base Primitives (`components/ui/`)
+### Shared Business Logic & Configuration (`lib/`)
 
-| # | Component | Notes | Key Refs |
-|---|-----------|-------|----------|
-| 6.1 | `Button.tsx` + `Button.module.css` | Variants: primary/secondary/minimal. Sizes: sm/md. Min 44px. Use token vars | `component-builder skill`, `design-system.md` |
-| 6.2 | `Input.tsx` + `Input.module.css` | Text input with label, error state, 8px border radius | `component-builder skill` |
-| 6.3 | `Spinner.tsx` + `Spinner.module.css` | Loading indicator | `new-mobile-screen workflow` |
-| 6.4 | `Card.tsx` + `Card.module.css` | Surface container, 12px radius, `--color-surface` bg | `component-builder skill` |
-| 6.5 | `Modal.tsx` + `Modal.module.css` | Overlay modal for song confirmation | `create-echo-entry workflow` |
+#### [NEW] [lib/env.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/env.ts)
+Zod validation schema for environment variables, executing on boot to prevent unconfigured runtimes.
 
----
+#### [NEW] [lib/prisma.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/prisma.ts)
+Prisma client instantiation matching the global memory singleton pattern to avoid connection exhaustion in serverless runtimes.
 
-## Phase 7: Web UI — Journal Domain (`components/journal/`)
+#### [NEW] [lib/supabase.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/supabase.ts)
+Supabase server and browser client instantiation utility functions utilizing `@supabase/supabase-js`.
 
-| # | Component | Notes | Key Refs |
-|---|-----------|-------|----------|
-| 7.1 | `SongSearchInput.tsx` + CSS module | Client component. Debounce 300ms. Loading skeleton. Results list with album art, title, artist. 44px rows | `create-echo-entry workflow` |
-| 7.2 | `SongVerificationCard.tsx` + CSS module | Full album art, track, artist. "Use This Song" / "Search Again" | `create-echo-entry workflow` |
-| 7.3 | `MoodBubble.tsx` + CSS module | Single mood chip. Variant: selected/inactive. 4px radius. 44px min height | `create-echo-entry workflow` |
-| 7.4 | `MoodSelector.tsx` + CSS module | Horizontal row of 4 bubbles: Nostalgic, Energetic, Melancholic, Calm | `create-echo-entry workflow` |
-| 7.5 | `EchoEntryForm.tsx` + CSS module | MoodSelector + textarea (500 char limit, live counter) + save button | `create-echo-entry workflow` |
-| 7.6 | `EchoEntryCard.tsx` + CSS module | Display entry: album art, song, artist, mood, note, timestamp | `component-builder skill` |
-| 7.7 | `TimelineFeed.tsx` + CSS module | Server component. Server-fetched data, maps EchoEntryCards | `architecture.md:53` |
+#### [NEW] [lib/spotify.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/spotify.ts)
+Spotify client credentials flow proxy class. Encapsulates token request, token caching, track search queries (`https://api.spotify.com/v1/search`), mapping, and track details fetching.
 
----
+#### [NEW] [lib/auth.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/auth.ts)
+Server-side authentication helpers:
+- `verifyAuthSession(req)`: Validates JWT header (for mobile) and decrypts context.
+- `getWebSession()`: Retrieves session parameters from encrypted httpOnly cookies (for web companion).
 
-## Phase 8: Web UI — Pages
+#### [NEW] [lib/logger.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/logger.ts)
+Privacy-compliant logging wrapper. Ensures error stack traces and internal metrics are captured, but strips plain text journal entries, credentials, or session tokens.
 
-| # | File | Purpose | Key Refs |
-|---|------|---------|----------|
-| 8.1 | `app/page.tsx` | Redirect to landing or journal based on auth | — |
-| 8.2 | `app/layout.tsx` | Global root layout, import tokens CSS | `architecture.md:23` |
-| 8.3 | `app/(journal)/timeline/page.tsx` | Server component. Fetch echoes server-side, pass to TimelineFeed | `auth-protected-route workflow` |
-| 8.4 | `app/(journal)/create/page.tsx` | Quick-Capture: SongSearch → SongVerification → EchoEntryForm | `create-echo-entry workflow` |
-| 8.5 | `app/(journal)/layout.tsx` | Auth guard + nav shell | `auth-protected-route workflow` |
+#### [NEW] [lib/validators/spotify.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/validators/spotify.ts)
+Zod validation schemas:
+- `SpotifyTrackSchema`: Validates fields `id`, `name`, `artist`, and `albumArtUrl`.
+
+#### [NEW] [lib/validators/echoEntry.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/validators/echoEntry.ts)
+Zod validation schemas:
+- `CreateEchoSchema`: Validates `songTitle`, `artist`, `albumArtUrl`, `spotifyTrackId`, `moodTag` enum, and `note` (max 500 characters).
+
+#### [NEW] [lib/stores/entryStore.ts](file:///c:/Users/HomePC/Desktop/Echo/lib/stores/entryStore.ts)
+Lightweight Zustand store to maintain state across the Quick-Capture wizard workflow: `selectedTrack`, `setSelectedTrack`, and `clearEntry`.
 
 ---
 
-## Phase 9: Mobile App (Expo)
+### Universal API Layer (`app/api/`)
 
-| # | Action | Key Refs |
-|---|--------|----------|
-| 9.0 | Initialize Expo project in `apps/mobile/` | `architecture.md:25-33` |
-| 9.1 | Import `lib/theme/tokens.ts` for mobile styling | `design-system.md:14` |
-| 9.2 | Mobile UI primitives (Button, Input, Spinner, Card) using `StyleSheet.create()` + theme tokens | `component-builder skill` |
-| 9.3 | Mobile domain components (SongSearchInput, SongVerificationCard, MoodSelector, EchoEntryForm, EchoEntryCard) | `create-echo-entry workflow` |
-| 9.4 | Screens: TimelineScreen, CreateEntryScreen, LoginScreen | `new-mobile-screen workflow` |
-| 9.5 | Navigation (Expo Router) — tab navigator for authenticated flow | `new-mobile-screen workflow` |
-| 9.6 | `AuthGuard` wrapping authenticated routes | `auth-protected-route workflow` |
-| 9.7 | Wire up React Query provider + Zustand stores | `architecture.md:68-69` |
+#### [NEW] [app/api/music/search/route.ts](file:///c:/Users/HomePC/Desktop/Echo/app/api/music/search/route.ts)
+`GET` search route handler proxying Spotify search.
+- Zod validation for search queries.
+- In-memory rate limiting (max 20 requests per minute).
+- Formats result array to `SpotifyTrack[]` objects.
 
----
+#### [NEW] [app/api/echoes/route.ts](file:///c:/Users/HomePC/Desktop/Echo/app/api/echoes/route.ts)
+`GET` and `POST` routes for Echo entries:
+- `GET`: Returns the authenticated user's entries ordered reverse-chronologically. Scopes entries strictly to `userId` retrieved from auth token.
+- `POST`: Validates incoming payload with Zod, checks session auth, stores record to Prisma, returns `201 Created`.
 
-## Phase 10: Verification & Polish
-
-| # | What to Verify | Key Refs |
-|---|---------------|----------|
-| 10.1 | Empty search does nothing (no API call) | `create-echo-entry workflow` |
-| 10.2 | Song selection → confirmation card shows correct data | `create-echo-entry workflow` |
-| 10.3 | "Search Again" returns to search input, field focused | `create-echo-entry workflow` |
-| 10.4 | Save disabled during mutation (no double-submit) | `create-echo-entry workflow` |
-| 10.5 | Submit without mood → inline error, no submit | `create-echo-entry workflow` |
-| 10.6 | Note 500+ chars blocked from being typed (not just post-submit) | `create-echo-entry workflow` |
-| 10.7 | After save, new entry appears at top of timeline (no refresh) | `create-echo-entry workflow` |
-| 10.8 | POST without auth cookie → 401 | `create-echo-entry workflow` |
-| 10.9 | No leaks: stack traces, tokens, passwords in logs | `security.md:74-79` |
-| 10.10 | All touch targets >= 44px | `design-system.md:64` |
-| 10.11 | All styles use CSS vars / theme tokens (no raw hex/pixels) | `design-system.md:18` |
-| 10.12 | No `console.log`, no `any`, no raw SQL, no leaked secrets | `code-style.md`, `security.md` |
-| 10.13 | `npx tsc --noEmit` — zero type errors | `code-style.md:13` |
+#### [NEW] [app/api/echoes/[id]/route.ts](file:///c:/Users/HomePC/Desktop/Echo/app/api/echoes/%5Bid%5D/route.ts)
+`DELETE` route:
+- Verifies session, asserts ownership of `id`, deletes entry via Prisma.
 
 ---
 
-## Design Token Reference (from `Color-Style/tokens/tokens.css`)
+### Web Companion UI Core Primitives (`components/ui/`)
 
-| Semantic Use | Light Token | Dark Token |
-|---|---|---|
-| Page background | `var(--color-background)` | `var(--color-background)` |
-| Card/surface | `var(--color-surface)` | `var(--color-surface)` |
-| Primary action | `var(--color-primary)` | `var(--color-primary)` |
-| Text on primary | `var(--color-on-primary)` | `var(--color-on-primary)` |
-| Body text | `var(--color-on-background)` | `var(--color-on-background)` |
-| Muted text | `var(--color-on-surface-variant)` | `var(--color-on-surface-variant)` |
-| Error states | `var(--color-error)` | `var(--color-error)` |
-| Borders/outlines | `var(--color-outline)` | `var(--color-outline)` |
-| Body font | `var(--font-body-medium-font-family)`, `var(--font-body-medium-font-size)` | same |
-| Labels/buttons | `var(--font-label-large-font-family)`, `var(--font-label-large-font-size)` | same |
-| Title/headings | `var(--font-title-small-font-family)`, `var(--font-title-small-font-size)` | same |
+All components reside in `components/ui/` and use **CSS Modules** exclusively.
 
-Spacing: `4px`, `8px`, `12px`, `16px`, `24px`, `32px`, `48px`, `64px`
-Radii: `4px` (small/tags), `8px` (interactive/inputs), `12px` (containers/cards)
-Touch targets: minimum `44px x 44px`
+#### [NEW] [components/ui/Button.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Button.tsx) & [Button.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Button.module.css)
+Primary, secondary, and minimal action button wrappers. Ensures touch target bounds of at least `44px x 44px`. Uses `--color-primary` and typography variables.
+
+#### [NEW] [components/ui/Input.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Input.tsx) & [Input.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Input.module.css)
+Form fields with outline and focus-visible states matching design system border radii (8px).
+
+#### [NEW] [components/ui/Card.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Card.tsx) & [Card.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Card.module.css)
+Sleek container panel with 12px container radius and surface colors.
+
+#### [NEW] [components/ui/Spinner.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Spinner.tsx) & [Spinner.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/ui/Spinner.module.css)
+Subtle, smooth animated loading states.
+
+---
+
+### Web Companion Journal Domain UI (`components/journal/`)
+
+All domain UI elements reside in `components/journal/` and use **CSS Modules**.
+
+#### [NEW] [components/journal/SongSearchInput.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/SongSearchInput.tsx) & [SongSearchInput.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/SongSearchInput.module.css)
+Interactive search box with debounced (300ms) request triggers and search results listing. Includes album art preview (minimum row height 44px).
+
+#### [NEW] [components/journal/SongVerificationCard.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/SongVerificationCard.tsx) & [SongVerificationCard.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/SongVerificationCard.module.css)
+Presents full album art and track details. Offers "Use This Song" (saves to Zustand) and "Search Again" (returns focus to search field).
+
+#### [NEW] [components/journal/MoodBubble.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/MoodBubble.tsx) & [MoodBubble.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/MoodBubble.module.css)
+Mood button for tags. Uses 4px border radius.
+
+#### [NEW] [components/journal/MoodSelector.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/MoodSelector.tsx) & [MoodSelector.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/MoodSelector.module.css)
+Horizontal scroll selector mapping `Calm`, `Melancholic`, `Nostalgic`, `Energetic` bubbles.
+
+#### [NEW] [components/journal/EchoEntryForm.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/EchoEntryForm.tsx) & [EchoEntryForm.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/EchoEntryForm.module.css)
+The notes entry panel. Connects `MoodSelector` and a textarea. Limits note to 500 characters and features a character counter.
+
+#### [NEW] [components/journal/EchoEntryCard.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/EchoEntryCard.tsx) & [EchoEntryCard.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/EchoEntryCard.module.css)
+Timeline card showing unified track metadata (Album art, title, artist), mood bubble, user reflection notes, and timestamp.
+
+#### [NEW] [components/journal/TimelineFeed.tsx](file:///c:/Users/HomePC/Desktop/Echo/components/journal/TimelineFeed.tsx) & [TimelineFeed.module.css](file:///c:/Users/HomePC/Desktop/Echo/components/journal/TimelineFeed.module.css)
+A clean scroll feed that renders multiple `EchoEntryCard` instances.
+
+---
+
+### Web Pages (`app/`)
+
+#### [NEW] [app/layout.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/layout.tsx)
+Root web shell wrapper loading Google Fonts (Outfit, Satoshi) and `app/globals.css`.
+
+#### [NEW] [app/page.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/page.tsx)
+Checks user auth state. Redirects to `/timeline` or `/login`.
+
+#### [NEW] [app/(marketing)/login/page.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/(marketing)/login/page.tsx)
+Sleek email/password login portal leveraging Supabase browser authentication.
+
+#### [NEW] [app/auth/callback/route.ts](file:///c:/Users/HomePC/Desktop/Echo/app/auth/callback/route.ts)
+Route handler processing Supabase authentication redirects.
+
+#### [NEW] [app/(journal)/layout.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/(journal)/layout.tsx)
+Layout guard ensuring redirect to `/login` if session is absent. Displays global navigation header.
+
+#### [NEW] [app/(journal)/timeline/page.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/(journal)/timeline/page.tsx)
+Server component fetching user journal entries server-side using Prisma and feeding them to `TimelineFeed`.
+
+#### [NEW] [app/(journal)/create/page.tsx](file:///c:/Users/HomePC/Desktop/Echo/app/(journal)/create/page.tsx)
+The Quick-Capture canvas hosting `SongSearchInput`, `SongVerificationCard`, and `EchoEntryForm` components dynamically based on Zustand store phase.
+
+---
+
+### React Native / Expo Mobile App (`apps/mobile/`)
+
+Mobile workspace setup inside `apps/mobile/`.
+
+#### [NEW] [apps/mobile/package.json](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/package.json)
+Configure Expo project with standard dependencies.
+
+#### [NEW] [apps/mobile/src/lib/theme/tokens.ts](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/lib/theme/tokens.ts)
+Map design tokens from `Color-Style/tokens/Color-tokens.json` and `Typography-tokens.json` to React Native JS theme objects.
+
+#### [NEW] [apps/mobile/src/components/ui/TouchableButton.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/ui/TouchableButton.tsx)
+Native touchscreen-safe button. Enforces 44px layout targets and maps style variables.
+
+#### [NEW] [apps/mobile/src/components/domain/SongSearchInput.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/SongSearchInput.tsx)
+Native track search bar using React Native inputs.
+
+#### [NEW] [apps/mobile/src/components/domain/SongVerificationCard.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/SongVerificationCard.tsx)
+Modal/Card component confirming track selection.
+
+#### [NEW] [apps/mobile/src/components/domain/EchoEntryForm.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/EchoEntryForm.tsx)
+Mood selector grid and textarea wrapping native scroll boundaries.
+
+#### [NEW] [apps/mobile/src/screens/LoginScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/LoginScreen.tsx)
+Mobile authentication screen saving JWT in `Expo.SecureStore`.
+
+#### [NEW] [apps/mobile/src/screens/TimelineScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/TimelineScreen.tsx)
+List feed rendering entries fetched via React Query from our unified server API layer.
+
+#### [NEW] [apps/mobile/src/screens/CreateEntryScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/CreateEntryScreen.tsx)
+Quick-capture screen managing song search, confirmation, and submission form.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- **Type Safety Checks:** Run `npx tsc --noEmit` in both Next.js and React Native folders to ensure 100% type-correct builds.
+- **Prisma Schema Lint:** Run `npx prisma validate` and review generated SQL migrations.
+- **Zod Boundaries:** Verify API routes block inputs via Postman/curl:
+  - Submit `note` of length > 500 to `POST /api/echoes` -> assert `400 Bad Request`.
+  - Submit empty `songTitle` -> assert `400 Bad Request`.
+  - Submit request without token -> assert `401 Unauthorized`.
+  - Attempt request modifying other user's record -> assert `403 Forbidden`.
+
+### Manual Verification
+1. **Quick-Capture Workflow Walkthrough:**
+   - Verify typing in search debounces and calls Spotify search API.
+   - Verify selection opens confirmation modal with details.
+   - Click "Search Again" -> verify search field refocuses.
+   - Verify mood selection is required for save button activation.
+   - Try to exceed 500 characters in the note -> assert input character counter is capped and physically blocked at 500.
+2. **Timeline Updates:**
+   - Save entry -> verify list updates instantly without page reloading.
+3. **Responsive Testing:**
+   - Scale down browser window to 360px width. Verify no text overlaps or layout overflow.
+4. **Touch Target Boundaries:**
+   - Inspect all clickable layout rows and tags. Verify bounds are at least 44px x 44px.

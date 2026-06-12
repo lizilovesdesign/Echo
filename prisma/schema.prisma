@@ -1,0 +1,42 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String      @id @default(uuid())
+  email     String      @unique
+  createdAt DateTime    @default(now())
+  entries   EchoEntry[]
+
+  @@map("users")
+}
+
+enum MoodTag {
+  Nostalgic
+  Energetic
+  Melancholic
+  Calm
+}
+
+model EchoEntry {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  songTitle      String   @map("song_title")
+  artist         String
+  albumArtUrl    String   @map("album_art_url")
+  spotifyTrackId String   @map("spotify_track_id")
+  moodTag        MoodTag  @map("mood_tag")
+  note           String   @db.VarChar(500)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("echo_entries")
+}
