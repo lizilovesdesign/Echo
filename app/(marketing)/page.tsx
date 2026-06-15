@@ -78,7 +78,7 @@ export default function LandingPage() {
               <span className={styles.moodText}>Calm</span>
             </div>
             <p className={styles.moodExcerpt}>
-              "Fast Car — Tracy Chapman. Reminds me of road trips with dad. The sunset was orange-yellow and warm."
+               &ldquo;Fast Car — Tracy Chapman. Reminds me of road trips with dad. The sunset was orange-yellow and warm.&rdquo;
             </p>
             <div className={styles.moodTime}>Just now</div>
           </div>

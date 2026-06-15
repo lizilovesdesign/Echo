@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { createServerSupabaseClient } from './supabase';
+import { createServerSupabaseClient } from './supabase-server';
 
 export interface UserSession {
   userId: string;

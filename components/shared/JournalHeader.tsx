@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Music, Plus, LogOut, Sun, Moon } from 'lucide-react';
-import { createBrowserSupabaseClient } from '@/lib/supabase';
+import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
 import { Button } from '../ui/Button';
 import styles from './JournalHeader.module.css';
