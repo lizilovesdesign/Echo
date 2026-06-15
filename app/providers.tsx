@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 type Theme = 'light' | 'dark';
@@ -20,8 +20,27 @@ export function useTheme() {
   return context;
 }
 
+function getInitialTheme(): Theme {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('theme') as Theme | null;
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  return 'dark';
+}
+
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  if (theme === 'dark') {
+    root.classList.add('dark');
+    root.classList.add('dark-theme');
+  } else {
+    root.classList.remove('dark');
+    root.classList.remove('dark-theme');
+  }
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
-  // Query Client Setup
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -35,35 +54,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
-  // Theme State Setup
-  const [theme, setTheme] = useState<Theme>('dark'); // Default to dark for a premium vibe
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
 
   useEffect(() => {
-    // Check local storage or system preference
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      setTheme(systemPreference);
-    }
-  }, []);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.add('dark-theme');
-    } else {
-      root.classList.remove('dark');
-      root.classList.remove('dark-theme');
-    }
+    applyTheme(theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

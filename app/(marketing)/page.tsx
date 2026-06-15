@@ -7,12 +7,62 @@ import { useTheme } from '../providers';
 import { Button } from '@/components/ui/Button';
 import styles from './page.module.css';
 
+const floatingEntries = [
+  {
+    mood: 'Calm',
+    moodEmoji: '🌊',
+    song: 'Rose Quartz',
+    artist: 'Toro y Moi',
+    note: 'Sunset drive home. Windows down. Felt like everything was going to be okay.',
+    position: 'topLeft',
+  },
+  {
+    mood: 'Melancholic',
+    moodEmoji: '🌧️',
+    song: 'Ocean Eyes',
+    artist: 'Billie Eilish',
+    note: 'Rainy Tuesday. Tracing water drops on the glass. Missing someone.',
+    position: 'topRight',
+  },
+  {
+    mood: 'Nostalgic',
+    moodEmoji: '🍂',
+    song: 'Fast Car',
+    artist: 'Tracy Chapman',
+    note: 'Road trips with dad. The sunset was orange-yellow and warm.',
+    position: 'bottomLeft',
+  },
+  {
+    mood: 'Energetic',
+    moodEmoji: '⚡',
+    song: 'Lost In Yesterday',
+    artist: 'Tame Impala',
+    note: 'Pre-game playlist. That bass drop still hits the same.',
+    position: 'bottomRight',
+  },
+  {
+    mood: 'Calm',
+    moodEmoji: '🌊',
+    song: 'Holocene',
+    artist: 'Bon Iver',
+    note: 'Early morning coffee. Frost on the window. Silence.',
+    position: 'midLeft',
+  },
+  {
+    mood: 'Nostalgic',
+    moodEmoji: '🍂',
+    song: 'Ribs',
+    artist: 'Lorde',
+    note: 'Late summer night. Driving with no destination.',
+    position: 'midRight',
+  },
+];
+
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
 
   return (
     <div className={styles.container}>
-      {/* Navigation Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
           <Music className={styles.logoIcon} />
@@ -34,11 +84,11 @@ export default function LandingPage() {
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
-          
+
           <Link href="/login" passHref>
             <span className={styles.loginLink}>Log in</span>
           </Link>
-          
+
           <Link href="/login" passHref>
             <Button size="sm" variant="primary" className={styles.getStartedBtn}>
               Get Started
@@ -47,87 +97,34 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Main Hero Section */}
       <main className={styles.heroSection}>
-        {/* Floating Song and Journal cards in corners (Fabric-inspired) */}
-        
-        {/* Top-Left: Song Cover Card */}
-        <div className={`${styles.floatingCard} ${styles.topLeft}`}>
-          <div className={styles.stampBorder}>
-            <div className={styles.spotifyHeader}>
-              <span className={styles.spotifyIcon}>🎧</span>
-              <span className={styles.spotifyTag}>Verified Track</span>
-            </div>
-            <img 
-              src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop" 
-              alt="Rose Quartz Album Cover" 
-              className={styles.floatAlbumArt}
-            />
-            <div className={styles.floatTrackMeta}>
-              <strong className={styles.floatTrackName}>Rose Quartz</strong>
-              <span className={styles.floatArtistName}>Toro y Moi</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Top-Right: Abstract Glowing Mood Card */}
-        <div className={`${styles.floatingCard} ${styles.topRight}`}>
-          <div className={styles.moodCard}>
-            <div className={styles.moodHeader}>
-              <span className={styles.moodEmoji}>🌊</span>
-              <span className={styles.moodText}>Calm</span>
-            </div>
-            <p className={styles.moodExcerpt}>
-               &ldquo;Fast Car — Tracy Chapman. Reminds me of road trips with dad. The sunset was orange-yellow and warm.&rdquo;
-            </p>
-            <div className={styles.moodTime}>Just now</div>
-          </div>
-        </div>
-
-        {/* Bottom-Left: Document/Journal snippet */}
-        <div className={`${styles.floatingCard} ${styles.bottomLeft}`}>
-          <div className={styles.journalClipping}>
-            <div className={styles.clippingLine}></div>
-            <div className={styles.clippingContent}>
-              <div className={styles.clippingTitle}>
-                <span>🌧️ Melancholic</span>
-                <span className={styles.clippingTrack}>Ocean Eyes</span>
+        {floatingEntries.map((entry, i) => (
+          <div
+            key={i}
+            className={`${styles.floatingCard} ${styles[entry.position]}`}
+          >
+            <div className={styles.entryCard}>
+              <div className={styles.entryMood}>
+                <span>{entry.moodEmoji}</span>
+                <span className={styles.entryMoodLabel}>{entry.mood}</span>
               </div>
-              <p className={styles.clippingText}>
-                Rainy Tuesday afternoon. Staring out the window, tracing water drops on the glass.
-              </p>
+              <div className={styles.entrySong}>
+                <span className={styles.entrySongTitle}>{entry.song}</span>
+                <span className={styles.entryArtist}>{entry.artist}</span>
+              </div>
+              <p className={styles.entryNote}>{entry.note}</p>
             </div>
           </div>
-        </div>
+        ))}
 
-        {/* Bottom-Right: Tilted Album Card */}
-        <div className={`${styles.floatingCard} ${styles.bottomRight}`}>
-          <div className={styles.stampBorder}>
-            <div className={styles.spotifyHeader}>
-              <span className={styles.spotifyIcon}>⚡</span>
-              <span className={styles.spotifyTag}>Active Mood</span>
-            </div>
-            <img 
-              src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=200&auto=format&fit=crop" 
-              alt="Lost In Yesterday Album Cover" 
-              className={styles.floatAlbumArt}
-            />
-            <div className={styles.floatTrackMeta}>
-              <strong className={styles.floatTrackName}>Lost In Yesterday</strong>
-              <span className={styles.floatArtistName}>Tame Impala</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Central Content */}
         <div className={styles.heroContent}>
           <h1 className={styles.title}>
             One home for <br />
             <span className={styles.highlight}>your emotional soundtrack</span>
           </h1>
-          
+
           <p className={styles.subtitle}>
-            A private, distraction-free space to anchor songs to personal memories and moods. 
+            A private, distraction-free space to anchor songs to personal memories and moods.
             Build your permanent emotional archive in under 20 seconds.
           </p>
 
@@ -141,13 +138,12 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Features Section */}
       <section id="features" className={styles.featuresSection}>
         <div className={styles.sectionHeader}>
           <h2>Why Echo?</h2>
           <p>Strictly private, designed to capture reflections instantaneously.</p>
         </div>
-        
+
         <div className={styles.featuresGrid}>
           <div className={styles.featureItem}>
             <div className={styles.featureIcon}>🔒</div>
@@ -167,7 +163,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
           <div className={styles.footerBrand}>
@@ -177,7 +172,7 @@ export default function LandingPage() {
             </div>
             <p className={styles.footerTagline}>Permanently archiving the soundtrack of your life.</p>
           </div>
-          
+
           <div className={styles.footerLinks}>
             <div className={styles.linkGroup}>
               <h4>Product</h4>
@@ -193,7 +188,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        
+
         <div className={styles.footerBottom}>
           <p>&copy; {new Date().getFullYear()} Echo Inc. All rights reserved. Strictly private.</p>
           <div className={styles.footerTheme}>
