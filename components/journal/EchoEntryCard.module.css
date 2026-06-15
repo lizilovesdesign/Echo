@@ -1,0 +1,138 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.deleting {
+  opacity: 0.5;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.songInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.albumArt {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.trackDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.songTitle {
+  font-family: var(--font-title-small-font-family);
+  font-size: var(--font-title-small-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface);
+}
+
+.artist {
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+}
+
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  opacity: 0.6;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.deleteButton:hover:not(:disabled) {
+  opacity: 1;
+  color: var(--color-error);
+  background-color: var(--color-surface-container-low);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--color-outline-variant);
+  padding-top: 8px;
+}
+
+.moodTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-small, 4px);
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+/* Mood colors mapping to tokens */
+.Calm {
+  background-color: rgba(9, 100%, 70%, 0.06);
+  color: var(--color-primary);
+  border-color: rgba(9, 100%, 70%, 0.15);
+}
+
+.Melancholic {
+  background-color: rgba(142, 45, 226, 0.06);
+  color: hsl(270, 70%, 50%);
+  border-color: rgba(142, 45, 226, 0.15);
+}
+
+.Nostalgic {
+  background-color: rgba(230, 92, 0, 0.06);
+  color: hsl(24, 100%, 45%);
+  border-color: rgba(230, 92, 0, 0.15);
+}
+
+.Energetic {
+  background-color: rgba(255, 193, 7, 0.08);
+  color: hsl(45, 100%, 35%);
+  border-color: rgba(255, 193, 7, 0.2);
+}
+
+.timestamp {
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+}
+
+.note {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  line-height: var(--font-body-medium-line-height);
+  color: var(--color-on-surface);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: var(--color-surface-container-low);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 4px;
+}

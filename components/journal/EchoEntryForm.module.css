@@ -1,0 +1,73 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.textareaWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface);
+}
+
+.textarea {
+  min-height: 120px;
+  padding: 12px 16px;
+  border-radius: var(--radius-interactive, 8px);
+  border: 1px solid var(--color-outline-variant);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body-large-font-family);
+  font-size: var(--font-body-large-font-size);
+  resize: vertical;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-container);
+}
+
+.counterRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+  min-height: 20px;
+}
+
+.counter {
+  margin-left: auto;
+}
+
+.error {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.actionBtn {
+  flex: 1;
+}
+
+.spinner {
+  margin-right: 8px;
+}
