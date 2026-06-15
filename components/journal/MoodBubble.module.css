@@ -1,0 +1,39 @@
+.bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px; /* Touch target constraint */
+  padding: 8px 16px;
+  border-radius: var(--radius-small, 4px); /* Explicit small border-radius */
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--color-outline-variant);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.inactive {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface-variant);
+}
+
+.inactive:hover {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+}
+
+.selected {
+  background-color: var(--color-primary-container, hsl(9, 100%, 83%));
+  color: var(--color-on-primary-container, hsl(8, 74%, 30%));
+  border-color: var(--color-primary);
+}
+
+.emoji {
+  font-size: 16px;
+}
+
+.label {
+  display: inline-block;
+}
