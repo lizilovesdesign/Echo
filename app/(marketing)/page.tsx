@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sun, Moon, Music, ArrowRight } from 'lucide-react';
+import { Sun, Moon, Music, ArrowRight, Github, Twitter, Heart, ChevronUp } from 'lucide-react';
 import { useTheme } from '../providers';
 import { Button } from '@/components/ui/Button';
 import styles from './page.module.css';
@@ -13,7 +13,7 @@ const floatingEntries = [
     moodEmoji: '🌊',
     song: 'Rose Quartz',
     artist: 'Toro y Moi',
-    note: 'Sunset drive home. Windows down. Felt like everything was going to be okay.',
+    note: 'Sunset drive home. Windows down. Everything felt okay.',
     position: 'topLeft',
   },
   {
@@ -21,7 +21,7 @@ const floatingEntries = [
     moodEmoji: '🌧️',
     song: 'Ocean Eyes',
     artist: 'Billie Eilish',
-    note: 'Rainy Tuesday. Tracing water drops on the glass. Missing someone.',
+    note: 'Rainy Tuesday. Tracing drops on the glass.',
     position: 'topRight',
   },
   {
@@ -29,7 +29,7 @@ const floatingEntries = [
     moodEmoji: '🍂',
     song: 'Fast Car',
     artist: 'Tracy Chapman',
-    note: 'Road trips with dad. The sunset was orange-yellow and warm.',
+    note: 'Road trips with dad. Warm amber sunset.',
     position: 'bottomLeft',
   },
   {
@@ -37,29 +37,14 @@ const floatingEntries = [
     moodEmoji: '⚡',
     song: 'Lost In Yesterday',
     artist: 'Tame Impala',
-    note: 'Pre-game playlist. That bass drop still hits the same.',
+    note: 'That bass drop still hits the same.',
     position: 'bottomRight',
-  },
-  {
-    mood: 'Calm',
-    moodEmoji: '🌊',
-    song: 'Holocene',
-    artist: 'Bon Iver',
-    note: 'Early morning coffee. Frost on the window. Silence.',
-    position: 'midLeft',
-  },
-  {
-    mood: 'Nostalgic',
-    moodEmoji: '🍂',
-    song: 'Ribs',
-    artist: 'Lorde',
-    note: 'Late summer night. Driving with no destination.',
-    position: 'midRight',
   },
 ];
 
 export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className={styles.container}>
@@ -67,14 +52,7 @@ export default function LandingPage() {
         <div className={styles.logo}>
           <Music className={styles.logoIcon} />
           <span>Echo</span>
-          <span className={styles.beta}>Beta</span>
         </div>
-
-        <nav className={styles.navLinks}>
-          <a href="#features" className={styles.link}>Features</a>
-          <a href="#privacy" className={styles.link}>Privacy</a>
-          <a href="#download" className={styles.link}>Download</a>
-        </nav>
 
         <div className={styles.actions}>
           <button
@@ -87,12 +65,6 @@ export default function LandingPage() {
 
           <Link href="/login" passHref>
             <span className={styles.loginLink}>Log in</span>
-          </Link>
-
-          <Link href="/login" passHref>
-            <Button size="sm" variant="primary" className={styles.getStartedBtn}>
-              Get Started
-            </Button>
           </Link>
         </div>
       </header>
@@ -119,13 +91,12 @@ export default function LandingPage() {
 
         <div className={styles.heroContent}>
           <h1 className={styles.title}>
-            One home for <br />
-            <span className={styles.highlight}>your emotional soundtrack</span>
+            Your life has a <br />
+            <span className={styles.highlight}>soundtrack</span>
           </h1>
 
           <p className={styles.subtitle}>
-            A private, distraction-free space to anchor songs to personal memories and moods.
-            Build your permanent emotional archive in under 20 seconds.
+            Anchor songs to memories. Capture the feeling in seconds.
           </p>
 
           <div className={styles.ctaGroup}>
@@ -164,38 +135,65 @@ export default function LandingPage() {
       </section>
 
       <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.footerBrand}>
-            <div className={styles.logo}>
-              <Music className={styles.logoIcon} />
-              <span>Echo</span>
+        <div className={styles.footerWave} />
+        <div className={styles.footerInner}>
+          <div className={styles.footerTop}>
+            <div className={styles.footerBrand}>
+              <div className={styles.footerLogo}>
+                <Music size={20} className={styles.footerLogoIcon} />
+                <span>Echo</span>
+              </div>
+              <p className={styles.footerTagline}>
+                Permanently archiving the soundtrack of your life.
+              </p>
+              <div className={styles.footerSocial}>
+                <a href="#" className={styles.socialLink} aria-label="Twitter">
+                  <Twitter size={16} />
+                </a>
+                <a href="#" className={styles.socialLink} aria-label="GitHub">
+                  <Github size={16} />
+                </a>
+              </div>
             </div>
-            <p className={styles.footerTagline}>Permanently archiving the soundtrack of your life.</p>
+
+            <div className={styles.footerColumns}>
+              <div className={styles.footerCol}>
+                <h4 className={styles.footerColTitle}>Product</h4>
+                <a href="#" className={styles.footerColLink}>Features</a>
+                <a href="#" className={styles.footerColLink}>Mobile App</a>
+                <a href="#" className={styles.footerColLink}>Changelog</a>
+              </div>
+              <div className={styles.footerCol}>
+                <h4 className={styles.footerColTitle}>Company</h4>
+                <a href="#" className={styles.footerColLink}>About</a>
+                <a href="#" className={styles.footerColLink}>Blog</a>
+                <a href="#" className={styles.footerColLink}>Contact</a>
+              </div>
+              <div className={styles.footerCol}>
+                <h4 className={styles.footerColTitle}>Legal</h4>
+                <a href="#" className={styles.footerColLink}>Privacy</a>
+                <a href="#" className={styles.footerColLink}>Terms</a>
+                <a href="#" className={styles.footerColLink}>Cookies</a>
+              </div>
+            </div>
           </div>
 
-          <div className={styles.footerLinks}>
-            <div className={styles.linkGroup}>
-              <h4>Product</h4>
-              <a href="#features">Features</a>
-              <a href="#download">Mobile Client</a>
-              <a href="#changelog">Changelog</a>
-            </div>
-            <div className={styles.linkGroup}>
-              <h4>Security</h4>
-              <a href="#privacy">Privacy Policy</a>
-              <a href="#terms">Terms of Service</a>
-              <a href="#audits">Data Portability</a>
-            </div>
-          </div>
-        </div>
+          <div className={styles.footerDivider} />
 
-        <div className={styles.footerBottom}>
-          <p>&copy; {new Date().getFullYear()} Echo Inc. All rights reserved. Strictly private.</p>
-          <div className={styles.footerTheme}>
-            <span>Theme:</span>
-            <button onClick={toggleTheme} className={styles.footerThemeBtn}>
-              {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
-            </button>
+          <div className={styles.footerBottom}>
+            <p className={styles.footerCopyright}>
+              &copy; {currentYear} Echo. Made with <Heart size={12} className={styles.heartIcon} /> for music lovers.
+            </p>
+            <div className={styles.footerTheme}>
+              <button
+                onClick={toggleTheme}
+                className={styles.footerThemeBtn}
+                aria-label="Switch theme"
+              >
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+              </button>
+            </div>
           </div>
         </div>
       </footer>

@@ -33,6 +33,7 @@ export default function RootLayout({
                   var t = localStorage.getItem('theme');
                   if (!t) { t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
                   if (t === 'dark') { document.documentElement.classList.add('dark', 'dark-theme'); }
+                  else { document.documentElement.classList.add('light-theme'); }
                 } catch(e) {}
               })();
             `,

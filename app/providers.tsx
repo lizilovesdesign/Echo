@@ -31,12 +31,12 @@ function getInitialTheme(): Theme {
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
+  root.classList.remove('light-theme', 'dark', 'dark-theme');
   if (theme === 'dark') {
     root.classList.add('dark');
     root.classList.add('dark-theme');
   } else {
-    root.classList.remove('dark');
-    root.classList.remove('dark-theme');
+    root.classList.add('light-theme');
   }
 }
 
