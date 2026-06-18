@@ -12,7 +12,8 @@ Never commit secrets, API tokens, or encryption keys to the repository. Sensitiv
 
 The required environment variables are:
 
-DATABASE_URL                # Connection string for the PostgreSQL database on Supabase
+DATABASE_URL                # Supavisor transaction pooler connection string (runtime, PrismaClient)
+DIRECT_URL                  # Direct connection string (Prisma CLI migrations only)
 NEXT_PUBLIC_SUPABASE_URL    # Public Supabase project URL
 SUPABASE_SERVICE_ROLE_KEY   # Secret service role key for bypassing RLS rules securely on the server
 SPOTIFY_CLIENT_ID           # Public Spotify developer app client ID
@@ -23,19 +24,18 @@ NEXT_PUBLIC_APP_URL         # Target application deployment URL
 
 Environment variables are validated at runtime during application boot using Zod in `lib/env.ts`. If any required system variable is missing, the application must abort execution immediately rather than operating in an unconfigured, unstable state.
 
-Only variables explicitly prefixed with `NEXT_PUBLIC_` are safely exposed to client runtimes (Web/Mobile browser scopes). Never append this prefix to any sensitive secret key under any circumstances.
+Only variables explicitly prefixed with `NEXT_PUBLIC_` are safely exposed to client runtimes (browser scopes). Never append this prefix to any sensitive secret key under any circumstances.
 
 ## Authentication & Session Persistence
 
 Authentication is anchored entirely via Supabase Auth. Passwords must be cryptographically hashed securely using high-entropy primitives (Bcrypt/Argon2id) managed downstream by Supabase. Plaintext passwords must never hit our system buffers or log structures.
 
-- **Web Companion Sessions:** Handled via secure, encrypted cookies configured with:
+- **Web Sessions:** Handled via secure, encrypted cookies configured with:
   - `httpOnly: true` (blocking client-side document cookie extraction scripts)
   - `secure: true` in production deployment tracks
   - `sameSite: 'lax'` to secure cross-site transaction integrity
-- **Mobile Native Clients (Expo):** Session access tokens and JWT structures must be stored exclusively inside the hardware-backed `Expo.SecureStore` subsystem. Never store raw user tokens in open, unencrypted async storage or configuration files.
 
-When a user logs out, clear cookies on the web interface, wipe tokens from mobile hardware storage, and issue a termination request to Supabase to invalidate the token layout server-side.
+When a user logs out, clear cookies and issue a termination request to Supabase to invalidate the token layout server-side.
 
 ## Input Validation & Sanitization
 
@@ -44,7 +44,7 @@ Every data payload entering an Echo endpoint from an external environment must b
 - Spotify proxy search queries and matching parameters
 - Account modifications and settings parameters
 
-Validation is strictly the server's responsibility. Client code (Next.js client blocks or mobile views) can handle field requirements for clean UX, but the backend proxy routes are the final safety barrier.
+Validation is strictly the server's responsibility. Client code can handle field requirements for clean UX, but the backend proxy routes are the final safety barrier.
 
 ## SQL Injection Protection
 

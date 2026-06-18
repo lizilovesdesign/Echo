@@ -1,21 +1,19 @@
 # Echo — Full Implementation Plan
 
-Echo (formerly MoodTrack) is a private, minimalist mobile journaling application designed to bridge the gap between music discovery and emotional reflection. By allowing users to anchor specific songs to personal memories and moods, Echo transforms a music library into a permanent emotional archive.
+Echo (formerly MoodTrack) is a private, minimalist journaling application designed to bridge the gap between music discovery and emotional reflection. By allowing users to anchor specific songs to personal memories and moods, Echo transforms a music library into a permanent emotional archive.
 
-This plan details the complete step-by-step implementation for the web companion engine and the native mobile Expo app.
+This plan details the complete step-by-step implementation for the responsive Next.js web app.
 
 ---
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Styling Framework Discrepancy (Tailwind CSS/NativeWind vs. CSS Modules/React Native StyleSheet)**
-> The user request specifies: *"Styling: Tailwind CSS (Web) and NativeWind/StyleSheet (Mobile)"*. 
-> However, the project guidelines in `.agent/rules/code-style.md` and `.agent/rules/design-system.md` explicitly mandate:
-> - **Web:** CSS Modules exclusively (`*.module.css`), forbidding Tailwind CSS, utility frameworks, inline CSS, or global class strings.
-> - **Mobile:** React Native `StyleSheet.create()` bound to the core tokens in `lib/theme/tokens.ts`, forbidding NativeWind.
+> **Styling Framework Discrepancy (Tailwind CSS vs. CSS Modules)**
+> The user request specifies: *"Styling: Tailwind CSS"*. 
+> However, the project guidelines in `.agent/rules/code-style.md` and `.agent/rules/design-system.md` explicitly mandate CSS Modules exclusively (`*.module.css`), forbidding Tailwind CSS, utility frameworks, inline CSS, or global class strings.
 >
-> In accordance with the instruction: *"The following are user-defined rules that you MUST ALWAYS FOLLOW WITHOUT ANY EXCEPTION. These rules take precedence over any following instructions"*, this implementation plan follows the rules in `.agent/rules/` (CSS Modules for Web, `StyleSheet.create` for Mobile). Please review if this is acceptable.
+> In accordance with the instruction: *"The following are user-defined rules that you MUST ALWAYS FOLLOW WITHOUT ANY EXCEPTION. These rules take precedence over any following instructions"*, this implementation plan follows the rules in `.agent/rules/` (CSS Modules). Please review if this is acceptable.
 
 ---
 
@@ -23,7 +21,7 @@ This plan details the complete step-by-step implementation for the web companion
 
 > [!IMPORTANT]
 > 1. **Spotify Developer API Keys:** Do you have a developer client credential set up? We will need `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` in `.env.local` to successfully request the client credentials token for proxying search requests.
-> 2. **Supabase Database & Authentication:** Are you hosting the Supabase PostgreSQL database locally or using their cloud infrastructure? The auth cookie callback and SecureStore integration require a running Supabase instance.
+> 2. **Supabase Database & Authentication:** Are you hosting the Supabase PostgreSQL database locally or using their cloud infrastructure? The auth cookie callback requires a running Supabase instance.
 > 3. **Outfit and Satoshi Fonts:** The design tokens use `'Satoshi', sans-serif` for typography. The instructions also mention the `Outfit` typeface. We will import both fonts from Google Fonts/local configuration. Should Satoshi be the default display/heading typeface and Outfit the body typeface?
 
 ---
@@ -183,43 +181,12 @@ The Quick-Capture canvas hosting `SongSearchInput`, `SongVerificationCard`, and 
 
 ---
 
-### React Native / Expo Mobile App (`apps/mobile/`)
-
-Mobile workspace setup inside `apps/mobile/`.
-
-#### [NEW] [apps/mobile/package.json](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/package.json)
-Configure Expo project with standard dependencies.
-
-#### [NEW] [apps/mobile/src/lib/theme/tokens.ts](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/lib/theme/tokens.ts)
-Map design tokens from `Color-Style/tokens/Color-tokens.json` and `Typography-tokens.json` to React Native JS theme objects.
-
-#### [NEW] [apps/mobile/src/components/ui/TouchableButton.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/ui/TouchableButton.tsx)
-Native touchscreen-safe button. Enforces 44px layout targets and maps style variables.
-
-#### [NEW] [apps/mobile/src/components/domain/SongSearchInput.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/SongSearchInput.tsx)
-Native track search bar using React Native inputs.
-
-#### [NEW] [apps/mobile/src/components/domain/SongVerificationCard.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/SongVerificationCard.tsx)
-Modal/Card component confirming track selection.
-
-#### [NEW] [apps/mobile/src/components/domain/EchoEntryForm.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/components/domain/EchoEntryForm.tsx)
-Mood selector grid and textarea wrapping native scroll boundaries.
-
-#### [NEW] [apps/mobile/src/screens/LoginScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/LoginScreen.tsx)
-Mobile authentication screen saving JWT in `Expo.SecureStore`.
-
-#### [NEW] [apps/mobile/src/screens/TimelineScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/TimelineScreen.tsx)
-List feed rendering entries fetched via React Query from our unified server API layer.
-
-#### [NEW] [apps/mobile/src/screens/CreateEntryScreen.tsx](file:///c:/Users/HomePC/Desktop/Echo/apps/mobile/src/screens/CreateEntryScreen.tsx)
-Quick-capture screen managing song search, confirmation, and submission form.
-
 ---
 
 ## Verification Plan
 
 ### Automated Tests
-- **Type Safety Checks:** Run `npx tsc --noEmit` in both Next.js and React Native folders to ensure 100% type-correct builds.
+- **Type Safety Checks:** Run `npx tsc --noEmit` to ensure 100% type-correct builds.
 - **Prisma Schema Lint:** Run `npx prisma validate` and review generated SQL migrations.
 - **Zod Boundaries:** Verify API routes block inputs via Postman/curl:
   - Submit `note` of length > 500 to `POST /api/echoes` -> assert `400 Bad Request`.

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
+  DIRECT_URL: z.string().min(1),
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   SPOTIFY_CLIENT_ID: z.string().min(1),
@@ -14,6 +15,7 @@ const envSchema = z.object({
 const parseEnv = () => {
   const result = envSchema.safeParse({
     DATABASE_URL: process.env.DATABASE_URL,
+    DIRECT_URL: process.env.DIRECT_URL,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,

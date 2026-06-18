@@ -1,16 +1,14 @@
 # Skill: API Route Scaffolder — Echo
 
-Load this skill when creating or modifying a Next.js route handler (`app/api/**/route.ts`) or a server-side action handler. It dictates the precise operational structure, validation chains, context boundaries, and structural envelopes for every API endpoint within the Echo ecosystem, ensuring complete consistency across both web companion and Expo mobile operations.
+Load this skill when creating or modifying a Next.js route handler (`app/api/**/route.ts`) or a server-side action handler. It dictates the precise operational structure, validation chains, context boundaries, and structural envelopes for every API endpoint within the Echo ecosystem.
 
 ## Before You Start
 
 Read `.agent/rules/architecture.md` and `.agent/rules/security.md`. This skill assumes you are fully aware of structural boundaries and that you will validate inputs and protect user privacy exactly as defined in those documents.
 
 Ask: **should this be an internal server helper/action or a route handler?**
-- **Server-side components or actions** if the consumer is our own companion web interface (dashboard timeline or form submit logic).
-- **Route handler** if the consumer is the React Native/Expo mobile client application, a third-party lifecycle webhook, or an external verification pipeline.
-
-Because Echo handles continuous cross-platform syncing, route handlers under `app/api/` act as our unified, headless REST entry points for the mobile client.
+- **Server-side components or actions** if the consumer is a Server Component page (dashboard timeline or form submit logic).
+- **Route handler** if the endpoint is a third-party lifecycle webhook, or an external verification pipeline.
 
 ## Route Handler Template
 
@@ -95,7 +93,7 @@ export async function POST(req: NextRequest) {
 
 - **Explicitly enforce Tenant Isolation Rules.** After confirming token authentication, you must ensure that all queries are explicitly scoped directly to the authenticated user's ID (`userId === session.userId`). Never allow queries to fetch or alter any journal resource based purely on arbitrary path properties or client arguments.
 
-- **Deliver an invariant data envelope.** Success responses must uniformly expose `{ ok: true, data: ... }`. Failures must uniformly map to `{ ok: false, error: { code, message } }`. This strict consistency simplifies error handling and parsing routines on both the Next.js and React Native/Expo clients.
+- **Deliver an invariant data envelope.** Success responses must uniformly expose `{ ok: true, data: ... }`. Failures must uniformly map to `{ ok: false, error: { code, message } }`. This strict consistency simplifies error handling and parsing routines across the client.
 
 - **Sanitize system exception outputs.** Raw backend processing errors, Prisma database crashes, or external Spotify API handshake rejections must never leak to the client. Log detailed technical error metrics securely on the server track, and return a clean, friendly string directly to the end user.
 

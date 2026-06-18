@@ -22,9 +22,7 @@ No stage can be skipped. A user must explicitly confirm a Spotify-verified track
 
 The search input is a client component because it requires `useState` for the query string and `useQuery` for the async search results.
 
-**File locations:**
-- Web: `components/journal/SongSearchInput.tsx` + `SongSearchInput.module.css`
-- Mobile: `apps/mobile/src/components/domain/SongSearchInput.tsx`
+**File location:** `components/journal/SongSearchInput.tsx` + `SongSearchInput.module.css`
 
 **Rules:**
 - Debounce the search query by at least 300ms before firing a request. Do not hit the API on every keystroke.
@@ -79,9 +77,7 @@ export type SpotifyTrack = z.infer<typeof SpotifyTrackSchema>;
 
 Once a user taps a search result, transition to a confirmation screen/modal. The user must explicitly tap "Use This Song" before proceeding.
 
-**File locations:**
-- Web: `components/journal/SongVerificationCard.tsx`
-- Mobile: `apps/mobile/src/components/domain/SongVerificationCard.tsx`
+**File location:** `components/journal/SongVerificationCard.tsx`
 
 **Displays:** Album art (full-size), track title, artist name.
 
@@ -95,9 +91,7 @@ Once a user taps a search result, transition to a confirmation screen/modal. The
 
 This form is shown only after a track has been confirmed in the Zustand store.
 
-**File locations:**
-- Web: `components/journal/EchoEntryForm.tsx` + `EchoEntryForm.module.css`
-- Mobile: `apps/mobile/src/components/domain/EchoEntryForm.tsx`
+**File location:** `components/journal/EchoEntryForm.tsx` + `EchoEntryForm.module.css`
 
 **Fields:**
 - **Mood selector:** A horizontally scrollable row of `MoodBubble` components. Valid options are exactly: `Nostalgic`, `Energetic`, `Melancholic`, `Calm`. At least one must be selected before saving.

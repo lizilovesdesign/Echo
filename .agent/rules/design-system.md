@@ -4,14 +4,13 @@ trigger: always_on
 
 # Design System Rules — Echo
 
-These are the design system and styling execution rules for Echo. They ensure that the interface remains unified, lightweight, and accessible across both the web companion and mobile native ecosystems. Consistency matters more than personal preference.
+These are the design system and styling execution rules for Echo. They ensure that the interface remains unified, lightweight, and accessible across all screen sizes. Consistency matters more than personal preference.
 
 ## Token Files Are the Source of Truth
 
 The project maintains dedicated global token variables that govern the entire visual footprint. The agent must never modify these configurations directly:
 
-- **Web / API Component Tokens:** Exported as CSS Custom Properties (CSS variables) available globally from the project's root styling configurations.
-- **Mobile Native Tokens:** Maintained as a centralized theme configuration object exported from the shared library (e.g., `lib/theme/tokens.ts`).
+- **Component Tokens:** Exported as CSS Custom Properties (CSS variables) available globally from the project's root styling configurations.
 
 ## Mandatory: Use Variables, Never Raw Values
 
@@ -51,15 +50,14 @@ Echo utilizes a highly disciplined layout rounding configuration. Use only these
 
 ## Styling Method
 
-Echo focuses on standard styling methodologies tailored cleanly to each target runtime environment. No `inline style={{}}` attributes are permitted unless handling fluid runtime dynamics (e.g., audio playback tracking bars or custom animated transitions):
+Echo focuses on standard styling methodologies. No `inline style={{}}` attributes are permitted unless handling fluid runtime dynamics (e.g., audio playback tracking bars or custom animated transitions):
 
-- **Next.js Web Layouts:** Implemented using CSS Modules exclusively (`[ComponentName].module.css` structures). No utility frameworks, inline hacks, or runtime CSS-in-JS engines are allowed on the web interface.
-- **Expo Mobile Clients:** Styled using React Native `StyleSheet.create()` primitives bound explicitly to the core design tokens.
+- **CSS Modules:** All component styling uses CSS Modules exclusively (`[ComponentName].module.css` structures). No utility frameworks, inline hacks, or runtime CSS-in-JS engines are allowed.
 
 ## Mobile-First & Quick-Capture Accessibility
 
-Echo is built from the ground up for intimate, single-handed interaction. The architecture requires that writing and navigation feel seamless.
+Echo is built from the ground up for intimate, single-handed interaction on mobile devices. The architecture requires that writing and navigation feel seamless:
 
-- **Web Responsiveness:** All web companion layouts must be authored mobile-first. Default rules dictate mobile structures; layout modifications for viewports wider than tablet boundaries must be handled safely via `@media (min-width: 768px)` queries.
+- **Mobile-First CSS:** All layouts must be authored mobile-first. Default rules dictate mobile structures; layout modifications for viewports wider than tablet boundaries must be handled safely via `@media (min-width: 768px)` queries.
 - **Physical Touch Targets:** To remove input friction and prevent accidental missed inputs, all pressable buttons, mood tag selectors, and search result list rows must maintain an absolute minimum touch bounding box of `44px x 44px`.
 - **Introspective Constraints:** Layout presentation must prioritize clean whitespace, strong typography hierarchy, and distraction-free framing to help users reflect and write comfortably.

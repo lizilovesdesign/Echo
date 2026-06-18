@@ -39,6 +39,31 @@ a {
   text-decoration: none;
 }
 
+/* Mobile tap highlight reset */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth scrolling, but only when the user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prevent horizontal overflow on small screens */
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Ensure safe area insets for modern mobile browsers */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
 /* Light theme class overrides system dark mode preference */
 :root.light-theme {
   --color-primary: hsl(9, 100%, 70%);

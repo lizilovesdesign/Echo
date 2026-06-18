@@ -16,6 +16,12 @@
   width: 100%;
 }
 
+@media (max-width: 480px) {
+  .inner {
+    padding: 10px 12px;
+  }
+}
+
 .left {
   display: flex;
   align-items: center;

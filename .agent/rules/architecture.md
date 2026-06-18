@@ -8,49 +8,46 @@ These rules describe how Echo is put together. Every agent building features mus
 
 ## The Stack
 
-Echo is a modern mobile and web-companion ecosystem utilizing a "Web-First" foundation for logic. The core engine is a Next.js application using the App Router, written in TypeScript, backed by PostgreSQL on Supabase through the Prisma ORM[cite: 7]. The mobile application is built using React Native and Expo[cite: 7]. External music data is integrated strictly via the Spotify Web API[cite: 7]. There is no separate backend service; serverless Next.js Route Handlers act as the unified API layer handling core logic for both the web and native mobile apps[cite: 7].
+Echo is a responsive single-page web application built with Next.js (App Router) in TypeScript, backed by PostgreSQL on Supabase through the Prisma ORM. External music data is integrated strictly via the Spotify Web API. There is no separate backend service; serverless Next.js Route Handlers act as the unified API layer. The app is designed mobile-first and is installable as a PWA.
 
 ## Directory Layout
 
 echo/
-├── app/                              # Next.js Web App & Universal API Layer
-│   ├── (marketing)/                  # Public landing pages and logged-out web views
-│   ├── (journal)/                    # Web companion authenticated dashboard & feed
+├── app/                              # Next.js App Router (pages & API)
+│   ├── (marketing)/                  # Public landing pages and logged-out views
+│   ├── (journal)/                    # Authenticated journal dashboard & feed
 │   ├── api/
 │   │   ├── auth/                     # Supabase authentication helper endpoints
 │   │   ├── music/                    # Spotify API search and metadata verification proxy
 │   │   └── echoes/                   # Core Journal Entry CRUD operations
-│   ├── layout.tsx                    # Global root web layout
-│   └── page.tsx                      # Web entry page
-├── apps/
-│   └── mobile/                       # React Native (Expo) Mobile client
-│       ├── assets/                   # Local application icons and splash graphics
-│       ├── src/
-│       │   ├── components/           # Mobile native UI components
-│       │   ├── hooks/                # Native state hooks (React Query, Zustand)
-│       │   └── screens/              # Core mobile views (Timeline, Search, Entry)
-│       ├── App.tsx                   # Expo entry point
-│       └── app.json                  # Expo app configuration
-├── components/                       # Shared Web UI components
+│   ├── layout.tsx                    # Global root layout
+│   ├── manifest.ts                   # PWA web manifest
+│   └── providers.tsx                 # Client-side providers (React Query, Theme)
+├── components/                       # UI components
 │   ├── ui/                           # Base design primitives (Buttons, Inputs, Cards)
 │   ├── journal/                      # Journal and timeline specific layouts
-│   └── shared/                       # Global web utilities
-├── lib/                              # Shared Business Logic & Configurations
+│   └── shared/                       # Global utilities (Header, etc.)
+├── lib/                              # Business Logic & Configurations
 │   ├── prisma.ts                     # Prisma client singleton instance
-│   ├── supabase.ts                   # Supabase authentication server client
+│   ├── supabase-client.ts            # Supabase browser client
+│   ├── supabase-server.ts            # Supabase server client
 │   ├── spotify.ts                    # Spotify Web API integration wrapper
-│   └── validators/                   # Zod parsing structures for structural data validation
+│   ├── stores/                       # Zustand stores
+│   └── validators/                   # Zod parsing structures
 ├── prisma/
 │   ├── schema.prisma                 # Database schema source of truth
 │   └── migrations/                   # Generated PostgreSQL migration scripts
-└── public/                           # Static assets for the web ecosystem
+├── public/                           # Static assets (icons, SW, favicon)
+├── Color-Style/                      # Design tokens
+├── workflows/                        # Step-by-step task recipes
+└── skills/                           # Specialized skill instructions
 
 
 ## Rendering & Performance Rules
 
-The mobile application running on Expo is client-side rendered, requiring aggressive loading states, optimistic UI updates, and heavy server-state caching to achieve the target sub-20 second "Quick-Capture" workflow[cite: 7]. 
+Journal layout pages must utilize server-side data fetching via Next.js Server Components by default to load user logs instantly without client-side waterfalls. Client components (`'use client'`) must be restricted to interactive nodes such as buttons, search query strings, and input shells.
 
-For the web companion interface, journal layout feeds must utilize server-side data fetching via Next.js Server Components by default to load user logs instantly without client-side waterfalls. Client components (`'use client'`) must be restricted to interactive nodes such as buttons, search query strings, and input shells.
+## Data Flow
 
 ## Data Flow
 
@@ -78,7 +75,7 @@ The Prisma Client instance must be loaded from `lib/prisma.ts`, which exports a 
 
 ## Authentication
 
-Authentication is handled securely via Supabase Auth[cite: 7]. Next.js route handlers verify JWT authorization headers passed from client requests, ensuring unauthenticated traffic is short-circuited with a `401 Unauthorized` status[cite: 7]. React Native stores auth tokens securely using Expo SecureStore. Client components receive auth parameters passed down as props from parent server environments or read securely from established custom authentication providers.
+Authentication is handled securely via Supabase Auth[cite: 7]. Next.js route handlers verify JWT authorization headers passed from client requests, ensuring unauthenticated traffic is short-circuited with a `401 Unauthorized` status[cite: 7]. Client components receive auth parameters passed down as props from parent server environments or read securely from established custom authentication providers.
 
 ## Error Handling
 
@@ -90,8 +87,8 @@ Raw runtime execution faults, server stack traces, or internal database engine l
 
 ## Environments
 
-- `development` runs locally using a local or test PostgreSQL instance, simulated Expo clients, and developer Spotify API keys.
-- `production` runs on Vercel and the live Expo distribution track, tied to the production Supabase PostgreSQL engine and production-tier API keys[cite: 7].
+- `development` runs locally using a local or test PostgreSQL instance and developer Spotify API keys.
+- `production` runs on Vercel, tied to the production Supabase PostgreSQL engine and production-tier API keys[cite: 7].
 
 ## What Not to Do
 

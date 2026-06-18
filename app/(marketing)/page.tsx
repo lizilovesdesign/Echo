@@ -160,7 +160,7 @@ export default function LandingPage() {
               <div className={styles.footerCol}>
                 <h4 className={styles.footerColTitle}>Product</h4>
                 <a href="#" className={styles.footerColLink}>Features</a>
-                <a href="#" className={styles.footerColLink}>Mobile App</a>
+                <a href="#" className={styles.footerColLink}>PWA Guide</a>
                 <a href="#" className={styles.footerColLink}>Changelog</a>
               </div>
               <div className={styles.footerCol}>

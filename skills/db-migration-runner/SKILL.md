@@ -13,7 +13,7 @@ Schema changes must follow this exact sequential cadence:
 1. Modify model parameters inside `prisma/schema.prisma`.
 2. Execute `npx prisma migrate dev --name <descriptive_name>` to generate a local migration tracking script.
 3. Review the generated SQL script inside `prisma/migrations/<timestamp>_<name>/migration.sql` completely from end to end. Do not bypass this validation step. Prisma is highly reliable, but it can misinterpret complex relational intentions.
-4. Launch the application locally, trigger the affected UI components (Web or Expo mobile views), and ensure data reads/writes work correctly.
+4. Launch the application locally, trigger the affected UI components, and ensure data reads/writes work correctly.
 5. Commit the schema changes and the generated `migration.sql` files together in the same version control batch.
 6. Deploy. Within the continuous integration track or the deployment host (Vercel), `npx prisma migrate deploy` is triggered automatically to safely apply pending scripts to production.
 

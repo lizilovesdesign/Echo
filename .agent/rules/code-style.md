@@ -8,7 +8,7 @@ These are the code-style rules for Echo. They exist so the codebase reads the sa
 
 ## Language
 
-TypeScript everywhere. No JavaScript files in `app/`, `apps/mobile/`, `components/`, or `lib/`. Configuration files like `next.config.mjs`, `tailwind.config.ts`, or Expo's `app.json` are the only exceptions.
+TypeScript everywhere. No JavaScript files in `app/`, `components/`, or `lib/`. Configuration files like `next.config.mjs` are the only exceptions.
 
 Strict mode is on. Do not disable `strict`, `noImplicitAny`, or `strictNullChecks` to make an error go away. Fix the type instead.
 
@@ -40,13 +40,13 @@ Do not use `any`. If you genuinely do not know the shape of something (e.g., raw
 
 Use zod for anything that comes from outside the application boundary: Spotify API search results, API request bodies, authentication state payloads, and environment variables. Do not trust the compiler's types at these boundaries.
 
-## React & React Native
+## React
 
 Write function components, not class components. Use hooks. Destructure props in the function signature. Rely on TypeScript type inference for component returns unless an explicit return type improves clarity.
 
-On the web, Server Components are the default. Add `"use client"` only when the component needs interactivity, browser APIs, or client-side global state management (Zustand). If a component is marked `"use client"` but lacks state, hooks, or event handlers, it must be rewritten as a server component.
+Server Components are the default. Add `"use client"` only when the component needs interactivity, browser APIs, or client-side global state management (Zustand). If a component is marked `"use client"` but lacks state, hooks, or event handlers, it must be rewritten as a server component.
 
-On mobile (Expo), maintain clean functional boundaries. Keep components small. If any component file (Web or Mobile) exceeds roughly 200 lines, extract internal layout fragments into smaller sub-components.
+Keep components small. If any component file exceeds roughly 200 lines, extract internal layout fragments into smaller sub-components.
 
 ## Formatting
 
@@ -86,11 +86,9 @@ Do not import from the `app/` folder into `components/` or `lib/`. Dependencies 
 
 ## Styling
 
-**Web Companion (Next.js):** Use CSS Modules exclusively. Every component that requires styles must have a co-located `[ComponentName].module.css` file. Import it as `import styles from './ComponentName.module.css'` and apply classes via `className={styles.myClass}`. No Tailwind, no `styled-components`, no runtime CSS-in-JS, and no global CSS class strings.
+**Styling:** Use CSS Modules exclusively. Every component that requires styles must have a co-located `[ComponentName].module.css` file. Import it as `import styles from './ComponentName.module.css'` and apply classes via `className={styles.myClass}`. No Tailwind, no `styled-components`, no runtime CSS-in-JS, and no global CSS class strings.
 
-**Mobile Native (Expo):** Use `StyleSheet.create()` from React Native. All style values must reference semantic tokens from `lib/theme/tokens.ts` — never hardcoded hex codes or raw pixel numbers. NativeWind is not used in this project.
-
-In both environments, inline `style={{}}` attributes are forbidden except for dynamic, runtime-computed values that cannot be expressed through static class definitions (e.g., an animated playback progress bar width).
+Inline `style={{}}` attributes are forbidden except for dynamic, runtime-computed values that cannot be expressed through static class definitions (e.g., an animated playback progress bar width).
 
 ## What Not to Do
 

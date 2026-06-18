@@ -1,6 +1,6 @@
 # Workflow: Add Authentication to a Route or Page
 
-Load this workflow whenever you need to protect a Next.js page, a Route Handler, or an Expo mobile screen behind authentication. Every piece of content in Echo is private — there are no public-facing journal pages.
+Load this workflow whenever you need to protect a Next.js page or a Route Handler behind authentication. Every piece of content in Echo is private — there are no public-facing journal pages.
 
 **Load before starting:** `.agent/rules/security.md`, `.agent/rules/architecture.md`
 
@@ -8,11 +8,10 @@ Load this workflow whenever you need to protect a Next.js page, a Route Handler,
 
 ## Overview
 
-Authentication is handled by Supabase Auth. The web and mobile clients use different mechanisms to persist and transmit the session, but both ultimately produce a verified `userId` that gets bound to every database operation.
+Authentication is handled by Supabase Auth. The session is persisted via secure cookies and produces a verified `userId` that gets bound to every database operation.
 
 ```
-Web:     Secure cookie → Supabase server client → userId
-Mobile:  Expo SecureStore → Bearer token → verifyAuthSession() → userId
+Secure cookie → Supabase server client → userId
 ```
 
 ---
@@ -100,38 +99,6 @@ export async function GET(req: NextRequest) {
 
 ---
 
-## Protecting a Mobile Screen (Expo)
-
-On mobile, the auth state is managed by the Supabase JS client, which reads the token from Expo SecureStore.
-
-Wrap the authenticated portion of the app in a guard component:
-
-```tsx
-// apps/mobile/src/components/shared/AuthGuard.tsx
-import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
-import { supabase } from '@/lib/supabase';
-
-export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
-        router.replace('/login');
-      }
-    });
-    return () => listener.subscription.unsubscribe();
-  }, []);
-
-  return <>{children}</>;
-}
-```
-
-Wrap the root navigator or the authenticated tab group with `<AuthGuard>`.
-
----
-
 ## Implementing Login & Logout
 
 ### Login
@@ -156,7 +123,7 @@ On logout, invalidate the session on both the client and the server:
 ```ts
 export async function signOut() {
   const supabase = createBrowserSupabaseClient();
-  await supabase.auth.signOut(); // Clears cookie (web) or SecureStore (mobile)
+  await supabase.auth.signOut(); // Clears auth cookie
 }
 ```
 
@@ -169,6 +136,5 @@ After calling `signOut()`, redirect to `/` or `/login`. Do not leave the user on
 - [ ] Unauthenticated user visiting a protected web page → redirected to `/login`.
 - [ ] Unauthenticated `POST` to any `app/api/echoes/` → `401` response.
 - [ ] Authenticated user attempting to read/modify another user's entry by passing a different `userId` → `403` response.
-- [ ] After logout on web → auth cookie is cleared, protected pages redirect to `/login`.
-- [ ] After logout on mobile → SecureStore token is cleared, app navigates to the login screen.
+- [ ] After logout → auth cookie is cleared, protected pages redirect to `/login`.
 - [ ] Session token is never logged, never returned in an API response, and never stored in `localStorage`.

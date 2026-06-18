@@ -13,3 +13,9 @@
   margin: 0 auto;
   padding: 24px 16px;
 }
+
+@media (max-width: 480px) {
+  .main {
+    padding: 20px 12px;
+  }
+}

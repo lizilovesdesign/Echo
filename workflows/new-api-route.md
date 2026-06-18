@@ -9,14 +9,13 @@ Load this workflow whenever you are adding a new Next.js Route Handler under `ap
 ## Step 1 — Decide: Route Handler or Server Action?
 
 **Use a Route Handler** (`app/api/**/route.ts`) when:
-- The consumer is the Expo mobile app.
 - The endpoint is a third-party webhook (e.g., a future payment or notification callback).
 - You need fine-grained HTTP method control.
 
 **Use a Server Action** (`app/(journal)/actions.ts`, marked `'use server'`) when:
-- The consumer is exclusively the Next.js web companion (e.g., a form submission from a Server Component page).
+- The consumer is exclusively a Server Component page (e.g., a form submission).
 
-If in doubt, use a Route Handler — it works for both consumers.
+If in doubt, use a Route Handler.
 
 ---
 
@@ -126,7 +125,7 @@ export async function POST(req: NextRequest) {
 
 ## Step 5 — Register the Validator in `lib/validators/`
 
-If the schema is non-trivial or will be reused elsewhere (e.g., on the mobile client for pre-validation), extract it:
+If the schema is non-trivial or will be reused elsewhere, extract it:
 
 ```
 lib/validators/echoEntry.ts
