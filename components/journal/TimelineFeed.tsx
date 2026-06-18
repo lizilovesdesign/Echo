@@ -46,7 +46,7 @@ export function TimelineFeed() {
         <p className={styles.emptySubtitle}>
           Anchor your first song to a personal memory and mood in under 20 seconds.
         </p>
-        <Link href="/create" passHref>
+        <Link href="/create">
           <Button variant="primary">Create an Echo</Button>
         </Link>
       </div>

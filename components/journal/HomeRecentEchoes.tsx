@@ -1,0 +1,86 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
+import { Music2 } from 'lucide-react';
+import { EchoEntryData } from '@/components/journal/EchoEntryCard';
+import { Spinner } from '@/components/ui/Spinner';
+import styles from './HomeRecentEchoes.module.css';
+
+const moodEmojis: Record<string, string> = {
+  Nostalgic: '🍂',
+  Energetic: '⚡',
+  Melancholic: '🌧️',
+  Calm: '🌊',
+};
+
+export function HomeRecentEchoes() {
+  const { data: entries = [], isLoading } = useQuery<EchoEntryData[]>({
+    queryKey: ['echoes'],
+    queryFn: async () => {
+      const res = await fetch('/api/echoes');
+      if (!res.ok) throw new Error('Failed to load entries');
+      const json = await res.json();
+      return json.data || [];
+    },
+    staleTime: 60_000, // 1 minute
+  });
+
+  // Show only the 3 most recent entries
+  const recent = entries.slice(0, 3);
+
+  return (
+    <section className={styles.section} aria-label="Recent echoes">
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>My Journal</h2>
+        <Link href="/timeline" className={styles.seeAll}>
+          See all
+        </Link>
+      </div>
+
+      {isLoading && (
+        <div className={styles.loadingState}>
+          <Spinner size="sm" />
+        </div>
+      )}
+
+      {!isLoading && recent.length === 0 && (
+        <div className={styles.emptyState}>
+          <Music2 className={styles.emptyIcon} size={32} />
+          <p className={styles.emptyText}>Your first Echo is waiting to be created.</p>
+          <Link href="/create" className={styles.emptyLink}>
+            Start now →
+          </Link>
+        </div>
+      )}
+
+      {!isLoading && recent.length > 0 && (
+        <div className={styles.list}>
+          {recent.map((entry) => (
+            <div key={entry.id} className={styles.entryRow}>
+              <img
+                src={entry.albumArtUrl}
+                alt={`Album art for ${entry.songTitle}`}
+                className={styles.albumArt}
+              />
+              <div className={styles.entryInfo}>
+                <p className={styles.songTitle}>{entry.songTitle}</p>
+                <p className={styles.artist}>{entry.artist}</p>
+              </div>
+              <div className={styles.entryMeta}>
+                <span className={styles.moodEmoji} aria-label={entry.moodTag}>
+                  {moodEmojis[entry.moodTag] ?? '🎵'}
+                </span>
+                <span className={styles.timestamp}>
+                  {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

@@ -20,7 +20,7 @@
   background-color: var(--color-surface);
   color: var(--color-on-surface);
   font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
+  font-size: 16px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }

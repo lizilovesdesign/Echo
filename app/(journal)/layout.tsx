@@ -1,7 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
-import { JournalHeader } from '@/components/shared/JournalHeader';
+import { BottomNav } from '@/components/shared/BottomNav';
 import styles from './layout.module.css';
 
 export default async function JournalLayout({ children }: { children: React.ReactNode }) {
@@ -20,8 +20,8 @@ export default async function JournalLayout({ children }: { children: React.Reac
 
   return (
     <div className={styles.container}>
-      <JournalHeader />
       <main className={styles.main}>{children}</main>
+      <BottomNav />
     </div>
   );
 }

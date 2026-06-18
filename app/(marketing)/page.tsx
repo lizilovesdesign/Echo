@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sun, Moon, Music, ArrowRight, Github, Twitter, Heart, ChevronUp } from 'lucide-react';
+import { Sun, Moon, Music, ArrowRight, Heart } from 'lucide-react';
 import { useTheme } from '../providers';
+import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import styles from './page.module.css';
 
@@ -43,6 +44,7 @@ const floatingEntries = [
 ];
 
 export default function LandingPage() {
+  const mounted = useMounted();
   const { theme, toggleTheme } = useTheme();
   const currentYear = new Date().getFullYear();
 
@@ -60,10 +62,10 @@ export default function LandingPage() {
             className={styles.themeToggle}
             aria-label="Toggle dark/light theme"
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
           </button>
 
-          <Link href="/login" passHref>
+          <Link href="/login">
             <span className={styles.loginLink}>Log in</span>
           </Link>
         </div>
@@ -100,9 +102,9 @@ export default function LandingPage() {
           </p>
 
           <div className={styles.ctaGroup}>
-            <Link href="/login" passHref>
+            <Link href="/login">
               <Button size="md" variant="primary" className={styles.heroCta}>
-                Get Echo Free <ArrowRight size={16} className={styles.arrow} />
+                Join Echo <ArrowRight size={16} className={styles.arrow} />
               </Button>
             </Link>
           </div>
@@ -127,15 +129,22 @@ export default function LandingPage() {
             <p>A optimized workflow to catalog a feeling, associate the soundtrack, and save the memory instantly.</p>
           </div>
           <div className={styles.featureItem}>
-            <div className={styles.featureIcon}>🎵</div>
-            <h3>Spotify Verification</h3>
-            <p>Every song is searched and verified against Spotify Web API metadata to preserve accuracy.</p>
+            <div className={styles.featureIcon}>💭</div>
+            <h3>Musical Time Capsule</h3>
+            <p>Every entry freezes a moment in time — revisit who you were through the songs that defined that feeling.</p>
           </div>
         </div>
       </section>
 
       <footer className={styles.footer}>
-        <div className={styles.footerWave} />
+        <div className={styles.notesContainer}>
+          <span className={`${styles.floatingNote} ${styles.note1}`}>♪</span>
+          <span className={`${styles.floatingNote} ${styles.note2}`}>♫</span>
+          <span className={`${styles.floatingNote} ${styles.note3}`}>♩</span>
+          <span className={`${styles.floatingNote} ${styles.note4}`}>♬</span>
+          <span className={`${styles.floatingNote} ${styles.note5}`}>♪</span>
+          <span className={`${styles.floatingNote} ${styles.note6}`}>♫</span>
+        </div>
         <div className={styles.footerInner}>
           <div className={styles.footerTop}>
             <div className={styles.footerBrand}>
@@ -146,35 +155,6 @@ export default function LandingPage() {
               <p className={styles.footerTagline}>
                 Permanently archiving the soundtrack of your life.
               </p>
-              <div className={styles.footerSocial}>
-                <a href="#" className={styles.socialLink} aria-label="Twitter">
-                  <Twitter size={16} />
-                </a>
-                <a href="#" className={styles.socialLink} aria-label="GitHub">
-                  <Github size={16} />
-                </a>
-              </div>
-            </div>
-
-            <div className={styles.footerColumns}>
-              <div className={styles.footerCol}>
-                <h4 className={styles.footerColTitle}>Product</h4>
-                <a href="#" className={styles.footerColLink}>Features</a>
-                <a href="#" className={styles.footerColLink}>PWA Guide</a>
-                <a href="#" className={styles.footerColLink}>Changelog</a>
-              </div>
-              <div className={styles.footerCol}>
-                <h4 className={styles.footerColTitle}>Company</h4>
-                <a href="#" className={styles.footerColLink}>About</a>
-                <a href="#" className={styles.footerColLink}>Blog</a>
-                <a href="#" className={styles.footerColLink}>Contact</a>
-              </div>
-              <div className={styles.footerCol}>
-                <h4 className={styles.footerColTitle}>Legal</h4>
-                <a href="#" className={styles.footerColLink}>Privacy</a>
-                <a href="#" className={styles.footerColLink}>Terms</a>
-                <a href="#" className={styles.footerColLink}>Cookies</a>
-              </div>
             </div>
           </div>
 
@@ -190,8 +170,12 @@ export default function LandingPage() {
                 className={styles.footerThemeBtn}
                 aria-label="Switch theme"
               >
-                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+                {mounted ? (theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />) : <div style={{ width: 14, height: 14 }} />}
+                {mounted ? (
+                  <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
+                ) : (
+                  <span style={{ display: 'inline-block', width: 70 }} />
+                )}
               </button>
             </div>
           </div>

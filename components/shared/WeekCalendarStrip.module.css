@@ -1,0 +1,59 @@
+/* WeekCalendarStrip.module.css */
+
+.strip {
+  padding: 8px 0 16px;
+}
+
+.days {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.dayCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 40px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  cursor: default;
+  transition: background-color 0.15s ease;
+}
+
+.dayAbbrev {
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: var(--font-label-medium-font-weight);
+  letter-spacing: var(--font-label-small-letter-spacing);
+  color: var(--color-on-surface-variant);
+  text-transform: uppercase;
+}
+
+.dayNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-family: var(--font-label-large-font-family);
+  font-size: var(--font-label-large-font-size);
+  font-weight: var(--font-label-large-font-weight);
+  color: var(--color-on-surface-variant);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Today highlight */
+.todayCell .dayAbbrev {
+  color: var(--color-primary);
+}
+
+.todayCell .dayNumber {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 700;
+  box-shadow: 0 2px 8px hsla(9, 100%, 70%, 0.35);
+}

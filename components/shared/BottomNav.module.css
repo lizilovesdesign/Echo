@@ -1,0 +1,110 @@
+/* BottomNav.module.css */
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  background-color: var(--color-surface-container-lowest);
+  border-top: 1px solid var(--color-outline-variant);
+
+  /* Safe area for home indicator on iOS */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Subtle frosted glass effect */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  position: relative;
+}
+
+/* Left / right groups hold the nav tab items */
+.group {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.group:last-child {
+  justify-content: flex-end;
+}
+
+/* Individual tab item */
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.item:hover {
+  color: var(--color-primary);
+}
+
+.item.active {
+  color: var(--color-primary);
+}
+
+.icon {
+  transition: transform 0.15s ease;
+}
+
+.item.active .icon {
+  transform: translateY(-1px);
+}
+
+.label {
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: var(--font-label-medium-font-weight);
+  letter-spacing: var(--font-label-small-letter-spacing);
+  line-height: 1;
+}
+
+/* Floating Action Button */
+.fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  text-decoration: none;
+  box-shadow: 0 4px 16px hsla(9, 100%, 70%, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Lift the FAB above the bar */
+  margin-top: -20px;
+}
+
+.fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 22px hsla(9, 100%, 70%, 0.55);
+}
+
+.fab:active {
+  transform: scale(0.96);
+}

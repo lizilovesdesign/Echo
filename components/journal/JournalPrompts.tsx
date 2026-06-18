@@ -1,0 +1,77 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import styles from './JournalPrompts.module.css';
+
+interface Prompt {
+  id: string;
+  emoji: string;
+  title: string;
+  question: string;
+  accent: 'rose' | 'lavender' | 'amber' | 'mint';
+}
+
+const PROMPTS: Prompt[] = [
+  {
+    id: 'reflect',
+    emoji: '🌱',
+    title: 'Pause & reflect',
+    question: 'What song has been living in your head today?',
+    accent: 'rose',
+  },
+  {
+    id: 'intentions',
+    emoji: '☀️',
+    title: 'Set intentions',
+    question: 'What feeling do you want to soundtrack right now?',
+    accent: 'amber',
+  },
+  {
+    id: 'memory',
+    emoji: '🎞️',
+    title: 'Capture a memory',
+    question: 'Which song teleports you to a specific moment?',
+    accent: 'lavender',
+  },
+  {
+    id: 'gratitude',
+    emoji: '💫',
+    title: 'Express gratitude',
+    question: 'Name a track that always lifts your spirit.',
+    accent: 'mint',
+  },
+];
+
+export function JournalPrompts() {
+  return (
+    <section className={styles.section} aria-label="Journal prompts">
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Quick Journal</h2>
+        <Link href="/timeline" className={styles.seeAll}>
+          See all
+        </Link>
+      </div>
+
+      <div className={styles.scrollContainer}>
+        <div className={styles.promptList}>
+          {PROMPTS.map((prompt) => (
+            <Link
+              key={prompt.id}
+              href={`/create?prompt=${prompt.id}`}
+              className={`${styles.promptCard} ${styles[prompt.accent]}`}
+              aria-label={`Start: ${prompt.title}`}
+            >
+              <span className={styles.emoji} aria-hidden="true">
+                {prompt.emoji}
+              </span>
+              <h3 className={styles.promptTitle}>{prompt.title}</h3>
+              <p className={styles.promptQuestion}>{prompt.question}</p>
+              <span className={styles.cta}>Today</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -12,11 +12,13 @@ export default function TimelinePage() {
   return (
     <div className={styles.container}>
       <header className={styles.pageHeader}>
-        <h1 className={styles.title}>Your Timeline</h1>
+        <h1 className={styles.title}>Memories</h1>
         <p className={styles.subtitle}>A private archive of your music and feelings.</p>
       </header>
       
       <TimelineFeed />
+
+      <div className={styles.navSpacer} aria-hidden="true" />
     </div>
   );
 }

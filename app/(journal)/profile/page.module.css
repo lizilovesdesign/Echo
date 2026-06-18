@@ -1,3 +1,5 @@
+/* Profile page */
+
 .container {
   display: flex;
   flex-direction: column;
@@ -20,6 +22,28 @@
 }
 
 .subtitle {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+}
+
+.comingSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  border-radius: 12px;
+  background-color: var(--color-surface-container-low);
+  text-align: center;
+}
+
+.icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.message {
   font-family: var(--font-body-medium-font-family);
   font-size: var(--font-body-medium-font-size);
   color: var(--color-on-surface-variant);

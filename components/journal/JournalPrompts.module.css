@@ -1,0 +1,179 @@
+/* JournalPrompts.module.css */
+
+.section {
+  margin-top: 32px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-family: var(--font-headline-small-font-family);
+  font-size: var(--font-headline-small-font-size);
+  font-weight: var(--font-headline-small-font-weight);
+  letter-spacing: var(--font-headline-small-letter-spacing);
+  color: var(--color-on-background);
+}
+
+.seeAll {
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: var(--font-label-medium-font-weight);
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.seeAll:hover {
+  opacity: 0.75;
+}
+
+/* Horizontal scroll container — bleeds past padding so cards appear full-width */
+.scrollContainer {
+  margin: 0 -16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.promptList {
+  display: flex;
+  gap: 12px;
+  padding: 4px 16px 16px;
+  width: max-content;
+}
+
+/* Prompt card base */
+.promptCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+  flex-shrink: 0;
+  padding: 20px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.promptCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+}
+
+.promptCard:active {
+  transform: translateY(0px);
+}
+
+.emoji {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.promptTitle {
+  font-family: var(--font-label-large-font-family);
+  font-size: var(--font-label-large-font-size);
+  font-weight: 700;
+  letter-spacing: var(--font-label-large-letter-spacing);
+  line-height: 1.2;
+}
+
+.promptQuestion {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  font-weight: var(--font-body-medium-font-weight);
+  letter-spacing: var(--font-body-medium-letter-spacing);
+  line-height: var(--font-body-medium-line-height);
+  flex: 1;
+  opacity: 0.85;
+}
+
+.cta {
+  display: inline-block;
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: var(--font-label-medium-font-weight);
+  letter-spacing: var(--font-label-small-letter-spacing);
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.35);
+  width: fit-content;
+  margin-top: 4px;
+}
+
+/* Accent colour variants */
+.rose {
+  background-color: hsl(350, 80%, 93%);
+  color: hsl(350, 60%, 30%);
+}
+
+.amber {
+  background-color: hsl(38, 100%, 92%);
+  color: hsl(30, 70%, 28%);
+}
+
+.lavender {
+  background-color: hsl(260, 60%, 93%);
+  color: hsl(260, 40%, 30%);
+}
+
+.mint {
+  background-color: hsl(155, 55%, 90%);
+  color: hsl(155, 45%, 25%);
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .rose {
+    background-color: hsl(350, 40%, 22%);
+    color: hsl(350, 70%, 85%);
+  }
+
+  .amber {
+    background-color: hsl(38, 40%, 20%);
+    color: hsl(38, 80%, 82%);
+  }
+
+  .lavender {
+    background-color: hsl(260, 30%, 22%);
+    color: hsl(260, 60%, 85%);
+  }
+
+  .mint {
+    background-color: hsl(155, 30%, 18%);
+    color: hsl(155, 55%, 80%);
+  }
+}
+
+.dark .rose,
+.dark-theme .rose {
+  background-color: hsl(350, 40%, 22%);
+  color: hsl(350, 70%, 85%);
+}
+
+.dark .amber,
+.dark-theme .amber {
+  background-color: hsl(38, 40%, 20%);
+  color: hsl(38, 80%, 82%);
+}
+
+.dark .lavender,
+.dark-theme .lavender {
+  background-color: hsl(260, 30%, 22%);
+  color: hsl(260, 60%, 85%);
+}
+
+.dark .mint,
+.dark-theme .mint {
+  background-color: hsl(155, 30%, 18%);
+  color: hsl(155, 55%, 80%);
+}

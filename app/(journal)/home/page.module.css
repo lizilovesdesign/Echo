@@ -1,0 +1,11 @@
+/* Home page */
+
+.page {
+  padding: 16px 16px 0;
+}
+
+/* Breathing room at the bottom so content clears the 64px fixed nav bar
+   plus any iOS safe-area inset */
+.navSpacer {
+  height: calc(64px + env(safe-area-inset-bottom, 0px) + 16px);
+}

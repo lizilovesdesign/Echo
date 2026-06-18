@@ -1,0 +1,144 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-title-small-font-family);
+  font-size: var(--font-title-small-font-size);
+  font-weight: 700;
+  color: var(--color-on-background);
+}
+
+.logoIcon {
+  color: var(--color-primary);
+}
+
+.themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.themeToggle:hover {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.card {
+  max-width: 440px;
+  width: 100%;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.cardHeader h2 {
+  font-family: var(--font-title-large-font-family);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.cardHeader p {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+  line-height: var(--font-body-medium-line-height);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.submitBtn {
+  margin-top: 8px;
+  width: 100%;
+  font-weight: 500;
+}
+
+.spinner {
+  margin-right: 8px;
+}
+
+.error {
+  color: var(--color-error);
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  font-weight: 500;
+  text-align: center;
+}
+
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.successIcon {
+  color: hsl(140, 70%, 45%);
+}
+
+.successState h2 {
+  font-family: var(--font-title-large-font-family);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.successState p {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+}

@@ -1,67 +1,123 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Music, Sun, Moon } from 'lucide-react';
+import { Music, Sun, Moon, ArrowLeft } from 'lucide-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
+import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
 import styles from './page.module.css';
 
+function validateDisplayName(name: string, isSignUp: boolean): string {
+  if (!isSignUp) return '';
+  if (!name.trim()) return 'A name or nickname is required.';
+  if (name.trim().length < 2) return 'Must be at least 2 characters.';
+  if (name.trim().length > 50) return 'Must be 50 characters or fewer.';
+  return '';
+}
+
+function validateEmail(email: string): string {
+  if (!email.trim()) return 'Email is required.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Enter a valid email address.';
+  return '';
+}
+
+function validatePassword(password: string, isSignUp: boolean): string {
+  if (!password) return 'Password is required.';
+  if (isSignUp) {
+    if (password.length < 8) return 'Must be at least 8 characters.';
+    if (!/[a-zA-Z]/.test(password)) return 'Include at least one letter.';
+    if (!/\d/.test(password)) return 'Include at least one number.';
+  }
+  return '';
+}
+
+function getPasswordStrength(password: string): { label: string; score: number } {
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (/[a-zA-Z]/.test(password)) score++;
+  if (/\d/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+  const labels = ['', 'Weak', 'Fair', 'Medium', 'Strong', 'Very Strong'];
+  return { label: labels[score] || '', score: Math.min(score, 5) };
+}
+
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  
+
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+
+  const mounted = useMounted();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
 
+  const nameError = touched.displayName ? validateDisplayName(displayName, isSignUp) : '';
+  const emailError = touched.email ? validateEmail(email) : '';
+  const passwordError = touched.password ? validatePassword(password, isSignUp) : '';
+  const strength = isSignUp && password ? getPasswordStrength(password) : null;
+
+  const handleBlur = useCallback((field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ displayName: true, email: true, password: true });
+
+    const errs = {
+      displayName: validateDisplayName(displayName, isSignUp),
+      email: validateEmail(email),
+      password: validatePassword(password, isSignUp),
+    };
+
+    if (errs.displayName || errs.email || errs.password) return;
+
     setLoading(true);
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (!email || !password) {
-      setErrorMsg('Please enter both your email and password.');
-      setLoading(false);
-      return;
-    }
-
     try {
       if (isSignUp) {
-        // Register a new account
+        const trimmedName = displayName.trim();
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/auth/callback`,
+            data: {
+              full_name: trimmedName,
+            },
           },
         });
 
         if (error) throw error;
 
         if (data.session) {
-          // Send welcome email in the background
           fetch('/api/auth/after-signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: email.split('@')[0] }),
+            body: JSON.stringify({ name: trimmedName }),
           }).catch(() => {});
 
-          router.push('/timeline');
+          router.push('/home');
         } else {
           setSuccessMsg('Verification email sent! Check your inbox to confirm your private archive.');
         }
       } else {
-        // Sign into an existing account
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -69,15 +125,59 @@ export default function LoginPage() {
 
         if (error) throw error;
 
-        // Force a page reload/redirect to populate the server context
         router.refresh();
-        router.push('/timeline');
+        router.push('/home');
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email.trim()) {
+      setTouched((prev) => ({ ...prev, email: true }));
+      return;
+    }
+
+    const emailErr = validateEmail(email);
+    if (emailErr) {
+      setTouched((prev) => ({ ...prev, email: true }));
+      return;
+    }
+
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+      });
+      if (error) throw error;
+      setResetEmailSent(true);
+      setSuccessMsg('Password reset link sent! Check your inbox.');
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to send reset email.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleMode = () => {
+    setIsSignUp(!isSignUp);
+    setDisplayName('');
+    setErrorMsg('');
+    setSuccessMsg('');
+    setTouched({});
+    setShowForgotPassword(false);
+    setResetEmailSent(false);
+  };
+
+  const handleCancelReset = () => {
+    setShowForgotPassword(false);
+    setResetEmailSent(false);
+    setSuccessMsg('');
+    setErrorMsg('');
   };
 
   return (
@@ -92,75 +192,144 @@ export default function LoginPage() {
           className={styles.themeToggle}
           aria-label="Toggle dark/light theme"
         >
-          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
         </button>
       </header>
 
       <main className={styles.main}>
         <Card className={styles.loginCard}>
           <div className={styles.cardHeader}>
-            <h2>{isSignUp ? 'Create your private archive' : 'Welcome to Echo'}</h2>
-            <p>
-              {isSignUp
-                ? 'Begin anchoring memories to your personal music diary.'
-                : 'Sign in to access your secure timeline of musical reflections.'}
-            </p>
+            {showForgotPassword ? (
+              <>
+                <h2>Reset your password</h2>
+                <p>Enter your email and we will send you a reset link.</p>
+              </>
+            ) : (
+              <>
+                <h2>{isSignUp ? 'Create your private archive' : 'Welcome to Echo'}</h2>
+                <p>
+                  {isSignUp
+                    ? 'Begin anchoring memories to your personal music diary.'
+                    : 'Sign in to access your secure timeline of musical reflections.'}
+                </p>
+              </>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>
+            {isSignUp && (
+              <Input
+                label="Name or Nickname"
+                type="text"
+                placeholder="What should we call you?"
+                value={displayName}
+                onChange={(e) => { setDisplayName(e.target.value); }}
+                onBlur={() => handleBlur('displayName')}
+                disabled={loading}
+                error={nameError}
+                required
+                autoComplete="nickname"
+              />
+            )}
+
             <Input
               label="Email Address"
               type="email"
               placeholder="you@domain.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); }}
+              onBlur={() => handleBlur('email')}
               disabled={loading}
+              error={emailError}
               required
             />
-            
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              required
-            />
+
+            {!showForgotPassword && (
+              <div className={styles.passwordWrapper}>
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); }}
+                  onBlur={() => handleBlur('password')}
+                  disabled={loading}
+                  error={passwordError}
+                  required
+                />
+
+                {strength && (
+                  <div className={styles.strengthIndicator}>
+                    <div className={styles.strengthHeader}>
+                      <span className={styles.strengthLabelText}>Password Strength</span>
+                      <span className={styles.strengthBadge} data-level={strength.score}>{strength.label}</span>
+                    </div>
+                    <div className={styles.strengthTrack}>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                          key={i}
+                          className={`${styles.strengthSegment} ${i <= strength.score ? styles.active : ''}`}
+                          data-level={strength.score}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!isSignUp && !resetEmailSent && (
+                  <button
+                    type="button"
+                    className={styles.forgotLink}
+                    onClick={() => setShowForgotPassword(true)}
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
+            )}
 
             {errorMsg && <p className={styles.error}>{errorMsg}</p>}
             {successMsg && <p className={styles.success}>{successMsg}</p>}
 
-            <Button type="submit" disabled={loading} className={styles.submitBtn}>
-              {loading ? (
-                <>
-                  <Spinner size="sm" className={styles.spinner} />
-                  Authenticating...
-                </>
-              ) : isSignUp ? (
-                'Create Account'
-              ) : (
-                'Sign In'
-              )}
-            </Button>
+            {showForgotPassword ? (
+              <div className={styles.resetActions}>
+                <Button type="button" disabled={loading} className={styles.submitBtn} onClick={handleForgotPassword}>
+                  {loading ? <><Spinner size="sm" className={styles.spinner} /> Sending...</> : 'Send Reset Link'}
+                </Button>
+                <button type="button" className={styles.backLink} onClick={handleCancelReset}>
+                  <ArrowLeft size={14} /> Back to sign in
+                </button>
+              </div>
+            ) : (
+              <Button type="submit" disabled={loading} className={styles.submitBtn}>
+                {loading ? (
+                  <>
+                    <Spinner size="sm" className={styles.spinner} />
+                    Authenticating...
+                  </>
+                ) : isSignUp ? (
+                  'Create Account'
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            )}
           </form>
 
-          <div className={styles.toggleRow}>
-            <span>
-              {isSignUp ? 'Already have a private log?' : 'First time journaling here?'}
-            </span>
-            <button
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setErrorMsg('');
-                setSuccessMsg('');
-              }}
-              className={styles.toggleBtn}
-              type="button"
-            >
-              {isSignUp ? 'Sign In' : 'Create Account'}
-            </button>
-          </div>
+          {!showForgotPassword && (
+            <div className={styles.toggleRow}>
+              <span>
+                {isSignUp ? 'Already have a private log?' : 'First time journaling here?'}
+              </span>
+              <button
+                onClick={handleToggleMode}
+                className={styles.toggleBtn}
+                type="button"
+              >
+                {isSignUp ? 'Sign In' : 'Create Account'}
+              </button>
+            </div>
+          )}
         </Card>
       </main>
     </div>

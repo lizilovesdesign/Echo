@@ -1,0 +1,58 @@
+/* UserGreeting.module.css */
+
+.greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 4px;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.greetingLine {
+  font-family: var(--font-body-large-font-family);
+  font-size: var(--font-body-large-font-size);
+  font-weight: var(--font-body-large-font-weight);
+  letter-spacing: var(--font-body-large-letter-spacing);
+  color: var(--color-on-surface-variant);
+}
+
+.name {
+  font-family: var(--font-headline-medium-font-family);
+  font-size: var(--font-headline-medium-font-size);
+  font-weight: var(--font-headline-medium-font-weight);
+  letter-spacing: var(--font-headline-medium-letter-spacing);
+  line-height: var(--font-headline-medium-line-height);
+  color: var(--color-on-background);
+}
+
+/* Avatar */
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-primary-container);
+  /* Override the global img display: block so it doesn't push layout */
+  display: block;
+}
+
+.avatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border: 2px solid var(--color-primary-container);
+}

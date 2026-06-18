@@ -6,10 +6,12 @@ import { useRouter } from 'next/navigation';
 import { Music, Plus, LogOut, Sun, Moon } from 'lucide-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
+import { useMounted } from '@/lib/use-mounted';
 import { Button } from '../ui/Button';
 import styles from './JournalHeader.module.css';
 
 export function JournalHeader() {
+  const mounted = useMounted();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
@@ -40,10 +42,10 @@ export function JournalHeader() {
             className={styles.themeToggle}
             aria-label="Toggle theme"
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
           </button>
 
-          <Link href="/create" passHref>
+          <Link href="/create" className={styles.createLink}>
             <Button size="sm" variant="primary" className={styles.createBtn}>
               <Plus size={16} className={styles.plusIcon} />
               <span>New Echo</span>

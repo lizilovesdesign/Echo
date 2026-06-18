@@ -64,7 +64,7 @@
   color: var(--color-on-surface-variant);
   cursor: pointer;
   transition: color 0.2s;
-  padding: 10px;
+  padding: 12px 10px;
 }
 
 .loginLink:hover {
@@ -324,24 +324,57 @@
   color: var(--color-on-surface-variant);
 }
 
+/* Floating Music Notes */
+.notesContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@keyframes noteFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg) scale(0.6);
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) rotate(30deg) scale(1);
+  }
+}
+
+.floatingNote {
+  position: absolute;
+  font-size: 18px;
+  color: var(--color-primary);
+  opacity: 0;
+  animation: noteFloat 4s ease-in-out infinite;
+}
+
+.note1 { left: 8%; bottom: 60%; animation-delay: 0s; font-size: 14px; }
+.note2 { left: 20%; bottom: 40%; animation-delay: 0.8s; font-size: 20px; }
+.note3 { left: 50%; bottom: 55%; animation-delay: 1.6s; font-size: 16px; }
+.note4 { left: 70%; bottom: 35%; animation-delay: 2.4s; font-size: 22px; }
+.note5 { left: 85%; bottom: 50%; animation-delay: 3.2s; font-size: 15px; }
+.note6 { left: 35%; bottom: 30%; animation-delay: 4s; font-size: 18px; }
+
+@media (max-width: 480px) {
+  .floatingNote { display: none; }
+}
+
 /* Footer */
 .footer {
   position: relative;
   background-color: var(--color-surface-container);
   border-top: 1px solid var(--color-outline-variant);
   padding: 0 24px;
-}
-
-.footerWave {
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-primary));
-  background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  overflow: hidden;
 }
 
 .footerInner {
@@ -349,26 +382,21 @@
   width: 100%;
   margin: 0 auto;
   padding: 48px 0 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .footerTop {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-@media (min-width: 768px) {
-  .footerTop {
-    flex-direction: row;
-    justify-content: space-between;
-  }
+  justify-content: center;
 }
 
 .footerBrand {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 280px;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
 }
 
 .footerLogo {
@@ -389,72 +417,7 @@
   font-size: 14px;
   color: var(--color-on-surface-variant);
   line-height: 1.5;
-}
-
-.footerSocial {
-  display: flex;
-  gap: 12px;
-}
-
-.socialLink {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background-color: var(--color-surface);
-  color: var(--color-on-surface-variant);
-  border: 1px solid var(--color-outline-variant);
-  transition: all 0.2s ease;
-}
-
-.socialLink:hover {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  border-color: var(--color-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.footerColumns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-}
-
-@media (max-width: 480px) {
-  .footerColumns {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.footerCol {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footerColTitle {
-  font-size: 11px;
-  font-family: var(--font-label-small-font-family);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--color-on-surface-variant);
-  margin: 0;
-}
-
-.footerColLink {
-  font-size: 14px;
-  font-family: var(--font-body-medium-font-family);
-  color: var(--color-on-surface-variant);
-  transition: all 0.2s ease;
-  width: fit-content;
-}
-
-.footerColLink:hover {
-  color: var(--color-primary);
-  transform: translateX(4px);
+  max-width: 280px;
 }
 
 .footerDivider {
@@ -514,6 +477,7 @@
   font-family: var(--font-body-medium-font-family);
   color: var(--color-on-surface-variant);
   padding: 8px 14px;
+  min-height: 44px;
   transition: all 0.2s ease;
 }
 

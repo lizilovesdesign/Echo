@@ -47,7 +47,7 @@ export function EchoEntryForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['echoes'] });
       clearEntry();
-      router.push('/timeline');
+      router.push('/home');
     },
     onError: (err: any) => {
       setValidationError(err.message || 'An error occurred. Please try again.');
