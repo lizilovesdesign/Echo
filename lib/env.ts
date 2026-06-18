@@ -9,6 +9,12 @@ const envSchema = z.object({
   SPOTIFY_CLIENT_SECRET: z.string().min(1),
   JOURNAL_ENCRYPTION_SECRET: z.string().min(32, 'JOURNAL_ENCRYPTION_SECRET must be at least 32 characters'),
   NEXT_PUBLIC_APP_URL: z.string().url(),
+  SMTP_HOST: z.string().min(1),
+  SMTP_PORT: z.coerce.number().int().positive(),
+  SMTP_USER: z.string().email(),
+  SMTP_PASS: z.string().min(1, 'SMTP_PASS is required — generate an App Password at https://myaccount.google.com/apppasswords'),
+  SMTP_FROM_EMAIL: z.string().email(),
+  SMTP_FROM_NAME: z.string().min(1),
 });
 
 // Run validation
@@ -22,6 +28,12 @@ const parseEnv = () => {
     SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
     JOURNAL_ENCRYPTION_SECRET: process.env.JOURNAL_ENCRYPTION_SECRET,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASS: process.env.SMTP_PASS,
+    SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL,
+    SMTP_FROM_NAME: process.env.SMTP_FROM_NAME,
   });
 
   if (!result.success) {

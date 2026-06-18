@@ -47,9 +47,15 @@ export default function LoginPage() {
         });
 
         if (error) throw error;
-        
+
         if (data.session) {
-          // Instantly logged in
+          // Send welcome email in the background
+          fetch('/api/auth/after-signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: email.split('@')[0] }),
+          }).catch(() => {});
+
           router.push('/timeline');
         } else {
           setSuccessMsg('Verification email sent! Check your inbox to confirm your private archive.');
