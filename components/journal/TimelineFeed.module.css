@@ -44,8 +44,9 @@
   margin: 0 auto;
 }
 
-.emptyIcon {
-  font-size: 48px;
+.emptyIllustration {
+  margin-bottom: 8px;
+  opacity: 0.85;
 }
 
 .emptyTitle {

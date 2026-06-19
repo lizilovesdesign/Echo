@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Music, Sun, Moon, ArrowLeft } from 'lucide-react';
+import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
 import { useMounted } from '@/lib/use-mounted';
@@ -184,7 +184,7 @@ export default function LoginPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo} onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
-          <Music className={styles.logoIcon} />
+          <MusicNote01Icon className={styles.logoIcon} />
           <span>Echo</span>
         </div>
         <button
@@ -192,7 +192,7 @@ export default function LoginPage() {
           className={styles.themeToggle}
           aria-label="Toggle dark/light theme"
         >
-          {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
+          {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
         </button>
       </header>
 
@@ -297,7 +297,7 @@ export default function LoginPage() {
                   {loading ? <><Spinner size="sm" className={styles.spinner} /> Sending...</> : 'Send Reset Link'}
                 </Button>
                 <button type="button" className={styles.backLink} onClick={handleCancelReset}>
-                  <ArrowLeft size={14} /> Back to sign in
+                  <ArrowLeft01Icon size={14} /> Back to sign in
                 </button>
               </div>
             ) : (

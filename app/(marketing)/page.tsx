@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sun, Moon, Music, ArrowRight, Heart } from 'lucide-react';
+import { Sun01Icon, Moon01Icon, MusicNote01Icon, ArrowRight01Icon, HeartAddIcon } from 'hugeicons-react';
 import { useTheme } from '../providers';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
@@ -52,7 +52,7 @@ export default function LandingPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <Music className={styles.logoIcon} />
+          <MusicNote01Icon className={styles.logoIcon} />
           <span>Echo</span>
         </div>
 
@@ -62,7 +62,7 @@ export default function LandingPage() {
             className={styles.themeToggle}
             aria-label="Toggle dark/light theme"
           >
-            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
+            {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
           </button>
 
           <Link href="/login">
@@ -104,7 +104,7 @@ export default function LandingPage() {
           <div className={styles.ctaGroup}>
             <Link href="/login">
               <Button size="md" variant="primary" className={styles.heroCta}>
-                Join Echo <ArrowRight size={16} className={styles.arrow} />
+                Join Echo <ArrowRight01Icon size={16} className={styles.arrow} />
               </Button>
             </Link>
           </div>
@@ -149,7 +149,7 @@ export default function LandingPage() {
           <div className={styles.footerTop}>
             <div className={styles.footerBrand}>
               <div className={styles.footerLogo}>
-                <Music size={20} className={styles.footerLogoIcon} />
+                <MusicNote01Icon size={20} className={styles.footerLogoIcon} />
                 <span>Echo</span>
               </div>
               <p className={styles.footerTagline}>
@@ -162,7 +162,7 @@ export default function LandingPage() {
 
           <div className={styles.footerBottom}>
             <p className={styles.footerCopyright}>
-              &copy; {currentYear} Echo. Made with <Heart size={12} className={styles.heartIcon} /> for music lovers.
+              &copy; {currentYear} Echo. Made with <HeartAddIcon size={12} className={styles.heartIcon} /> for music lovers.
             </p>
             <div className={styles.footerTheme}>
               <button
@@ -170,7 +170,7 @@ export default function LandingPage() {
                 className={styles.footerThemeBtn}
                 aria-label="Switch theme"
               >
-                {mounted ? (theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />) : <div style={{ width: 14, height: 14 }} />}
+                {mounted ? (theme === 'dark' ? <Sun01Icon size={14} /> : <Moon01Icon size={14} />) : <div style={{ width: 14, height: 14 }} />}
                 {mounted ? (
                   <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
                 ) : (

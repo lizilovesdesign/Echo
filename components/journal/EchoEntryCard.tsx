@@ -3,7 +3,7 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { Trash2 } from 'lucide-react';
+import { Delete01Icon } from 'hugeicons-react';
 import { MoodTag } from '@/lib/validators/echoEntry';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -77,7 +77,7 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
           disabled={deleteMutation.isPending}
           aria-label="Delete entry"
         >
-          <Trash2 size={16} />
+          <Delete01Icon size={16} />
         </button>
       </div>
 

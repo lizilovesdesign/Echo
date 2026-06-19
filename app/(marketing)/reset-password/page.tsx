@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Music, Sun, Moon, CheckCircle } from 'lucide-react';
+import { MusicNote01Icon, Sun01Icon, Moon01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
 import { useMounted } from '@/lib/use-mounted';
@@ -82,17 +82,17 @@ export default function ResetPasswordPage() {
       <div className={styles.container}>
         <header className={styles.header}>
           <div className={styles.logo} onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
-            <Music className={styles.logoIcon} />
+            <MusicNote01Icon className={styles.logoIcon} />
             <span>Echo</span>
           </div>
           <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle dark/light theme">
-            {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
+            {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
           </button>
         </header>
         <main className={styles.main}>
           <Card className={styles.card}>
             <div className={styles.successState}>
-              <CheckCircle size={48} className={styles.successIcon} />
+              <CheckmarkCircle01Icon size={48} className={styles.successIcon} />
               <h2>Password updated</h2>
               <p>Your password has been changed successfully.</p>
               <Button onClick={() => router.push('/timeline')} className={styles.submitBtn}>
@@ -109,11 +109,11 @@ export default function ResetPasswordPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo} onClick={() => router.push('/')} style={{ cursor: 'pointer' }}>
-          <Music className={styles.logoIcon} />
+          <MusicNote01Icon className={styles.logoIcon} />
           <span>Echo</span>
         </div>
         <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle dark/light theme">
-          {mounted ? (theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />) : <div style={{ width: 18, height: 18 }} />}
+          {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
         </button>
       </header>
 

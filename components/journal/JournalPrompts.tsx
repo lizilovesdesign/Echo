@@ -48,9 +48,6 @@ export function JournalPrompts() {
     <section className={styles.section} aria-label="Journal prompts">
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>Quick Journal</h2>
-        <Link href="/timeline" className={styles.seeAll}>
-          See all
-        </Link>
       </div>
 
       <div className={styles.scrollContainer}>
@@ -67,7 +64,6 @@ export function JournalPrompts() {
               </span>
               <h3 className={styles.promptTitle}>{prompt.title}</h3>
               <p className={styles.promptQuestion}>{prompt.question}</p>
-              <span className={styles.cta}>Today</span>
             </Link>
           ))}
         </div>

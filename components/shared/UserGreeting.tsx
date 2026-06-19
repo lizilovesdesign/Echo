@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { User } from 'lucide-react';
+import { UserIcon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import styles from './UserGreeting.module.css';
 
@@ -56,7 +56,7 @@ export function UserGreeting() {
           />
         ) : (
           <div className={styles.avatarFallback} aria-label="Profile avatar">
-            <User size={22} />
+            <UserIcon size={22} />
           </div>
         )}
       </div>

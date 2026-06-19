@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { Music2 } from 'lucide-react';
+import { MusicNote02Icon } from 'hugeicons-react';
 import { EchoEntryData } from '@/components/journal/EchoEntryCard';
 import { Spinner } from '@/components/ui/Spinner';
 import styles from './HomeRecentEchoes.module.css';
@@ -35,9 +35,6 @@ export function HomeRecentEchoes() {
     <section className={styles.section} aria-label="Recent echoes">
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>My Journal</h2>
-        <Link href="/timeline" className={styles.seeAll}>
-          See all
-        </Link>
       </div>
 
       {isLoading && (
@@ -48,7 +45,7 @@ export function HomeRecentEchoes() {
 
       {!isLoading && recent.length === 0 && (
         <div className={styles.emptyState}>
-          <Music2 className={styles.emptyIcon} size={32} />
+          <MusicNote02Icon className={styles.emptyIcon} size={32} />
           <p className={styles.emptyText}>Your first Echo is waiting to be created.</p>
           <Link href="/create" className={styles.emptyLink}>
             Start now →

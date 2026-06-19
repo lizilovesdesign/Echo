@@ -41,7 +41,11 @@ export function TimelineFeed() {
   if (entries.length === 0) {
     return (
       <div className={styles.emptyState}>
-        <div className={styles.emptyIcon}>🎵</div>
+        <svg className={styles.emptyIllustration} width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="56" stroke="var(--color-outline-variant)" strokeWidth="2" strokeDasharray="6 6" />
+          <circle cx="60" cy="60" r="40" stroke="var(--color-outline-variant)" strokeWidth="1.5" strokeDasharray="4 4" />
+          <path d="M52 48V78a6 6 0 01-6 6h-2a6 6 0 01-6-6 6 6 0 016-6h2V48l24-4v24a6 6 0 01-6 6h-2a6 6 0 01-6-6 6 6 0 016-6h2V44l24-4v24" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+        </svg>
         <h3 className={styles.emptyTitle}>Your timeline is silent</h3>
         <p className={styles.emptySubtitle}>
           Anchor your first song to a personal memory and mood in under 20 seconds.
