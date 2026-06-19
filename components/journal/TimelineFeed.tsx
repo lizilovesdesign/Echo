@@ -30,15 +30,7 @@ export function TimelineFeed() {
     );
   }
 
-  if (error) {
-    return (
-      <div className={styles.centeredState}>
-        <p className={styles.errorText}>Failed to load timeline entries.</p>
-      </div>
-    );
-  }
-
-  if (entries.length === 0) {
+  if (entries.length === 0 || error) {
     return (
       <div className={styles.emptyState}>
         <svg className={styles.emptyIllustration} width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">

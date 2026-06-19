@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/app/providers';
 import { useMounted } from '@/lib/use-mounted';
@@ -12,7 +13,7 @@ import {
   Mail01Icon,
   Logout01Icon,
   Delete01Icon,
-  Settings01Icon,
+  Edit01Icon,
 } from 'hugeicons-react';
 import styles from './page.module.css';
 
@@ -23,9 +24,9 @@ export default function ProfilePage() {
   const supabase = createBrowserSupabaseClient();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [editingName, setEditingName] = useState(false);
-  const [nameInput, setNameInput] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     async function loadProfile() {
@@ -33,8 +34,8 @@ export default function ProfilePage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setEmail(user.email ?? '');
+          setAvatarUrl(user.user_metadata?.avatar_url ?? null);
           setName(user.user_metadata?.name ?? user.email?.split('@')[0] ?? '');
-          setNameInput(user.user_metadata?.name ?? user.email?.split('@')[0] ?? '');
         }
       } catch {
         // Silently fail
@@ -42,20 +43,6 @@ export default function ProfilePage() {
     }
     loadProfile();
   }, [supabase]);
-
-  const handleSaveName = useCallback(async () => {
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: { name: nameInput.trim() || name },
-      });
-      if (!error) {
-        setName(nameInput.trim() || name);
-      }
-    } catch {
-      // Silently fail
-    }
-    setEditingName(false);
-  }, [nameInput, name, supabase]);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -68,7 +55,7 @@ export default function ProfilePage() {
   }, [supabase, router]);
 
   const handleDeleteAccount = useCallback(async () => {
-    if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+    setShowDeleteConfirm(false);
     setDeleting(true);
     try {
       const res = await fetch('/api/auth/delete-account', { method: 'DELETE' });
@@ -92,32 +79,19 @@ export default function ProfilePage() {
 
       <div className={styles.card}>
         <div className={styles.avatar}>
-          <UserIcon size={28} />
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="Profile" className={styles.avatarImg} />
+          ) : (
+            <UserIcon size={28} />
+          )}
         </div>
         <div className={styles.info}>
-          {editingName ? (
-            <div className={styles.editNameRow}>
-              <input
-                type="text"
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                className={styles.nameInput}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleSaveName(); if (e.key === 'Escape') setEditingName(false); }}
-                autoFocus
-              />
-              <button onClick={handleSaveName} className={styles.saveBtn}>Save</button>
-              <button onClick={() => setEditingName(false)} className={styles.cancelBtn}>Cancel</button>
-            </div>
-          ) : (
-            <span className={styles.name}>{name || 'Echo User'}</span>
-          )}
+          <span className={styles.name}>{name || 'Echo User'}</span>
           {email && <span className={styles.email}>{email}</span>}
         </div>
-        {!editingName && (
-          <button onClick={() => setEditingName(true)} className={styles.editBtn} aria-label="Edit name">
-            <Settings01Icon size={18} />
-          </button>
-        )}
+        <Link href="/profile/edit" className={styles.editBtn} aria-label="Edit profile">
+          <Edit01Icon size={18} />
+        </Link>
       </div>
 
       <div className={styles.sectionCard}>
@@ -161,20 +135,44 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <div className={styles.actions}>
-        <button onClick={handleLogout} className={styles.logoutBtn}>
-          <Logout01Icon size={18} />
-          Sign out
+      <div className={styles.sectionCard}>
+        <h2 className={styles.sectionTitle}>Actions</h2>
+
+        <button className={styles.actionRow} onClick={handleLogout}>
+          <span className={styles.actionInfo}>
+            <Logout01Icon size={18} className={styles.actionIcon} />
+            <span>Sign out</span>
+          </span>
+          <span className={styles.actionChevron}>→</span>
         </button>
-        <button
-          onClick={handleDeleteAccount}
-          className={styles.deleteBtn}
-          disabled={deleting}
-        >
-          <Delete01Icon size={18} />
-          {deleting ? 'Deleting...' : 'Delete account'}
+
+        <button className={styles.actionRow} onClick={() => setShowDeleteConfirm(true)} disabled={deleting}>
+          <span className={styles.actionInfo}>
+            <Delete01Icon size={18} className={styles.dangerIcon} />
+            <span className={styles.dangerText}>Delete account</span>
+          </span>
+          <span className={styles.actionChevron}>→</span>
         </button>
       </div>
+
+      {showDeleteConfirm && (
+        <div className={styles.overlay}>
+          <div className={styles.confirmDialog}>
+            <h3 className={styles.confirmTitle}>Delete account?</h3>
+            <p className={styles.confirmText}>
+              This will permanently delete your account and all your Echo entries. This action cannot be undone.
+            </p>
+            <div className={styles.confirmActions}>
+              <button onClick={() => setShowDeleteConfirm(false)} className={styles.cancelBtn}>
+                Cancel
+              </button>
+              <button onClick={handleDeleteAccount} className={styles.confirmDeleteBtn}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {!mounted && <div className={styles.placeholder} />}
       <div className={styles.navSpacer} aria-hidden="true" />
