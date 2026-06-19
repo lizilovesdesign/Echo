@@ -102,7 +102,7 @@ export default function LandingPage() {
           </p>
 
           <div className={styles.ctaGroup}>
-            <Link href="/login">
+            <Link href="/login?mode=signup">
               <Button size="md" variant="primary" className={styles.heroCta}>
                 Join Echo <ArrowRight01Icon size={16} className={styles.arrow} />
               </Button>

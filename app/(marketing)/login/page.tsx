@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/app/providers';
@@ -47,8 +47,9 @@ function getPasswordStrength(password: string): { label: string; score: number }
   return { label: labels[score] || '', score: Math.min(score, 5) };
 }
 
-export default function LoginPage() {
-  const [isSignUp, setIsSignUp] = useState(false);
+function LoginPageContent() {
+  const searchParams = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup');
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -333,5 +334,13 @@ export default function LoginPage() {
         </Card>
       </main>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
