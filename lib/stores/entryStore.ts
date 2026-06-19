@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import { SpotifyTrack } from '../validators/spotify';
+import { MusicTrack } from '../validators/music';
 
 interface EntryStore {
-  selectedTrack: SpotifyTrack | null;
-  setSelectedTrack: (track: SpotifyTrack | null) => void;
+  selectedTrack: MusicTrack | null;
+  setSelectedTrack: (track: MusicTrack | null) => void;
   clearEntry: () => void;
 }
 

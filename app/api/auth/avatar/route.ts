@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { logger } from '@/lib/logger';
 
@@ -32,17 +31,19 @@ export async function POST(req: Request) {
       );
     }
 
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json(
+        { ok: false, error: { code: 'INVALID_TYPE', message: 'Only JPEG, PNG, and WebP images are allowed.' } },
+        { status: 400 }
+      );
+    }
+
     const ext = file.name.split('.').pop() ?? 'png';
     const fileName = `${session.user.id}/${Date.now()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const storageAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { persistSession: false } }
-    );
-
-    const { error: uploadError } = await storageAdmin.storage
+    const { error: uploadError } = await supabase.storage
       .from('avatars')
       .upload(fileName, buffer, {
         contentType: file.type,
@@ -52,14 +53,14 @@ export async function POST(req: Request) {
     if (uploadError) {
       logger.error('api.auth.avatar.upload-failed', { error: uploadError });
       return NextResponse.json(
-        { ok: false, error: { code: 'UPLOAD_FAILED', message: uploadError.message } },
+        { ok: false, error: { code: 'UPLOAD_FAILED', message: 'Failed to upload avatar.' } },
         { status: 500 }
       );
     }
 
-    const { data: urlData } = storageAdmin.storage.from('avatars').getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(fileName);
 
-    return NextResponse.json({ ok: true, url: urlData.publicUrl });
+    return NextResponse.json({ ok: true, data: { url: urlData.publicUrl } });
   } catch (error) {
     logger.error('api.auth.avatar.failed', { error });
     return NextResponse.json(

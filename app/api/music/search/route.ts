@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     // 3. Query Spotify API
     const tracks = await spotify.searchTracks(query);
     return NextResponse.json({ ok: true, data: tracks });
-  } catch (error: any) {
+  } catch (error) {
     logger.error('music.search.internal_error', { query, error });
     return NextResponse.json(
       {

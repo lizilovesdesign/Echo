@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Sun01Icon, Moon01Icon, MusicNote01Icon, ArrowRight01Icon, HeartAddIcon } from 'hugeicons-react';
-import { useTheme } from '../providers';
+import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import styles from './page.module.css';

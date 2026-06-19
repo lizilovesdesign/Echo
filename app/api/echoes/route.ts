@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ ok: true, data: entries });
-  } catch (error: any) {
+  } catch (error) {
     logger.error('echoes.get.failed', { userId: session.userId, error });
     return NextResponse.json(
       {
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     logger.info('echoes.created', { userId: session.userId, entryId: newEntry.id });
 
     return NextResponse.json({ ok: true, data: newEntry }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     logger.error('echoes.create.failed', { userId: session.userId, error });
     return NextResponse.json(
       {

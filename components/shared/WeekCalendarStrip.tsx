@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './WeekCalendarStrip.module.css';
 
 const DAY_ABBREVS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -21,7 +21,7 @@ function getWeekDays(today: Date): Array<{ dayAbbrev: string; date: number; full
 }
 
 export function WeekCalendarStrip() {
-  const today = useMemo(() => new Date(), []);
+  const [today, setToday] = useState(() => new Date());
   const days = useMemo(() => getWeekDays(today), [today]);
 
   return (

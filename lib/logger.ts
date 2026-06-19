@@ -1,25 +1,21 @@
-type LogMeta = Record<string, any>;
+type LogMeta = Record<string, unknown>;
 
 // Banned fields list (sensitive user journaling data and credentials)
+// Per security rules: never emit journal notes, mood tags, auth tokens, or credentials.
 const SENSITIVE_FIELDS = new Set([
   'note',
   'noteText',
   'password',
-  'email',
   'token',
   'authorization',
   'accessToken',
   'refreshToken',
   'moodTag',
   'mood',
-  'songTitle',
-  'artist',
-  'albumArtUrl',
-  'spotifyTrackId',
 ]);
 
 // Helper to scrub nested metadata objects
-function sanitizeMeta(obj: any): any {
+function sanitizeMeta(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
   if (obj instanceof Error) {
     return {
@@ -31,13 +27,13 @@ function sanitizeMeta(obj: any): any {
   if (Array.isArray(obj)) {
     return obj.map(sanitizeMeta);
   }
-  if (typeof obj === 'object') {
-    const sanitized: Record<string, any> = {};
+  if (typeof obj === 'object' && obj !== null) {
+    const sanitized: Record<string, unknown> = {};
     for (const key of Object.keys(obj)) {
       if (SENSITIVE_FIELDS.has(key)) {
         sanitized[key] = '[SCRUBBED]';
       } else {
-        sanitized[key] = sanitizeMeta(obj[key]);
+        sanitized[key] = sanitizeMeta((obj as Record<string, unknown>)[key]);
       }
     }
     return sanitized;

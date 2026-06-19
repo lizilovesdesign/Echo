@@ -73,7 +73,7 @@ export async function DELETE(request: NextRequest, { params }: Context) {
     logger.info('echoes.deleted', { userId: session.userId, entryId });
 
     return NextResponse.json({ ok: true, data: { id: entryId } });
-  } catch (error: any) {
+  } catch (error) {
     logger.error('echoes.delete.failed', { userId: session.userId, entryId, error });
     return NextResponse.json(
       {

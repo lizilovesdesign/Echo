@@ -4,12 +4,13 @@ import React, { useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
-import { useTheme } from '@/app/providers';
+import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
+import { PasswordStrength } from '@/components/ui/PasswordStrength';
 import styles from './page.module.css';
 
 function validateDisplayName(name: string, isSignUp: boolean): string {
@@ -36,17 +37,6 @@ function validatePassword(password: string, isSignUp: boolean): string {
   return '';
 }
 
-function getPasswordStrength(password: string): { label: string; score: number } {
-  let score = 0;
-  if (password.length >= 8) score++;
-  if (password.length >= 12) score++;
-  if (/[a-zA-Z]/.test(password)) score++;
-  if (/\d/.test(password)) score++;
-  if (/[^a-zA-Z0-9]/.test(password)) score++;
-  const labels = ['', 'Weak', 'Fair', 'Medium', 'Strong', 'Very Strong'];
-  return { label: labels[score] || '', score: Math.min(score, 5) };
-}
-
 function LoginPageContent() {
   const searchParams = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup');
@@ -69,7 +59,7 @@ function LoginPageContent() {
   const nameError = touched.displayName ? validateDisplayName(displayName, isSignUp) : '';
   const emailError = touched.email ? validateEmail(email) : '';
   const passwordError = touched.password ? validatePassword(password, isSignUp) : '';
-  const strength = isSignUp && password ? getPasswordStrength(password) : null;
+  const showStrength = isSignUp && password.length > 0;
 
   const handleBlur = useCallback((field: string) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -129,8 +119,8 @@ function LoginPageContent() {
         router.refresh();
         router.push('/home');
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Authentication failed. Please verify credentials.');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Authentication failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
@@ -157,8 +147,8 @@ function LoginPageContent() {
       if (error) throw error;
       setResetEmailSent(true);
       setSuccessMsg('Password reset link sent! Check your inbox.');
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to send reset email.');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Failed to send reset email.');
     } finally {
       setLoading(false);
     }
@@ -259,23 +249,7 @@ function LoginPageContent() {
                   required
                 />
 
-                {strength && (
-                  <div className={styles.strengthIndicator}>
-                    <div className={styles.strengthHeader}>
-                      <span className={styles.strengthLabelText}>Password Strength</span>
-                      <span className={styles.strengthBadge} data-level={strength.score}>{strength.label}</span>
-                    </div>
-                    <div className={styles.strengthTrack}>
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div
-                          key={i}
-                          className={`${styles.strengthSegment} ${i <= strength.score ? styles.active : ''}`}
-                          data-level={strength.score}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {showStrength && <PasswordStrength password={password} />}
 
                 {!isSignUp && !resetEmailSent && (
                   <button

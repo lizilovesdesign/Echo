@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MusicNote01Icon, Sun01Icon, Moon01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
-import { useTheme } from '@/app/providers';
+import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -70,8 +70,8 @@ export default function ResetPasswordPage() {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       setSuccess(true);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to update password.');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Failed to update password.');
     } finally {
       setLoading(false);
     }

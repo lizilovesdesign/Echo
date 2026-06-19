@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MusicNote01Icon, PlusSignIcon, Logout01Icon, Sun01Icon, Moon01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
-import { useTheme } from '@/app/providers';
+import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '../ui/Button';
 import styles from './JournalHeader.module.css';

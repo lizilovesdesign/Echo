@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTheme } from '@/app/providers';
+import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import {

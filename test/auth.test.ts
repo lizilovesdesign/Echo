@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
+import { MoodTagSchema, CreateEchoSchema } from '@/lib/validators/echoEntry';
 
 const testEnvSchema = z.object({
   DATABASE_URL: z.string().min(1),
@@ -61,8 +62,6 @@ describe('Database URL format', () => {
 });
 
 describe('MoodTag enum validation', () => {
-  const MoodTagSchema = z.enum(['Nostalgic', 'Energetic', 'Melancholic', 'Calm']);
-
   it('accepts valid mood tags', () => {
     expect(MoodTagSchema.parse('Nostalgic')).toBe('Nostalgic');
     expect(MoodTagSchema.parse('Energetic')).toBe('Energetic');
@@ -77,15 +76,6 @@ describe('MoodTag enum validation', () => {
 });
 
 describe('EchoEntry validation', () => {
-  const CreateEchoSchema = z.object({
-    songTitle: z.string().min(1),
-    artist: z.string().min(1),
-    albumArtUrl: z.string().url(),
-    spotifyTrackId: z.string().min(1),
-    moodTag: z.enum(['Nostalgic', 'Energetic', 'Melancholic', 'Calm']),
-    note: z.string().max(500),
-  });
-
   const validEntry = {
     songTitle: 'Rose Quartz',
     artist: 'Toro y Moi',

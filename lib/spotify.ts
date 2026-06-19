@@ -1,9 +1,10 @@
-import { SpotifyTrack } from './validators/spotify';
+import { env } from './env';
+import { MusicTrack } from './validators/music';
 import { logger } from './logger';
 
 class SpotifyClient {
-  private clientId = process.env.SPOTIFY_CLIENT_ID || '';
-  private clientSecret = process.env.SPOTIFY_CLIENT_SECRET || '';
+  private clientId = env.SPOTIFY_CLIENT_ID;
+  private clientSecret = env.SPOTIFY_CLIENT_SECRET;
   private cachedToken: string | null = null;
   private tokenExpiry: number = 0; // Unix timestamp in ms
 
@@ -44,7 +45,7 @@ class SpotifyClient {
     }
   }
 
-  public async searchTracks(query: string): Promise<SpotifyTrack[]> {
+  public async searchTracks(query: string): Promise<MusicTrack[]> {
     if (!query.trim()) return [];
 
     try {
@@ -66,15 +67,24 @@ class SpotifyClient {
       const items = data.tracks?.items || [];
 
       // Map raw Spotify tracks into our strict unified shape
-      return items.map((item: any) => ({
-        id: item.id,
-        name: item.name,
-        artist: item.artists?.[0]?.name || 'Unknown Artist',
-        albumArtUrl: item.album?.images?.[0]?.url || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop',
-      }));
+      return items.map((item: unknown) => {
+        const track = item as {
+          id?: string;
+          name?: string;
+          artists?: Array<{ name?: string }>;
+          album?: { images?: Array<{ url?: string }> };
+        };
+        return {
+          id: track.id ?? '',
+          name: track.name ?? '',
+          artist: track.artists?.[0]?.name ?? 'Unknown Artist',
+          albumArtUrl: track.album?.images?.[0]?.url ?? 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop',
+          source: 'spotify' as const,
+        };
+      });
     } catch (error) {
       logger.error('spotify.search.failed', { query, error });
-      return [];
+      throw new Error('Music search failed. Please try again.');
     }
   }
 }

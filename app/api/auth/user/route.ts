@@ -14,8 +14,10 @@ export async function GET() {
 
     return NextResponse.json({
       ok: true,
-      email: session.email,
-      userId: session.userId,
+      data: {
+        email: session.email,
+        userId: session.userId,
+      },
     });
   } catch (error) {
     logger.error('api.auth.user.failed', { error });

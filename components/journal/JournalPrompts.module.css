@@ -39,6 +39,10 @@
 
 /* Prompt card base */
 .promptCard {
+  --card-bg: var(--color-surface-container-low);
+  --card-text: #3D3835;
+  --card-muted: #756E69;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -47,13 +51,16 @@
   padding: 20px 16px;
   border-radius: 12px;
   text-decoration: none;
+  background-color: var(--card-bg);
+  color: var(--card-text);
+  border-top: 3px solid transparent;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .promptCard:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .promptCard:active {
@@ -71,6 +78,7 @@
   font-weight: 700;
   letter-spacing: var(--font-label-large-letter-spacing);
   line-height: 1.2;
+  color: var(--card-text);
 }
 
 .promptQuestion {
@@ -80,73 +88,54 @@
   letter-spacing: var(--font-body-medium-letter-spacing);
   line-height: var(--font-body-medium-line-height);
   flex: 1;
-  opacity: 0.85;
+  color: var(--card-muted);
 }
 
-/* Accent colour variants — balanced across light and dark modes */
-.rose {
-  background-color: hsl(350, 35%, 90%);
-  color: var(--color-on-surface);
-}
+/* Accent border colours — Natural Pop palette */
+.rose   { border-top-color: #C98670; } /* Muted Terracotta — warmth */
+.amber  { border-top-color: #8A9A5B; } /* Sage Moss — organic */
+.lavender { border-top-color: #6F7E9B; } /* Dusty Indigo — deep/soulful */
+.mint   { border-top-color: #708090; } /* Soft Slate — grounding */
 
-.amber {
-  background-color: hsl(38, 40%, 88%);
-  color: var(--color-on-surface);
-}
-
-.lavender {
-  background-color: hsl(260, 30%, 90%);
-  color: var(--color-on-surface);
-}
-
-.mint {
-  background-color: hsl(155, 30%, 88%);
-  color: var(--color-on-surface);
-}
-
-/* Dark mode overrides */
+/* Dark mode — system preference */
 @media (prefers-color-scheme: dark) {
-  .rose {
-    background-color: hsl(350, 25%, 20%);
-    color: var(--color-on-surface);
+  .promptCard {
+    --card-bg: var(--color-surface-container-low);
+    --card-text: #E0DDDB;
+    --card-muted: #9A9794;
   }
 
-  .amber {
-    background-color: hsl(38, 25%, 18%);
-    color: var(--color-on-surface);
-  }
-
-  .lavender {
-    background-color: hsl(260, 20%, 20%);
-    color: var(--color-on-surface);
-  }
-
-  .mint {
-    background-color: hsl(155, 20%, 17%);
-    color: var(--color-on-surface);
-  }
+  .rose   { border-top-color: #C98670; }
+  .amber  { border-top-color: #8A9A5B; }
+  .lavender { border-top-color: #6F7E9B; }
+  .mint   { border-top-color: #708090; }
 }
 
-.dark .rose,
-.dark-theme .rose {
-  background-color: hsl(350, 25%, 20%);
-  color: var(--color-on-surface);
+/* Light mode — class-based (theme toggle) — overrides system @media */
+:global(.light-theme) .promptCard {
+  --card-bg: var(--color-surface-container-low);
+  --card-text: #3D3835;
+  --card-muted: #756E69;
 }
 
-.dark .amber,
-.dark-theme .amber {
-  background-color: hsl(38, 25%, 18%);
-  color: var(--color-on-surface);
+:global(.light-theme) .rose { border-top-color: #C98670; }
+:global(.light-theme) .amber { border-top-color: #8A9A5B; }
+:global(.light-theme) .lavender { border-top-color: #6F7E9B; }
+:global(.light-theme) .mint { border-top-color: #708090; }
+
+/* Dark mode — class-based (theme toggle) */
+:global(.dark) .promptCard,
+:global(.dark-theme) .promptCard {
+  --card-bg: var(--color-surface-container-low);
+  --card-text: #E0DDDB;
+  --card-muted: #9A9794;
 }
 
-.dark .lavender,
-.dark-theme .lavender {
-  background-color: hsl(260, 20%, 20%);
-  color: var(--color-on-surface);
-}
-
-.dark .mint,
-.dark-theme .mint {
-  background-color: hsl(155, 20%, 17%);
-  color: var(--color-on-surface);
-}
+:global(.dark) .rose,
+:global(.dark-theme) .rose { border-top-color: #C98670; }
+:global(.dark) .amber,
+:global(.dark-theme) .amber { border-top-color: #8A9A5B; }
+:global(.dark) .lavender,
+:global(.dark-theme) .lavender { border-top-color: #6F7E9B; }
+:global(.dark) .mint,
+:global(.dark-theme) .mint { border-top-color: #708090; }

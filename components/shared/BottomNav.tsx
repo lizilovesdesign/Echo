@@ -16,7 +16,7 @@ export function BottomNav() {
   const isHome = pathname === '/home';
 
   return (
-    <>
+    <div className={styles.wrapper}>
       {isHome && (
         <Link href="/create" className={styles.fab} aria-label="Create new Echo entry">
           <AddCircleIcon size={28} />
@@ -50,6 +50,6 @@ export function BottomNav() {
           </Link>
         </div>
       </nav>
-    </>
+    </div>
   );
 }

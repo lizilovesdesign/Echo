@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useEntryStore } from '@/lib/stores/entryStore';
-import { SpotifyTrack } from '@/lib/validators/spotify';
+import { MusicTrack } from '@/lib/validators/music';
 import { Spinner } from '../ui/Spinner';
 import styles from './SongSearchInput.module.css';
 
@@ -29,7 +29,7 @@ export function SongSearchInput() {
   const setSelectedTrack = useEntryStore((state) => state.setSelectedTrack);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { data: tracks = [], isLoading } = useQuery<SpotifyTrack[]>({
+  const { data: tracks = [], isLoading } = useQuery<MusicTrack[]>({
     queryKey: ['spotifySearch', debouncedQuery],
     queryFn: async () => {
       if (!debouncedQuery.trim()) return [];
@@ -56,7 +56,7 @@ export function SongSearchInput() {
       {isLoading && (
         <div className={styles.loadingWrapper}>
           <Spinner size="sm" />
-          <span className={styles.loadingText}>Searching Spotify...</span>
+          <span className={styles.loadingText}>Searching...</span>
         </div>
       )}
 

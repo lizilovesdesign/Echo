@@ -1,3 +1,7 @@
+.wrapper {
+  position: relative;
+}
+
 .nav {
   position: fixed;
   bottom: 0;

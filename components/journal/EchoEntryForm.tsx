@@ -49,7 +49,7 @@ export function EchoEntryForm() {
       clearEntry();
       router.push('/home');
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setValidationError(err.message || 'An error occurred. Please try again.');
     },
   });

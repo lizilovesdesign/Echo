@@ -1,57 +1,31 @@
 // Design Tokens for Email Templates
-// Resolved values from Color-Style/tokens/tokens.css (dark theme)
-// and Color-Style/tokens/Typography-tokens.json.
-// CSS custom properties aren't supported in email clients,
-// so these are inlined as the resolved HSL values.
+// Mapped from Color-Style/tokens/tokens.css (light theme) and Typography-tokens.json.
+// HSL values used directly for maximum email client compatibility.
 
 export const tokens = {
   color: {
-    primary: 'hsl(9, 100%, 70%)',
-    onPrimary: 'hsl(5, 96%, 20%)',
-    primaryContainer: 'hsl(8, 74%, 30%)',
-    onPrimaryContainer: 'hsl(8, 100%, 92%)',
-    surface: 'hsl(9, 12%, 6%)',
-    onSurface: 'hsl(8, 29%, 90%)',
-    surfaceContainerLow: 'hsl(9, 12%, 11%)',
-    surfaceContainer: 'hsl(9, 12%, 12%)',
-    surfaceContainerHigh: 'hsl(8, 10%, 17%)',
-    onSurfaceVariant: 'hsl(15, 4%, 78%)',
-    outline: 'hsl(0, 1%, 57%)',
-    outlineVariant: 'hsl(0, 1%, 28%)',
-    surfaceContainerLowest: 'hsl(9, 12%, 4%)',
+    bg: 'hsl(7, 100%, 98%)',
+    card: '#FFFFFF',
+    text: 'hsl(9, 12%, 11%)',
+    muted: 'hsl(0, 1%, 28%)',
+    subtle: 'hsl(0, 1%, 47%)',
+    border: 'hsl(15, 4%, 78%)',
+    btnBg: 'hsl(9, 100%, 70%)',
+    btnText: 'hsl(0, 0%, 100%)',
+    footerBg: 'hsl(8, 40%, 92%)',
   },
   font: {
-    family: "'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    heading: {
-      size: '20px',
-      weight: '500',
-      lineHeight: '30px',
-      letterSpacing: '-0.3px',
-    },
-    body: {
-      size: '14px',
-      weight: '400',
-      lineHeight: '21px',
-      letterSpacing: '-0.21px',
-    },
-    small: {
-      size: '12px',
-      weight: '400',
-      lineHeight: '18px',
-      letterSpacing: '-0.18px',
-    },
-    label: {
-      size: '14px',
-      weight: '500',
-      lineHeight: '21px',
-      letterSpacing: '-0.21px',
-    },
+    family: "'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    heading: { size: '24px', weight: '500', lineHeight: '36px', letterSpacing: '-0.36px' },
+    body: { size: '14px', weight: '400', lineHeight: '21px', letterSpacing: '-0.21px' },
+    small: { size: '12px', weight: '400', lineHeight: '18px', letterSpacing: '-0.18px' },
+    label: { size: '14px', weight: '500', lineHeight: '21px', letterSpacing: '-0.21px' },
   },
   spacing: {
-    cardPadding: '32px',
-    containerPadding: '40px 24px',
-    buttonPadding: '12px 24px',
+    outerPadding: '40px 16px',
+    cardPadding: '40px 32px',
+    buttonPadding: '12px 32px',
     borderRadius: '12px',
-    buttonRadius: '8px',
+    buttonRadius: '999px',
   },
 } as const;
