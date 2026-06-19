@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Sun01Icon, Moon01Icon, MusicNote01Icon, ArrowRight01Icon, HeartAddIcon } from 'hugeicons-react';
 import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
@@ -46,6 +47,7 @@ const floatingEntries = [
 export default function LandingPage() {
   const mounted = useMounted();
   const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -102,11 +104,9 @@ export default function LandingPage() {
           </p>
 
           <div className={styles.ctaGroup}>
-            <Link href="/login?mode=signup">
-              <Button size="md" variant="primary" className={styles.heroCta}>
-                Join Echo <ArrowRight01Icon size={16} className={styles.arrow} />
-              </Button>
-            </Link>
+            <Button size="md" variant="primary" className={styles.heroCta} onClick={() => router.push('/login?mode=signup')}>
+              Join Echo <ArrowRight01Icon size={16} className={styles.arrow} />
+            </Button>
           </div>
         </div>
       </main>

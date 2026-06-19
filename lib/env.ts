@@ -12,8 +12,8 @@ const envSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url(),
   SMTP_HOST: z.string().min(1),
   SMTP_PORT: z.coerce.number().int().positive(),
-  SMTP_USER: z.string().email(),
-  SMTP_PASS: z.string().min(1, 'SMTP_PASS is required — generate an App Password at https://myaccount.google.com/apppasswords'),
+  SMTP_USER: z.string().min(1),
+  SMTP_PASS: z.string().min(1, 'SMTP_PASS is required — set your Resend API key in .env.local'),
   SMTP_FROM_EMAIL: z.string().email(),
   SMTP_FROM_NAME: z.string().min(1),
 });
@@ -39,7 +39,8 @@ const parseEnv = () => {
   });
 
   if (!result.success) {
-    throw new Error('Invalid environment variables. Check system configurations.');
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
+    throw new Error(`Invalid environment variables: ${issues}`);
   }
 
   return result.data;

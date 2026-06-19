@@ -50,6 +50,7 @@ function LoginPageContent() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const mounted = useMounted();
   const { theme, toggleTheme } = useTheme();
@@ -120,7 +121,19 @@ function LoginPageContent() {
         router.push('/home');
       }
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Authentication failed. Please verify credentials.');
+      const message = err instanceof Error ? err.message : '';
+      const lower = message.toLowerCase();
+      if (!message) {
+        setErrorMsg('Authentication failed. Please verify credentials.');
+      } else if (lower.includes('user already registered')) {
+        setErrorMsg('An account with this email already exists. Try signing in instead.');
+      } else if (lower.includes('rate limit') || lower.includes('too many')) {
+        setErrorMsg('Too many sign-up attempts. Please wait a few minutes before trying again.');
+      } else if (lower.includes('email') && (lower.includes('send') || lower.includes('fail') || lower.includes('confirm'))) {
+        setErrorMsg(`Supabase email error: ${message}\n\nMake sure email is configured in your Supabase dashboard → Authentication → Settings → Email (Built-in) or SMTP. Also check the Supabase logs for details.`);
+      } else {
+        setErrorMsg(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -162,6 +175,24 @@ function LoginPageContent() {
     setTouched({});
     setShowForgotPassword(false);
     setResetEmailSent(false);
+  };
+
+  const handleResendConfirmation = async () => {
+    setResending(true);
+    setErrorMsg('');
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) throw error;
+      setSuccessMsg('Confirmation email resent! Check your inbox (and spam folder).');
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'Failed to resend confirmation email.');
+    } finally {
+      setResending(false);
+    }
   };
 
   const handleCancelReset = () => {
@@ -264,7 +295,20 @@ function LoginPageContent() {
             )}
 
             {errorMsg && <p className={styles.error}>{errorMsg}</p>}
-            {successMsg && <p className={styles.success}>{successMsg}</p>}
+            {successMsg && (
+              <div className={styles.successBlock}>
+                <p className={styles.success}>{successMsg}</p>
+                <p className={styles.spamTip}>Didn&apos;t receive it? Check your spam folder, then click below to resend.</p>
+                <button
+                  type="button"
+                  className={styles.resendBtn}
+                  onClick={handleResendConfirmation}
+                  disabled={resending}
+                >
+                  {resending ? 'Sending...' : 'Resend confirmation email'}
+                </button>
+              </div>
+            )}
 
             {showForgotPassword ? (
               <div className={styles.resetActions}>

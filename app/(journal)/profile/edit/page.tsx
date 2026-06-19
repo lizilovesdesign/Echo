@@ -73,7 +73,7 @@ export default function EditProfilePage() {
           throw new Error(json.error?.message || json.error || 'Failed to upload image.');
         }
 
-        newAvatarUrl = json.url;
+        newAvatarUrl = json.data?.url;
       }
 
       const metadata: Record<string, string> = {};

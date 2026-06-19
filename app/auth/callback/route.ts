@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { sendWelcomeEmail } from '@/lib/email';
 import { logger } from '@/lib/logger';
 
 export async function GET(request: Request) {
@@ -13,6 +14,15 @@ export async function GET(request: Request) {
       const supabase = createServerSupabaseClient();
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
+        if (type !== 'recovery') {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.email) {
+            const name = user.user_metadata?.full_name || 'there';
+            sendWelcomeEmail(user.email, name).catch((e) =>
+              logger.error('auth.callback.welcome-email-failed', { error: e })
+            );
+          }
+        }
         if (type === 'recovery') {
           return NextResponse.redirect(`${origin}/reset-password`);
         }
