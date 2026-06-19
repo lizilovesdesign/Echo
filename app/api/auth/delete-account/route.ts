@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createAdminSupabaseClient } from '@/lib/supabase-admin';
 import { verifyAuthSession } from '@/lib/auth';
 import { logger } from '@/lib/logger';
 
@@ -13,7 +13,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const supabase = createServerSupabaseClient();
+    const supabase = createAdminSupabaseClient();
     const { error } = await supabase.auth.admin.deleteUser(session.userId);
 
     if (error) {

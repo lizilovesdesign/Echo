@@ -30,7 +30,18 @@ export function TimelineFeed() {
     );
   }
 
-  if (entries.length === 0 || error) {
+  if (error) {
+    return (
+      <div className={styles.emptyState}>
+        <h3 className={styles.emptyTitle}>Unable to load timeline</h3>
+        <p className={styles.emptySubtitle}>
+          There was a problem fetching your entries. Please try again.
+        </p>
+      </div>
+    );
+  }
+
+  if (entries.length === 0) {
     return (
       <div className={styles.emptyState}>
         <svg className={styles.emptyIllustration} width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">

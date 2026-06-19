@@ -12,7 +12,7 @@ export interface UserSession {
  */
 export async function verifyAuthSession(req: NextRequest): Promise<UserSession | null> {
   try {
-    // 1. Check Authorization Header (used by React Native Mobile client)
+    // 1. Check Authorization Header
     const authHeader = req.headers.get('authorization');
     if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
       const token = authHeader.substring(7).trim();

@@ -5,7 +5,7 @@ export const MusicTrackSchema = z.object({
   name: z.string().min(1),
   artist: z.string().min(1),
   albumArtUrl: z.string().url(),
-  source: z.enum(['spotify', 'apple-music']),
+  source: z.enum(['spotify']),
 });
 
 export type MusicTrack = z.infer<typeof MusicTrackSchema>;

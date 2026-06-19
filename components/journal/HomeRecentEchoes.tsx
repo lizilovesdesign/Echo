@@ -17,7 +17,7 @@ const moodEmojis: Record<string, string> = {
 };
 
 export function HomeRecentEchoes() {
-  const { data: entries = [], isLoading } = useQuery<EchoEntryData[]>({
+  const { data: entries = [], isLoading, error } = useQuery<EchoEntryData[]>({
     queryKey: ['echoes'],
     queryFn: async () => {
       const res = await fetch('/api/echoes');
@@ -43,7 +43,13 @@ export function HomeRecentEchoes() {
         </div>
       )}
 
-      {!isLoading && recent.length === 0 && (
+      {!isLoading && error && (
+        <div className={styles.emptyState}>
+          <p className={styles.emptyText}>Unable to load recent entries.</p>
+        </div>
+      )}
+
+      {!isLoading && !error && recent.length === 0 && (
         <div className={styles.emptyState}>
           <MusicNote02Icon className={styles.emptyIcon} size={32} />
           <p className={styles.emptyText}>Your first Echo is waiting to be created.</p>
@@ -53,7 +59,7 @@ export function HomeRecentEchoes() {
         </div>
       )}
 
-      {!isLoading && recent.length > 0 && (
+      {!isLoading && !error && recent.length > 0 && (
         <div className={styles.list}>
           {recent.map((entry) => (
             <div key={entry.id} className={styles.entryRow}>

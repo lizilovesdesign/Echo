@@ -1,5 +1,6 @@
+import { z } from 'zod';
 import { env } from './env';
-import { MusicTrack } from './validators/music';
+import { MusicTrack, MusicTrackSchema } from './validators/music';
 import { logger } from './logger';
 
 class SpotifyClient {
@@ -64,24 +65,37 @@ class SpotifyClient {
       }
 
       const data = await response.json();
-      const items = data.tracks?.items || [];
+      const items: unknown[] = data.tracks?.items || [];
 
-      // Map raw Spotify tracks into our strict unified shape
-      return items.map((item: unknown) => {
-        const track = item as {
-          id?: string;
-          name?: string;
-          artists?: Array<{ name?: string }>;
-          album?: { images?: Array<{ url?: string }> };
-        };
-        return {
-          id: track.id ?? '',
-          name: track.name ?? '',
-          artist: track.artists?.[0]?.name ?? 'Unknown Artist',
-          albumArtUrl: track.album?.images?.[0]?.url ?? 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop',
-          source: 'spotify' as const,
-        };
+      // Validate and transform raw Spotify tracks through Zod
+      const rawTrackSchema = z.object({
+        id: z.string(),
+        name: z.string(),
+        artists: z.array(z.object({ name: z.string() })).min(1),
+        album: z.object({ images: z.array(z.object({ url: z.string() })) }).optional(),
       });
+
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      return items.map((item) => {
+        const parsed = rawTrackSchema.safeParse(item);
+        if (!parsed.success) {
+          return null;
+        }
+        const track = parsed.data;
+        const albumArtUrl = track.album?.images?.[0]?.url ?? fallbackArt;
+
+        const validated = MusicTrackSchema.safeParse({
+          id: track.id,
+          name: track.name,
+          artist: track.artists[0].name,
+          albumArtUrl,
+          source: 'spotify',
+        });
+
+        return validated.success ? validated.data : null;
+      }).filter((t): t is MusicTrack => t !== null);
     } catch (error) {
       logger.error('spotify.search.failed', { query, error });
       throw new Error('Music search failed. Please try again.');

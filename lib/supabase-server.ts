@@ -6,7 +6,7 @@ export function createServerSupabaseClient() {
   const cookieStore = cookies();
   return createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
-    env.SUPABASE_SERVICE_ROLE_KEY,
+    env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         get(name: string) {
@@ -15,13 +15,13 @@ export function createServerSupabaseClient() {
         set(name: string, value: string, options: Record<string, unknown>) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
           }
         },
         remove(name: string, options: Record<string, unknown>) {
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch {
           }
         },
       },

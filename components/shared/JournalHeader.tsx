@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MusicNote01Icon, PlusSignIcon, Logout01Icon, Sun01Icon, Moon01Icon } from 'hugeicons-react';
@@ -15,15 +15,17 @@ export function JournalHeader() {
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
+    setLoggingOut(true);
     try {
       await supabase.auth.signOut();
-      router.refresh();
-      router.push('/login');
-    } catch (err) {
-      // Suppress signout logs
+    } catch {
+      // Redirect even if sign-out fails
     }
+    router.refresh();
+    router.push('/login');
   };
 
   return (
@@ -52,7 +54,7 @@ export function JournalHeader() {
             </Button>
           </Link>
 
-          <button onClick={handleLogout} className={styles.logoutBtn} aria-label="Sign out">
+          <button onClick={handleLogout} className={styles.logoutBtn} aria-label="Sign out" disabled={loggingOut}>
             <Logout01Icon size={18} />
           </button>
         </div>

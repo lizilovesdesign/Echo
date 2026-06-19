@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     async function loadProfile() {
@@ -45,13 +46,14 @@ export default function ProfilePage() {
   }, [supabase]);
 
   const handleLogout = useCallback(async () => {
+    setLoggingOut(true);
     try {
       await supabase.auth.signOut();
-      router.refresh();
-      router.push('/login');
     } catch {
-      // Silently fail
+      // Redirect even if sign-out fails
     }
+    router.refresh();
+    router.push('/login');
   }, [supabase, router]);
 
   const handleDeleteAccount = useCallback(async () => {
@@ -138,10 +140,10 @@ export default function ProfilePage() {
       <div className={styles.sectionCard}>
         <h2 className={styles.sectionTitle}>Actions</h2>
 
-        <button className={styles.actionRow} onClick={handleLogout}>
+        <button className={styles.actionRow} onClick={handleLogout} disabled={loggingOut}>
           <span className={styles.actionInfo}>
             <Logout01Icon size={18} className={styles.actionIcon} />
-            <span>Sign out</span>
+            <span>{loggingOut ? 'Signing out...' : 'Sign out'}</span>
           </span>
           <span className={styles.actionChevron}>→</span>
         </button>

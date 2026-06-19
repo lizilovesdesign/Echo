@@ -18,6 +18,7 @@ export async function GET(request: Request) {
           const { data: { user } } = await supabase.auth.getUser();
           if (user?.email) {
             const name = user.user_metadata?.full_name || 'there';
+            // Fire welcome email in background — don't block the redirect if it fails
             sendWelcomeEmail(user.email, name).catch((e) =>
               logger.error('auth.callback.welcome-email-failed', { error: e })
             );
