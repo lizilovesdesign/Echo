@@ -14,6 +14,7 @@ import {
   Logout01Icon,
   Delete01Icon,
   Edit01Icon,
+  LockIcon,
 } from 'hugeicons-react';
 import styles from './page.module.css';
 
@@ -28,6 +29,13 @@ export default function ProfilePage() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   useEffect(() => {
     async function loadProfile() {
@@ -44,6 +52,74 @@ export default function ProfilePage() {
     }
     loadProfile();
   }, [supabase]);
+
+  const resetPasswordForm = useCallback(() => {
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordError('');
+    setPasswordSuccess(false);
+  }, []);
+
+  const handleChangePassword = useCallback(async () => {
+    setPasswordError('');
+
+    if (!currentPassword) {
+      setPasswordError('Current password is required.');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError('New password must be at least 8 characters.');
+      return;
+    }
+
+    if (!/[a-zA-Z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      setPasswordError('New password must include at least one letter and one number.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('New passwords do not match.');
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      setPasswordError('New password must be different from current password.');
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword,
+      });
+
+      if (signInError) {
+        setPasswordError('Current password is incorrect.');
+        setChangingPassword(false);
+        return;
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (updateError) throw updateError;
+
+      setPasswordSuccess(true);
+      resetPasswordForm();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '';
+      if (message.toLowerCase().includes('reauthentication') || message.toLowerCase().includes('session')) {
+        setPasswordError('Session expired. Please sign out and sign back in, then try again.');
+      } else {
+        setPasswordError(message || 'Failed to change password. Please try again.');
+      }
+    }
+    setChangingPassword(false);
+  }, [email, currentPassword, newPassword, confirmPassword, supabase, resetPasswordForm]);
 
   const handleLogout = useCallback(async () => {
     setLoggingOut(true);
@@ -135,6 +211,14 @@ export default function ProfilePage() {
             <span className={styles.settingValue}>{email}</span>
           </div>
         )}
+
+        <button className={styles.actionRow} onClick={() => { resetPasswordForm(); setShowPasswordModal(true); }}>
+          <span className={styles.actionInfo}>
+            <LockIcon size={18} className={styles.actionIcon} />
+            <span>Change password</span>
+          </span>
+          <span className={styles.actionChevron}>→</span>
+        </button>
       </div>
 
       <div className={styles.sectionCard}>
@@ -172,6 +256,85 @@ export default function ProfilePage() {
                 Delete
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showPasswordModal && (
+        <div className={styles.overlay} onClick={() => setShowPasswordModal(false)}>
+          <div className={styles.passwordDialog} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.confirmTitle}>Change password</h3>
+
+            {passwordSuccess ? (
+              <div className={styles.passwordSuccessBlock}>
+                <p className={styles.passwordSuccessText}>Password changed successfully.</p>
+                <button
+                  onClick={() => setShowPasswordModal(false)}
+                  className={styles.saveBtn}
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className={styles.passwordField}>
+                  <label className={styles.passwordLabel} htmlFor="current-password">Current password</label>
+                  <input
+                    id="current-password"
+                    type="password"
+                    className={styles.passwordInput}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    disabled={changingPassword}
+                    autoFocus
+                  />
+                </div>
+                <div className={styles.passwordField}>
+                  <label className={styles.passwordLabel} htmlFor="new-password">New password</label>
+                  <input
+                    id="new-password"
+                    type="password"
+                    className={styles.passwordInput}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="At least 8 characters"
+                    disabled={changingPassword}
+                  />
+                </div>
+                <div className={styles.passwordField}>
+                  <label className={styles.passwordLabel} htmlFor="confirm-password">Confirm new password</label>
+                  <input
+                    id="confirm-password"
+                    type="password"
+                    className={styles.passwordInput}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                    disabled={changingPassword}
+                  />
+                </div>
+
+                {passwordError && <p className={styles.passwordError}>{passwordError}</p>}
+
+                <div className={styles.confirmActions}>
+                  <button
+                    onClick={() => setShowPasswordModal(false)}
+                    className={styles.cancelBtn}
+                    disabled={changingPassword}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleChangePassword}
+                    className={styles.saveBtn}
+                    disabled={changingPassword}
+                  >
+                    {changingPassword ? 'Changing...' : 'Change Password'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
