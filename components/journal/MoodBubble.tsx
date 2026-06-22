@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { MoodTag } from '@/lib/validators/echoEntry';
+import { getMoodConfig } from '@/lib/moods';
 import styles from './MoodBubble.module.css';
 
 interface MoodBubbleProps {
@@ -10,27 +11,22 @@ interface MoodBubbleProps {
   onSelect: (mood: MoodTag) => void;
 }
 
-const moodEmojis: Record<MoodTag, string> = {
-  Nostalgic: '🍂',
-  Energetic: '⚡',
-  Melancholic: '🌧️',
-  Calm: '🌊',
-};
-
 export function MoodBubble({ mood, isSelected, onSelect }: MoodBubbleProps) {
-  const moodKey = mood.toLowerCase() as keyof typeof styles;
-  const moodClass = styles[moodKey] || '';
-  const componentClass = `${styles.bubble} ${moodClass} ${isSelected ? styles.selected : styles.inactive}`.trim();
+  const config = getMoodConfig(mood);
+
+  const bg = isSelected ? config?.bubbleBgHover : config?.bubbleBg;
+  const color = config?.bubbleText ?? 'inherit';
 
   return (
     <button
       type="button"
-      className={componentClass}
+      className={styles.bubble}
       onClick={() => onSelect(mood)}
       aria-pressed={isSelected}
+      style={{ backgroundColor: bg, color, opacity: isSelected ? 1 : 0.85 }}
     >
-      <span className={styles.emoji}>{moodEmojis[mood]}</span>
-      <span>{mood}</span>
+      <span className={styles.emoji}>{config?.emoji}</span>
+      <span>{config?.label}</span>
     </button>
   );
 }

@@ -6,7 +6,6 @@ import { logger } from '@/lib/logger';
 export async function GET(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
 
-  // 1. Enforce Rate Limiting (max 20 requests per minute)
   if (isRateLimited(ip, { limit: 20, windowMs: 60 * 1000 })) {
     logger.warn('music.search.rate_limited', { ip });
     return NextResponse.json(
@@ -21,7 +20,6 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // 2. Validate Query Parameter
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q');
 
@@ -39,7 +37,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 3. Query Spotify API
     const tracks = await spotify.searchTracks(query);
     return NextResponse.json({ ok: true, data: tracks });
   } catch (error) {

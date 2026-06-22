@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminSupabaseClient } from '@/lib/supabase-admin';
 import { verifyAuthSession } from '@/lib/auth';
+import { checkCsrfOrigin } from '@/lib/csrf';
 import { logger } from '@/lib/logger';
 
 export async function DELETE(request: NextRequest) {
+  const csrf = checkCsrfOrigin(request);
+  if (!csrf.valid) {
+    logger.warn('csrf.blocked', { path: '/api/auth/delete-account', method: 'DELETE' });
+    return csrf.response;
+  }
+
   try {
     const session = await verifyAuthSession(request);
     if (!session) {

@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEntryStore } from '@/lib/stores/entryStore';
 import { MoodTag } from '@/lib/validators/echoEntry';
+import { useAudioPreview } from '@/lib/hooks/useAudioPreview';
 import { SongSearchInput } from './SongSearchInput';
 import { MoodSelector } from './MoodSelector';
 import { Button } from '../ui/Button';
@@ -13,23 +14,22 @@ import styles from './EchoEntryForm.module.css';
 
 const STICKER_EMOJIS = ['🌟', '❤️', '🎶', '💭', '🔥', '✨', '🌸', '🎵'];
 
+const PROMPT_QUESTIONS: Record<string, string> = {
+  reflect: 'What song has been living in your head today?',
+  intentions: 'What feeling do you want to soundtrack right now?',
+  memory: 'Which song teleports you to a specific moment?',
+  gratitude: 'Name a track that always lifts your spirit.',
+};
+
 export function EchoEntryForm() {
   const [note, setNote] = useState('');
   const [selectedMood, setSelectedMood] = useState<MoodTag | null>(null);
   const [stickers, setStickers] = useState<string[]>([]);
   const [validationError, setValidationError] = useState('');
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isPlaying, toggle, stop } = useAudioPreview();
 
   const searchParams = useSearchParams();
   const promptId = searchParams.get('prompt');
-
-  const PROMPT_QUESTIONS: Record<string, string> = {
-    reflect: 'What song has been living in your head today?',
-    intentions: 'What feeling do you want to soundtrack right now?',
-    memory: 'Which song teleports you to a specific moment?',
-    gratitude: 'Name a track that always lifts your spirit.',
-  };
 
   const selectedTrack = useEntryStore((state) => state.selectedTrack);
   const storeNote = useEntryStore((state) => state.note);
@@ -42,13 +42,13 @@ export function EchoEntryForm() {
     if (storeNote) setNote(storeNote);
     if (storeMoodTag) setSelectedMood(storeMoodTag);
     if (storeStickers.length > 0) setStickers(storeStickers);
-  }, []);
+  }, [storeNote, storeMoodTag, storeStickers]);
 
   useEffect(() => {
     if (promptId && PROMPT_QUESTIONS[promptId] && !storeNote) {
       setNote(PROMPT_QUESTIONS[promptId]);
     }
-  }, [promptId]);
+  }, [promptId, storeNote]);
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -91,29 +91,9 @@ export function EchoEntryForm() {
     },
   });
 
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
   const handlePlayPreview = () => {
-    if (!selectedTrack?.previewUrl) return;
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(selectedTrack.previewUrl);
-      audioRef.current.addEventListener('ended', () => setIsPlaying(false));
-    }
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play().catch(() => setIsPlaying(false));
-      setIsPlaying(true);
+    if (selectedTrack?.previewUrl) {
+      toggle(selectedTrack.previewUrl);
     }
   };
 
@@ -135,11 +115,7 @@ export function EchoEntryForm() {
   };
 
   const handleCancel = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    setIsPlaying(false);
+    stop();
     clearEntry();
     router.push('/home');
   };

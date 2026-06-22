@@ -9,6 +9,17 @@ class SpotifyClient {
   private cachedToken: string | null = null;
   private tokenExpiry: number = 0;
 
+  private async fetchWithTimeout(url: string, options: RequestInit & { timeout?: number } = {}): Promise<Response> {
+    const { timeout = 8000, ...fetchOptions } = options;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      return await fetch(url, { ...fetchOptions, signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   private async getAccessToken(): Promise<string> {
     const now = Date.now();
     if (this.cachedToken && this.tokenExpiry > now + 60000) {
@@ -17,7 +28,7 @@ class SpotifyClient {
 
     try {
       const basicAuth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
-      const response = await fetch('https://accounts.spotify.com/api/token', {
+      const response = await this.fetchWithTimeout('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {
           'Authorization': `Basic ${basicAuth}`,
@@ -27,6 +38,7 @@ class SpotifyClient {
           grant_type: 'client_credentials',
         }),
         cache: 'no-store',
+        timeout: 10000,
       });
 
       if (!response.ok) {
@@ -52,7 +64,7 @@ class SpotifyClient {
       const accessToken = await this.getAccessToken();
       const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=8`;
 
-      const response = await fetch(searchUrl, {
+      const response = await this.fetchWithTimeout(searchUrl, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
         },
@@ -105,7 +117,7 @@ class SpotifyClient {
   public async getTrack(trackId: string): Promise<{ previewUrl: string | null }> {
     try {
       const accessToken = await this.getAccessToken();
-      const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      const response = await this.fetchWithTimeout(`https://api.spotify.com/v1/tracks/${trackId}`, {
         headers: { 'Authorization': `Bearer ${accessToken}` },
       });
 

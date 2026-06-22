@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
-import { env } from '@/lib/env';
+import { createAdminSupabaseClient } from '@/lib/supabase-admin';
 import { logger } from '@/lib/logger';
-
-// Admin client for storage ops — no user session attached, uses service_role key only
-function createStorageClient() {
-  return createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
 
 export async function POST(req: Request) {
   try {
@@ -52,7 +44,7 @@ export async function POST(req: Request) {
     const fileName = `${session.user.id}/${Date.now()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    const storageClient = createStorageClient();
+    const storageClient = createAdminSupabaseClient();
     const { error: uploadError } = await storageClient.storage
       .from('avatars')
       .upload(fileName, buffer, {

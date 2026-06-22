@@ -5,20 +5,12 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { EchoEntryCard, EchoEntryData } from './EchoEntryCard';
 import { MoodTag } from '@/lib/validators/echoEntry';
+import { MOOD_ORDER, getMoodConfig } from '@/lib/moods';
 import { Spinner } from '../ui/Spinner';
 import { Button } from '../ui/Button';
 import styles from './TimelineFeed.module.css';
 
-const MOOD_ORDER: MoodTag[] = ['Nostalgic', 'Energetic', 'Melancholic', 'Calm'];
-
 type Filter = 'All' | MoodTag;
-
-const moodEmojis: Record<MoodTag, string> = {
-  Nostalgic: '🍂',
-  Energetic: '⚡',
-  Melancholic: '🌧️',
-  Calm: '🌊',
-};
 
 const filters: Filter[] = ['All', ...MOOD_ORDER];
 
@@ -86,15 +78,26 @@ export function TimelineFeed() {
       <div className={styles.filterRow}>
         {filters.map((f) => {
           const isActive = activeFilter === f;
-          const moodClass = f === 'All' ? '' : styles[f];
+          const moodConfig = f === 'All' ? null : getMoodConfig(f);
+          const pillStyle = f === 'All'
+            ? isActive
+              ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-on-primary)' }
+              : {}
+            : {
+                backgroundColor: isActive ? moodConfig!.pillActiveBg : moodConfig!.pillInactiveBg,
+                color: isActive ? moodConfig!.pillActiveColor : moodConfig!.pillInactiveColor,
+                opacity: isActive ? 1 : 0.7,
+              };
+
           return (
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`${styles.filterPill} ${moodClass} ${isActive ? styles.filterPillActive : styles.filterPillInactive}`}
+              className={styles.filterPill}
+              style={pillStyle}
             >
-              {f !== 'All' && <span>{moodEmojis[f]}</span>}
-              <span>{f}</span>
+              {moodConfig && <span>{moodConfig.emoji}</span>}
+              <span>{moodConfig ? moodConfig.label : f}</span>
             </button>
           );
         })}

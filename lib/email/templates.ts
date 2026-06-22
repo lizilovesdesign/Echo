@@ -69,32 +69,4 @@ export function welcomeEmailHtml(name: string, appUrl: string): string {
   `);
 }
 
-export function signinEmailHtml(appUrl: string): string {
-  return wrap(`
-    <h1 class="heading">Sign in to Echo</h1>
-    <p class="text">
-      A sign-in was requested for your Echo account. If this was you, click the button below to continue.
-    </p>
-    <div class="btn-wrap">
-      <a href="${appUrl}/login" class="btn">Sign In</a>
-    </div>
-    <p class="text" style="font-size:13px;color:${t.color.subtle};margin-top:16px;">
-      If you didn't request this, you can safely ignore this email.
-    </p>
-  `, 'If you didn\'t request this, you can safely ignore this email.');
-}
 
-export function confirmSignupEmailHtml(confirmationUrl: string): string {
-  return `
-    <h1 class="heading">Confirm your email</h1>
-    <p class="text">
-      Thanks for joining Echo. Click the button below to verify your email address and start capturing your musical memories.
-    </p>
-    <div class="btn-wrap">
-      <a href="${confirmationUrl}" class="btn">Verify Email</a>
-    </div>
-    <p class="text" style="font-size:13px;color:${t.color.subtle};margin-top:16px;">
-      If you didn't sign up for Echo, you can safely ignore this email.
-    </p>
-  `;
-}

@@ -33,8 +33,6 @@ model EchoEntry {
   previewUrl     String?  @map("preview_url")
   moodTag        MoodTag  @map("mood_tag")
   note           String   @db.VarChar(500)
-  noteColor      String?  @map("note_color")
-  category       String?
   stickers       String[] @default([])
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")

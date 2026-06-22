@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { sendWelcomeEmail } from '@/lib/email';
 import { verifyAuthSession } from '@/lib/auth';
+import { checkCsrfOrigin } from '@/lib/csrf';
 import { logger } from '@/lib/logger';
 
 const bodySchema = z.object({
@@ -9,6 +10,12 @@ const bodySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const csrf = checkCsrfOrigin(req);
+  if (!csrf.valid) {
+    logger.warn('csrf.blocked', { path: '/api/auth/after-signup', method: 'POST' });
+    return csrf.response;
+  }
+
   try {
     const session = await verifyAuthSession(req);
     if (!session) {

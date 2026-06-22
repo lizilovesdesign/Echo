@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { Delete01Icon } from 'hugeicons-react';
 import { MoodTag } from '@/lib/validators/echoEntry';
 import { useEntryStore } from '@/lib/stores/entryStore';
+import { useAudioPreview } from '@/lib/hooks/useAudioPreview';
 import { Card } from '../ui/Card';
 import { Modal } from '../ui/Modal';
 import styles from './EchoEntryCard.module.css';
@@ -32,11 +33,8 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const prefillFromEntry = useEntryStore((state) => state.prefillFromEntry);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
-  const [previewError, setPreviewError] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isPlaying, isLoading, hasError, toggle } = useAudioPreview();
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
@@ -78,60 +76,9 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
     deleteMutation.mutate();
   };
 
-  const handlePlayPreview = async () => {
-    if (isPlaying) {
-      audioRef.current?.pause();
-      audioRef.current = null;
-      setIsPlaying(false);
-      return;
-    }
-
-    if (audioRef.current) {
-      audioRef.current.play().catch(() => setIsPlaying(false));
-      setIsPlaying(true);
-      return;
-    }
-
-    setPreviewError(false);
-
-    let previewUrl = entry.previewUrl;
-
-    if (!previewUrl) {
-      setIsLoadingPreview(true);
-      try {
-        const res = await fetch(`/api/music/track/${entry.spotifyTrackId}`);
-        if (!res.ok) {
-          setIsLoadingPreview(false);
-          setPreviewError(true);
-          return;
-        }
-        const json = await res.json();
-        previewUrl = json.data?.previewUrl;
-        if (!previewUrl) {
-          setIsLoadingPreview(false);
-          setPreviewError(true);
-          return;
-        }
-      } catch {
-        setIsLoadingPreview(false);
-        setPreviewError(true);
-        return;
-      } finally {
-        setIsLoadingPreview(false);
-      }
-    }
-
-    const audio = new Audio(previewUrl);
-    audio.addEventListener('ended', () => {
-      setIsPlaying(false);
-      audioRef.current = null;
-    });
-    audio.play().catch(() => {
-      setIsPlaying(false);
-      setPreviewError(true);
-    });
-    audioRef.current = audio;
-    setIsPlaying(true);
+  const handlePlayPreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggle(entry.previewUrl, entry.spotifyTrackId);
   };
 
   const timeAgo = formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true });
@@ -148,8 +95,8 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
         <div className={styles.songInfo}>
           <button
             className={styles.albumArtBtn}
-            onClick={(e) => { e.stopPropagation(); handlePlayPreview(); }}
-            disabled={isLoadingPreview}
+            onClick={handlePlayPreview}
+            disabled={isLoading}
             aria-label={isPlaying ? 'Stop preview' : 'Play preview'}
           >
             <img
@@ -157,8 +104,8 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
               alt={`Album cover of ${entry.songTitle}`}
               className={styles.albumArt}
             />
-            <span className={`${styles.playOverlay} ${previewError ? styles.playOverlayError : ''}`}>
-              {isLoadingPreview ? '⏳' : isPlaying ? '⏹' : previewError ? '⛔' : '▶'}
+            <span className={`${styles.playOverlay} ${hasError ? styles.playOverlayError : ''}`}>
+              {isLoading ? '⏳' : isPlaying ? '⏹' : hasError ? '⛔' : '▶'}
             </span>
           </button>
           <div className={styles.trackDetails}>

@@ -1,7 +1,5 @@
 type LogMeta = Record<string, unknown>;
 
-// Banned fields list (sensitive user journaling data and credentials)
-// Per security rules: never emit journal notes, mood tags, auth tokens, or credentials.
 const SENSITIVE_FIELDS = new Set([
   'note',
   'noteText',
@@ -14,7 +12,6 @@ const SENSITIVE_FIELDS = new Set([
   'mood',
 ]);
 
-// Helper to scrub nested metadata objects
 function sanitizeMeta(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
   if (obj instanceof Error) {

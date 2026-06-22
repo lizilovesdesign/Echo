@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { verifyAuthSession } from '@/lib/auth';
+import { echoEntryRepository } from '@/lib/repositories/echoEntry.repository';
+import { CreateEchoSchema, MoodTag } from '@/lib/validators/echoEntry';
+import { checkCsrfOrigin } from '@/lib/csrf';
 import { logger } from '@/lib/logger';
 
 interface Context {
@@ -10,9 +12,14 @@ interface Context {
 }
 
 export async function PATCH(request: NextRequest, { params }: Context) {
+  const csrf = checkCsrfOrigin(request);
+  if (!csrf.valid) {
+    logger.warn('csrf.blocked', { path: '/api/echoes/[id]', method: 'PATCH' });
+    return csrf.response;
+  }
+
   const entryId = params.id;
 
-  // 1. Verify User Authentication
   const session = await verifyAuthSession(request);
   if (!session) {
     return NextResponse.json(
@@ -28,10 +35,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
   }
 
   try {
-    // 2. Fetch target entry
-    const entry = await prisma.echoEntry.findUnique({
-      where: { id: entryId },
-    });
+    const entry = await echoEntryRepository.findById(entryId);
 
     if (!entry) {
       return NextResponse.json(
@@ -46,7 +50,6 @@ export async function PATCH(request: NextRequest, { params }: Context) {
       );
     }
 
-    // 3. Assert Ownership Bounds
     if (entry.userId !== session.userId) {
       logger.warn('echoes.update.unauthorized_attempt', {
         userId: session.userId,
@@ -65,22 +68,34 @@ export async function PATCH(request: NextRequest, { params }: Context) {
       );
     }
 
-    // 4. Parse and validate request body
     const body = await request.json();
 
-    // 5. Update entry
-    const updated = await prisma.echoEntry.update({
-      where: { id: entryId },
-      data: {
-        songTitle: body.songTitle ?? entry.songTitle,
-        artist: body.artist ?? entry.artist,
-        albumArtUrl: body.albumArtUrl ?? entry.albumArtUrl,
-        spotifyTrackId: body.spotifyTrackId ?? entry.spotifyTrackId,
-        previewUrl: body.previewUrl ?? entry.previewUrl,
-        moodTag: body.moodTag ?? entry.moodTag,
-        note: body.note ?? entry.note,
-        stickers: body.stickers ?? entry.stickers,
-      },
+    const validation = CreateEchoSchema.partial().safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: {
+            code: 'BAD_REQUEST',
+            message: 'Input validation failed.',
+            details: validation.error.format(),
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    const input = validation.data;
+
+    const updated = await echoEntryRepository.update(entryId, {
+      songTitle: input.songTitle ?? entry.songTitle,
+      artist: input.artist ?? entry.artist,
+      albumArtUrl: input.albumArtUrl ?? entry.albumArtUrl,
+      spotifyTrackId: input.spotifyTrackId ?? entry.spotifyTrackId,
+      previewUrl: input.previewUrl ?? entry.previewUrl,
+      moodTag: (input.moodTag ?? entry.moodTag) as MoodTag,
+      note: input.note ?? entry.note,
+      stickers: input.stickers ?? entry.stickers,
     });
 
     logger.info('echoes.updated', { userId: session.userId, entryId });
@@ -102,9 +117,14 @@ export async function PATCH(request: NextRequest, { params }: Context) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Context) {
+  const csrf = checkCsrfOrigin(request);
+  if (!csrf.valid) {
+    logger.warn('csrf.blocked', { path: '/api/echoes/[id]', method: 'DELETE' });
+    return csrf.response;
+  }
+
   const entryId = params.id;
 
-  // 1. Verify User Authentication
   const session = await verifyAuthSession(request);
   if (!session) {
     return NextResponse.json(
@@ -120,10 +140,7 @@ export async function DELETE(request: NextRequest, { params }: Context) {
   }
 
   try {
-    // 2. Fetch target entry
-    const entry = await prisma.echoEntry.findUnique({
-      where: { id: entryId },
-    });
+    const entry = await echoEntryRepository.findById(entryId);
 
     if (!entry) {
       return NextResponse.json(
@@ -138,7 +155,6 @@ export async function DELETE(request: NextRequest, { params }: Context) {
       );
     }
 
-    // 3. Assert Ownership Bounds
     if (entry.userId !== session.userId) {
       logger.warn('echoes.delete.unauthorized_attempt', {
         userId: session.userId,
@@ -157,10 +173,7 @@ export async function DELETE(request: NextRequest, { params }: Context) {
       );
     }
 
-    // 4. Execute deletion
-    await prisma.echoEntry.delete({
-      where: { id: entryId },
-    });
+    await echoEntryRepository.delete(entryId);
 
     logger.info('echoes.deleted', { userId: session.userId, entryId });
 

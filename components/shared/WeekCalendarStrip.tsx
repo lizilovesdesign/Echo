@@ -21,7 +21,7 @@ function getWeekDays(today: Date): Array<{ dayAbbrev: string; date: number; full
 }
 
 export function WeekCalendarStrip() {
-  const [today, setToday] = useState(() => new Date());
+  const [today] = useState(() => new Date());
   const days = useMemo(() => getWeekDays(today), [today]);
 
   return (

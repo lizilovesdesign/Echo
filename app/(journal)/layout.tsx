@@ -13,8 +13,7 @@ export default async function JournalLayout({ children }: { children: React.Reac
     if (error || !session) {
       redirect('/login');
     }
-  } catch (err) {
-    // Force redirect on error
+  } catch {
     redirect('/login');
   }
 

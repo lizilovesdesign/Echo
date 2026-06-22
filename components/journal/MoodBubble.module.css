@@ -30,44 +30,6 @@
   }
 }
 
-.nostalgic {
-  --mood-bg: hsl(37, 100%, 72%);
-  --mood-bg-hover: hsl(37, 100%, 62%);
-  --mood-text: hsl(25, 90%, 12%);
-}
-
-.energetic {
-  --mood-bg: hsl(45, 100%, 65%);
-  --mood-bg-hover: hsl(45, 100%, 55%);
-  --mood-text: hsl(32, 95%, 10%);
-}
-
-.melancholic {
-  --mood-bg: hsl(270, 75%, 78%);
-  --mood-bg-hover: hsl(270, 75%, 68%);
-  --mood-text: hsl(271, 80%, 15%);
-}
-
-.calm {
-  --mood-bg: hsl(210, 85%, 72%);
-  --mood-bg-hover: hsl(210, 85%, 62%);
-  --mood-text: hsl(217, 70%, 12%);
-}
-
-.inactive {
-  background-color: var(--mood-bg);
-  color: var(--mood-text);
-  opacity: 0.85;
-}
-
-.selected {
-  background-color: var(--mood-bg-hover);
-  color: var(--mood-text);
-  border-color: var(--mood-text);
-  opacity: 1;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
 .emoji {
   font-size: 16px;
   line-height: 1;

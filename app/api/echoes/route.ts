@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { verifyAuthSession } from '@/lib/auth';
 import { CreateEchoSchema } from '@/lib/validators/echoEntry';
+import { echoEntryRepository } from '@/lib/repositories/echoEntry.repository';
+import { checkCsrfOrigin } from '@/lib/csrf';
 import { logger } from '@/lib/logger';
 
-// GET: Retrieve authenticated user's timeline logs
 export async function GET(request: NextRequest) {
-  // 1. Verify User Authentication
   const session = await verifyAuthSession(request);
   if (!session) {
     return NextResponse.json(
@@ -22,16 +21,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // 2. Fetch Entries from Database
-    const entries = await prisma.echoEntry.findMany({
-      where: {
-        userId: session.userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
+    const entries = await echoEntryRepository.findByUserId(session.userId);
     return NextResponse.json({ ok: true, data: entries });
   } catch (error) {
     logger.error('echoes.get.failed', { userId: session.userId, error });
@@ -48,9 +38,13 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST: Anchor a new song and memory
 export async function POST(request: NextRequest) {
-  // 1. Verify User Authentication
+  const csrf = checkCsrfOrigin(request);
+  if (!csrf.valid) {
+    logger.warn('csrf.blocked', { path: '/api/echoes', method: 'POST' });
+    return csrf.response;
+  }
+
   const session = await verifyAuthSession(request);
   if (!session) {
     return NextResponse.json(
@@ -68,7 +62,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 2. Validate Incoming Input Parameters
     const validation = CreateEchoSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(
@@ -84,34 +77,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const input = validation.data;
-
-    // 3. Ensure User Record exists locally (upsert to prevent foreign key violation)
-    await prisma.user.upsert({
-      where: { id: session.userId },
-      update: {},
-      create: {
-        id: session.userId,
-        email: session.email,
-      },
-    });
-
-    // 4. Create Entry
-    const newEntry = await prisma.echoEntry.create({
-      data: {
-        userId: session.userId,
-        songTitle: input.songTitle,
-        artist: input.artist,
-        albumArtUrl: input.albumArtUrl,
-        spotifyTrackId: input.spotifyTrackId,
-        previewUrl: input.previewUrl ?? null,
-        moodTag: input.moodTag,
-        note: input.note,
-        stickers: input.stickers ?? [],
-        noteColor: null,
-        category: null,
-      },
-    });
+    const newEntry = await echoEntryRepository.create(session.userId, session.email, validation.data);
 
     logger.info('echoes.created', { userId: session.userId, entryId: newEntry.id });
 
