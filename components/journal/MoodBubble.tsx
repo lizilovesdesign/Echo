@@ -18,7 +18,9 @@ const moodEmojis: Record<MoodTag, string> = {
 };
 
 export function MoodBubble({ mood, isSelected, onSelect }: MoodBubbleProps) {
-  const componentClass = `${styles.bubble} ${isSelected ? styles.selected : styles.inactive}`.trim();
+  const moodKey = mood.toLowerCase() as keyof typeof styles;
+  const moodClass = styles[moodKey] || '';
+  const componentClass = `${styles.bubble} ${moodClass} ${isSelected ? styles.selected : styles.inactive}`.trim();
 
   return (
     <button
@@ -28,7 +30,7 @@ export function MoodBubble({ mood, isSelected, onSelect }: MoodBubbleProps) {
       aria-pressed={isSelected}
     >
       <span className={styles.emoji}>{moodEmojis[mood]}</span>
-      <span className={styles.label}>{mood}</span>
+      <span>{mood}</span>
     </button>
   );
 }

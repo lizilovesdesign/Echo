@@ -4,6 +4,8 @@
   gap: 12px;
   position: relative;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .deleting {
@@ -25,12 +27,55 @@
   gap: 12px;
 }
 
-.albumArt {
+.albumArtBtn {
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 6px;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  flex-shrink: 0;
+}
+
+.albumArt {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: block;
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.playOverlayError {
+  opacity: 1;
+  background: rgba(200, 50, 50, 0.5);
+  cursor: not-allowed;
+}
+
+.albumArtBtn:hover .playOverlay,
+.albumArtBtn:focus-visible .playOverlay {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .playOverlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.3);
+  }
 }
 
 .trackDetails {
@@ -77,45 +122,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--color-outline-variant);
-  padding-top: 8px;
 }
 
-.moodTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-small, 4px);
-  font-family: var(--font-label-medium-font-family);
-  font-size: var(--font-label-medium-font-size);
-  font-weight: 500;
-  border: 1px solid transparent;
+.stickersRow {
+  display: flex;
+  gap: 4px;
 }
 
-/* Mood colors mapping to tokens */
-.Calm {
-  background-color: rgba(9, 100%, 70%, 0.06);
-  color: var(--color-primary);
-  border-color: rgba(9, 100%, 70%, 0.15);
-}
-
-.Melancholic {
-  background-color: rgba(142, 45, 226, 0.06);
-  color: hsl(270, 70%, 50%);
-  border-color: rgba(142, 45, 226, 0.15);
-}
-
-.Nostalgic {
-  background-color: rgba(230, 92, 0, 0.06);
-  color: hsl(24, 100%, 45%);
-  border-color: rgba(230, 92, 0, 0.15);
-}
-
-.Energetic {
-  background-color: rgba(255, 193, 7, 0.08);
-  color: hsl(45, 100%, 35%);
-  border-color: rgba(255, 193, 7, 0.2);
+.stickerEmoji {
+  font-size: 16px;
+  line-height: 1;
 }
 
 .timestamp {
@@ -135,4 +151,49 @@
   padding: 12px;
   border-radius: 8px;
   margin-top: 4px;
+}
+
+.deleteWarning {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+  line-height: var(--font-body-medium-line-height);
+  margin-bottom: 20px;
+}
+
+.deleteActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.confirmBtn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-error);
+  color: var(--color-on-error);
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

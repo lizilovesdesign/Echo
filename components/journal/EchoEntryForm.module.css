@@ -1,73 +1,286 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  min-height: 100dvh;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
+  padding: 0 16px 24px;
+  background-color: var(--color-background);
+  overflow-y: auto;
 }
 
-.textareaWrapper {
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  min-height: 56px;
+  flex-shrink: 0;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--color-on-surface);
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.backButton:hover {
+  background-color: var(--color-surface-container-high);
+}
+
+.headerTitle {
+  font-family: var(--font-title-small-font-family);
+  font-size: var(--font-title-small-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface);
+  margin: 0;
+}
+
+.stickyNote {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-container, 12px);
+  padding: 20px 20px 12px;
+  background-color: var(--color-surface-container-low);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.stickersContainer {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 120px;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.sticker {
+  font-size: 28px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.noteTextarea {
+  width: 100%;
+  min-height: 120px;
+  border: none;
+  background: transparent;
+  resize: vertical;
+  font-family: var(--font-body-large-font-family);
+  font-size: var(--font-body-large-font-size);
+  line-height: var(--font-body-large-line-height);
+  color: var(--color-on-surface);
+  outline: none;
+}
+
+.noteTextarea::placeholder {
+  color: var(--color-on-surface-variant);
+  opacity: 0.5;
+}
+
+.counter {
+  text-align: right;
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-outline-variant);
+}
+
+.songSection {
+  flex-shrink: 0;
+}
+
+.selectedTrack {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-interactive, 8px);
+  border: 1px solid var(--color-outline-variant);
+  background-color: var(--color-surface);
+}
+
+.trackArt {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.trackInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.trackName {
+  font-family: var(--font-label-large-font-family);
+  font-size: var(--font-label-large-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackArtist {
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.playBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.playBtn:hover {
+  transform: scale(1.1);
+}
+
+.playBtn:active {
+  transform: scale(0.95);
+}
+
+.clearTrack {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-surface-container-high);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-on-surface-variant);
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.clearTrack:hover {
+  background: var(--color-surface-container-highest);
+}
+
+.error {
+  color: var(--color-error);
+  text-align: center;
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  margin: 12px 0;
+  padding: 8px 16px;
+  background-color: var(--color-error-container);
+  border-radius: var(--radius-interactive, 8px);
+}
+
+.stickersSection {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.label {
+.stickersLabel {
   font-family: var(--font-label-medium-font-family);
   font-size: var(--font-label-medium-font-size);
   font-weight: 500;
   color: var(--color-on-surface);
 }
 
-.textarea {
-  min-height: 120px;
-  padding: 12px 16px;
-  border-radius: var(--radius-interactive, 8px);
-  border: 1px solid var(--color-outline-variant);
-  background-color: var(--color-surface);
-  color: var(--color-on-surface);
-  font-family: var(--font-body-large-font-family);
-  font-size: var(--font-body-large-font-size);
-  resize: vertical;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.textarea:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-container);
-}
-
-.counterRow {
+.stickersRow {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
-  font-family: var(--font-body-small-font-family);
-  font-size: var(--font-body-small-font-size);
-  color: var(--color-on-surface-variant);
-  min-height: 20px;
 }
 
-.counter {
-  margin-left: auto;
-}
-
-.error {
-  color: var(--color-error);
-  font-weight: 500;
-}
-
-.actions {
+.stickerBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface);
+  font-size: 20px;
+  cursor: pointer;
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
 }
 
-.actionBtn {
-  flex: 1;
+.stickerBtn:hover:not(:disabled) {
+  background: var(--color-surface-container-low);
+  transform: scale(1.15);
 }
 
-.spinner {
-  margin-right: 8px;
+.stickerBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.clearStickers {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  border: 1px solid var(--color-outline-variant);
+  background: transparent;
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clearStickers:hover {
+  background: var(--color-surface-container-high);
+}
+
+.saveBtn {
+  width: 100%;
+  min-height: 56px;
+  margin-top: auto;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
 }

@@ -1,10 +1,118 @@
 .feed {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+}
+
+.filterRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.filterRow::-webkit-scrollbar {
+  display: none;
+}
+
+.filterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s, opacity 0.2s;
+  min-height: 44px;
+}
+
+.filterPillInactive {
+  background-color: var(--color-surface-container-low);
+  color: var(--color-on-surface-variant);
+  opacity: 0.7;
+}
+
+.filterPillInactive:hover {
+  opacity: 1;
+}
+
+.filterPillActive {
+  opacity: 1;
+}
+
+.filterPill.Nostalgic.filterPillActive {
+  background-color: rgba(230, 92, 0, 0.12);
+  color: hsl(24, 100%, 40%);
+}
+
+.filterPill.Energetic.filterPillActive {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: hsl(45, 100%, 30%);
+}
+
+.filterPill.Melancholic.filterPillActive {
+  background-color: rgba(142, 45, 226, 0.12);
+  color: hsl(270, 70%, 45%);
+}
+
+.filterPill.Calm.filterPillActive {
+  background-color: rgba(9, 100%, 70%, 0.12);
+  color: var(--color-primary);
+}
+
+.filterPillActive:not(.Nostalgic):not(.Energetic):not(.Melancholic):not(.Calm) {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.Nostalgic {
+  background-color: rgba(230, 92, 0, 0.08);
+  color: hsl(24, 100%, 40%);
+}
+
+.Energetic {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: hsl(45, 100%, 30%);
+}
+
+.Melancholic {
+  background-color: rgba(142, 45, 226, 0.08);
+  color: hsl(270, 70%, 45%);
+}
+
+.Calm {
+  background-color: rgba(9, 100%, 70%, 0.08);
+  color: var(--color-primary);
+}
+
+.moodEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardWrapper {
+  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .centeredState {
@@ -40,7 +148,6 @@
   background-color: var(--color-surface-container-low);
   border: 1px dashed var(--color-outline-variant);
   border-radius: var(--radius-container, 12px);
-  max-width: 500px;
   margin: 0 auto;
 }
 

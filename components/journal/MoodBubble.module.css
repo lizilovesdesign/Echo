@@ -2,38 +2,73 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px; /* Touch target constraint */
+  min-height: 44px;
   padding: 8px 16px;
-  border-radius: var(--radius-small, 4px); /* Explicit small border-radius */
+  border-radius: var(--radius-small, 4px);
   font-family: var(--font-label-medium-font-family);
   font-size: var(--font-label-medium-font-size);
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid var(--color-outline-variant);
+  border: 1px solid transparent;
   transition: all 0.2s ease;
   user-select: none;
+  animation: bubbleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.bubble:nth-child(2) { animation-delay: 0.04s; }
+.bubble:nth-child(3) { animation-delay: 0.08s; }
+.bubble:nth-child(4) { animation-delay: 0.12s; }
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.nostalgic {
+  --mood-bg: hsl(37, 100%, 72%);
+  --mood-bg-hover: hsl(37, 100%, 62%);
+  --mood-text: hsl(25, 90%, 12%);
+}
+
+.energetic {
+  --mood-bg: hsl(45, 100%, 65%);
+  --mood-bg-hover: hsl(45, 100%, 55%);
+  --mood-text: hsl(32, 95%, 10%);
+}
+
+.melancholic {
+  --mood-bg: hsl(270, 75%, 78%);
+  --mood-bg-hover: hsl(270, 75%, 68%);
+  --mood-text: hsl(271, 80%, 15%);
+}
+
+.calm {
+  --mood-bg: hsl(210, 85%, 72%);
+  --mood-bg-hover: hsl(210, 85%, 62%);
+  --mood-text: hsl(217, 70%, 12%);
 }
 
 .inactive {
-  background-color: var(--color-surface);
-  color: var(--color-on-surface-variant);
-}
-
-.inactive:hover {
-  background-color: var(--color-surface-container-low);
-  color: var(--color-on-surface);
+  background-color: var(--mood-bg);
+  color: var(--mood-text);
+  opacity: 0.85;
 }
 
 .selected {
-  background-color: var(--color-primary-container, hsl(9, 100%, 83%));
-  color: var(--color-on-primary-container, hsl(8, 74%, 30%));
-  border-color: var(--color-primary);
+  background-color: var(--mood-bg-hover);
+  color: var(--mood-text);
+  border-color: var(--mood-text);
+  opacity: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .emoji {
   font-size: 16px;
-}
-
-.label {
-  display: inline-block;
+  line-height: 1;
 }

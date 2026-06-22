@@ -104,8 +104,12 @@ export async function POST(request: NextRequest) {
         artist: input.artist,
         albumArtUrl: input.albumArtUrl,
         spotifyTrackId: input.spotifyTrackId,
+        previewUrl: input.previewUrl ?? null,
         moodTag: input.moodTag,
         note: input.note,
+        stickers: input.stickers ?? [],
+        noteColor: null,
+        category: null,
       },
     });
 
@@ -113,13 +117,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, data: newEntry }, { status: 201 });
   } catch (error) {
-    logger.error('echoes.create.failed', { userId: session.userId, error });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    logger.error('echoes.create.failed', { userId: session.userId, error, message });
     return NextResponse.json(
       {
         ok: false,
         error: {
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to record Echo entry.',
+          message,
         },
       },
       { status: 500 }

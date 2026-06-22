@@ -25,16 +25,18 @@ export function HomeRecentEchoes() {
       const json = await res.json();
       return json.data || [];
     },
-    staleTime: 60_000, // 1 minute
+    staleTime: 60_000,
   });
 
-  // Show only the 3 most recent entries
   const recent = entries.slice(0, 3);
 
   return (
     <section className={styles.section} aria-label="Recent echoes">
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>My Journal</h2>
+        <Link href="/timeline" className={styles.seeAll}>
+          See all →
+        </Link>
       </div>
 
       {isLoading && (
@@ -61,8 +63,16 @@ export function HomeRecentEchoes() {
 
       {!isLoading && !error && recent.length > 0 && (
         <div className={styles.list}>
-          {recent.map((entry) => (
-            <div key={entry.id} className={styles.entryRow}>
+          {recent.map((entry, idx) => (
+            <div
+              key={entry.id}
+              className={styles.rowWrapper}
+              style={{ animationDelay: `${idx * 0.08}s` }}
+            >
+            <Link
+              href="/timeline"
+              className={styles.entryRow}
+            >
               <img
                 src={entry.albumArtUrl}
                 alt={`Album art for ${entry.songTitle}`}
@@ -80,6 +90,7 @@ export function HomeRecentEchoes() {
                   {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
                 </span>
               </div>
+            </Link>
             </div>
           ))}
         </div>

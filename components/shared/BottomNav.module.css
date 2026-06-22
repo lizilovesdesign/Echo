@@ -22,10 +22,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 48px;
+  gap: 32px;
   max-width: 600px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 16px;
   height: 64px;
 }
 
@@ -51,12 +51,26 @@
   color: var(--color-primary);
 }
 
+.item.active .label {
+  color: var(--color-primary);
+}
+
 .icon {
-  transition: transform 0.15s ease;
+  transition: transform 0.2s ease;
 }
 
 .item.active .icon {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.item.active .icon svg {
+  animation: iconPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes iconPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 .label {

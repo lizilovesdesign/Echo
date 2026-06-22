@@ -1,12 +1,11 @@
-/* HomeRecentEchoes.module.css */
-
 .section {
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .sectionHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 16px;
 }
 
@@ -16,16 +15,32 @@
   font-weight: var(--font-headline-small-font-weight);
   letter-spacing: var(--font-headline-small-letter-spacing);
   color: var(--color-on-background);
+  margin: 0;
 }
 
-/* Loading state */
+.seeAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+  min-height: 44px;
+  padding: 0 8px;
+}
+
+.seeAll:hover {
+  text-decoration: underline;
+}
+
 .loadingState {
   display: flex;
   justify-content: center;
   padding: 24px 0;
 }
 
-/* Empty state */
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -68,21 +83,37 @@
   text-decoration: none;
 }
 
-/* Entry list */
 .list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+.rowWrapper {
+  animation: rowFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .entryRow {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
+  padding: 16px;
   border-radius: 12px;
   background-color: var(--color-surface-container-low);
   transition: background-color 0.15s ease;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .entryRow:hover {
@@ -110,6 +141,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 
 .artist {
@@ -119,6 +151,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 
 .entryMeta {

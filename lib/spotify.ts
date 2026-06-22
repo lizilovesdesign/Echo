@@ -7,11 +7,10 @@ class SpotifyClient {
   private clientId = env.SPOTIFY_CLIENT_ID;
   private clientSecret = env.SPOTIFY_CLIENT_SECRET;
   private cachedToken: string | null = null;
-  private tokenExpiry: number = 0; // Unix timestamp in ms
+  private tokenExpiry: number = 0;
 
   private async getAccessToken(): Promise<string> {
     const now = Date.now();
-    // Return cached token if it's still valid (with a 60-second buffer)
     if (this.cachedToken && this.tokenExpiry > now + 60000) {
       return this.cachedToken;
     }
@@ -67,12 +66,12 @@ class SpotifyClient {
       const data = await response.json();
       const items: unknown[] = data.tracks?.items || [];
 
-      // Validate and transform raw Spotify tracks through Zod
       const rawTrackSchema = z.object({
         id: z.string(),
         name: z.string(),
         artists: z.array(z.object({ name: z.string() })).min(1),
         album: z.object({ images: z.array(z.object({ url: z.string() })) }).optional(),
+        preview_url: z.string().nullable().optional(),
       });
 
       const fallbackArt =
@@ -92,6 +91,7 @@ class SpotifyClient {
           artist: track.artists[0].name,
           albumArtUrl,
           source: 'spotify',
+          previewUrl: track.preview_url ?? null,
         });
 
         return validated.success ? validated.data : null;
@@ -99,6 +99,25 @@ class SpotifyClient {
     } catch (error) {
       logger.error('spotify.search.failed', { query, error });
       throw new Error('Music search failed. Please try again.');
+    }
+    }
+
+  public async getTrack(trackId: string): Promise<{ previewUrl: string | null }> {
+    try {
+      const accessToken = await this.getAccessToken();
+      const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Spotify track fetch failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return { previewUrl: data.preview_url ?? null };
+    } catch (error) {
+      logger.error('spotify.track.fetch_failed', { trackId, error });
+      return { previewUrl: null };
     }
   }
 }

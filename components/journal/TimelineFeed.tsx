@@ -1,14 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { EchoEntryCard, EchoEntryData } from './EchoEntryCard';
+import { MoodTag } from '@/lib/validators/echoEntry';
 import { Spinner } from '../ui/Spinner';
 import { Button } from '../ui/Button';
 import styles from './TimelineFeed.module.css';
 
+const MOOD_ORDER: MoodTag[] = ['Nostalgic', 'Energetic', 'Melancholic', 'Calm'];
+
+type Filter = 'All' | MoodTag;
+
+const moodEmojis: Record<MoodTag, string> = {
+  Nostalgic: '🍂',
+  Energetic: '⚡',
+  Melancholic: '🌧️',
+  Calm: '🌊',
+};
+
+const filters: Filter[] = ['All', ...MOOD_ORDER];
+
 export function TimelineFeed() {
+  const [activeFilter, setActiveFilter] = useState<Filter>('All');
+
   const { data: entries = [], isLoading, error } = useQuery<EchoEntryData[]>({
     queryKey: ['echoes'],
     queryFn: async () => {
@@ -20,6 +36,11 @@ export function TimelineFeed() {
       return json.data || [];
     },
   });
+
+  const filtered = useMemo(() => {
+    if (activeFilter === 'All') return entries;
+    return entries.filter((e) => e.moodTag === activeFilter);
+  }, [entries, activeFilter]);
 
   if (isLoading) {
     return (
@@ -62,9 +83,40 @@ export function TimelineFeed() {
 
   return (
     <div className={styles.feed}>
-      {entries.map((entry) => (
-        <EchoEntryCard key={entry.id} entry={entry} />
-      ))}
+      <div className={styles.filterRow}>
+        {filters.map((f) => {
+          const isActive = activeFilter === f;
+          const moodClass = f === 'All' ? '' : styles[f];
+          return (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`${styles.filterPill} ${moodClass} ${isActive ? styles.filterPillActive : styles.filterPillInactive}`}
+            >
+              {f !== 'All' && <span>{moodEmojis[f]}</span>}
+              <span>{f}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className={styles.emptyState}>
+          <p className={styles.emptySubtitle}>No entries match this mood.</p>
+        </div>
+      ) : (
+        <div className={styles.moodEntries}>
+          {filtered.map((entry, idx) => (
+            <div
+              key={entry.id}
+              className={styles.cardWrapper}
+              style={{ animationDelay: `${idx * 0.06}s` }}
+            >
+              <EchoEntryCard entry={entry} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -8,8 +8,10 @@ export const CreateEchoSchema = z.object({
   artist: z.string().min(1, 'Artist name is required'),
   albumArtUrl: z.string().url('Invalid album artwork URL'),
   spotifyTrackId: z.string().min(1, 'Spotify track ID is required'),
+  previewUrl: z.string().url().nullable().optional(),
   moodTag: MoodTagSchema,
   note: z.string().max(500, 'Note cannot exceed 500 characters'),
+  stickers: z.array(z.string()).optional(),
 });
 
 export type CreateEchoInput = z.infer<typeof CreateEchoSchema>;

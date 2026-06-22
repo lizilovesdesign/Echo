@@ -3,7 +3,6 @@
 import React from 'react';
 import { useEntryStore } from '@/lib/stores/entryStore';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
 import styles from './SongVerificationCard.module.css';
 
 interface SongVerificationCardProps {
@@ -17,7 +16,7 @@ export function SongVerificationCard({ onConfirm }: SongVerificationCardProps) {
   if (!selectedTrack) return null;
 
   return (
-    <Card className={styles.card}>
+    <div className={styles.card}>
       <div className={styles.imageWrapper}>
         <img
           src={selectedTrack.albumArtUrl}
@@ -37,6 +36,6 @@ export function SongVerificationCard({ onConfirm }: SongVerificationCardProps) {
           Use This Song
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }
