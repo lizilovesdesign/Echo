@@ -4,6 +4,7 @@ import { UserGreeting } from '@/components/shared/UserGreeting';
 import { WeekCalendarStrip } from '@/components/shared/WeekCalendarStrip';
 import { HomeRecentEchoes } from '@/components/journal/HomeRecentEchoes';
 import { JournalPrompts } from '@/components/journal/JournalPrompts';
+import { OnboardingGate } from '@/components/journal/OnboardingOverlay';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className={styles.page}>
+      <OnboardingGate />
+
       {/* Welcome header: name + avatar */}
       <UserGreeting />
 

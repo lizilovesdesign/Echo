@@ -1,0 +1,212 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--color-surface);
+  border-radius: 24px 24px 0 0;
+  padding: 40px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.carousel {
+  width: 100%;
+  overflow: hidden;
+}
+
+.carouselTrack {
+  display: flex;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide {
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.iconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  margin-bottom: 8px;
+}
+
+.slideTitle {
+  font-family: var(--font-title-medium-font-family);
+  font-size: var(--font-title-medium-font-size);
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin: 0;
+}
+
+.slideDescription {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface-variant);
+  line-height: var(--font-body-medium-line-height);
+  margin: 0;
+  max-width: 320px;
+}
+
+.installContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.installTitle {
+  font-family: var(--font-title-medium-font-family);
+  font-size: var(--font-title-medium-font-size);
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin: 0;
+}
+
+.installSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.installStep {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
+  color: var(--color-on-surface);
+  line-height: var(--font-body-medium-line-height);
+  padding: 12px 16px;
+  background-color: var(--color-surface-container);
+  border-radius: 10px;
+  counter-increment: step-counter;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.installStep::before {
+  content: counter(step-counter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-surface-variant);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s, width 0.2s;
+}
+
+.dotActive {
+  width: 24px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.nextBtn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  min-height: 48px;
+  transition: opacity 0.15s;
+}
+
+.nextBtn:hover {
+  opacity: 0.9;
+}
+
+.skipBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+  min-height: 44px;
+  padding: 8px;
+  transition: color 0.15s;
+}
+
+.skipBtn:hover {
+  color: var(--color-primary);
+}
