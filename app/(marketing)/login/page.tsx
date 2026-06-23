@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon } from 'hugeicons-react';
+import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon, ViewIcon, ViewOffIcon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
@@ -47,6 +47,7 @@ function LoginPageContent() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
@@ -99,13 +100,15 @@ function LoginPageContent() {
         if (error) throw error;
 
         if (data.session) {
+          localStorage.removeItem('echo::onboarding-done');
+
           fetch('/api/auth/after-signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: trimmedName }),
           }).catch(() => {});
 
-          router.push('/home');
+          router.push('/home?welcome=1');
         } else {
           setSuccessMsg('Verification email sent! Check your inbox to confirm your private archive.');
         }
@@ -154,10 +157,13 @@ function LoginPageContent() {
     setLoading(true);
     setErrorMsg('');
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       });
-      if (error) throw error;
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error?.message || 'Failed to send reset email.');
       setResetEmailSent(true);
       setSuccessMsg('Password reset link sent! Check your inbox.');
     } catch (err) {
@@ -270,7 +276,7 @@ function LoginPageContent() {
               <div className={styles.passwordWrapper}>
                 <Input
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => { setPassword(e.target.value); }}
@@ -278,6 +284,17 @@ function LoginPageContent() {
                   disabled={loading}
                   error={passwordError}
                   required
+                  endAdornment={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      tabIndex={-1}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: 0, color: 'inherit' }}
+                    >
+                      {showPassword ? <ViewOffIcon size={18} /> : <ViewIcon size={18} />}
+                    </button>
+                  }
                 />
 
                 {showStrength && <PasswordStrength password={password} />}

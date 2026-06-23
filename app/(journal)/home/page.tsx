@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { UserGreeting } from '@/components/shared/UserGreeting';
 import { WeekCalendarStrip } from '@/components/shared/WeekCalendarStrip';
+import { NowPlaying } from '@/components/journal/NowPlaying';
 import { HomeRecentEchoes } from '@/components/journal/HomeRecentEchoes';
 import { JournalPrompts } from '@/components/journal/JournalPrompts';
 import { OnboardingGate } from '@/components/journal/OnboardingOverlay';
@@ -15,13 +16,18 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className={styles.page}>
-      <OnboardingGate />
+      <Suspense fallback={null}>
+        <OnboardingGate />
+      </Suspense>
 
       {/* Welcome header: name + avatar */}
       <UserGreeting />
 
       {/* 7-day week calendar strip */}
       <WeekCalendarStrip />
+
+      {/* Currently playing / listening habits */}
+      <NowPlaying />
 
       {/* 3 most recent echoes */}
       <HomeRecentEchoes />

@@ -16,6 +16,7 @@ export const tokens = {
   },
   font: {
     family: "'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    title: { size: '20px', weight: '500', lineHeight: '30px', letterSpacing: '-0.3px' },
     heading: { size: '24px', weight: '500', lineHeight: '36px', letterSpacing: '-0.36px' },
     body: { size: '14px', weight: '400', lineHeight: '21px', letterSpacing: '-0.21px' },
     small: { size: '12px', weight: '400', lineHeight: '18px', letterSpacing: '-0.18px' },

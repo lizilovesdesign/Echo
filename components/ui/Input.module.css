@@ -12,6 +12,12 @@
   color: var(--color-on-surface);
 }
 
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .inputBase {
   min-height: 44px;
   padding: 10px 14px;
@@ -23,11 +29,27 @@
   font-size: 16px;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.hasAdornment {
+  padding-right: 48px;
 }
 
 .inputBase:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px var(--color-primary-container);
+}
+
+.adornment {
+  position: absolute;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--color-on-surface-variant);
 }
 
 .inputError {

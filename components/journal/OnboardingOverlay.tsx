@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { MusicNote01Icon, AddCircleIcon, BookOpen01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
 import styles from './OnboardingOverlay.module.css';
 
@@ -35,42 +36,42 @@ const STEPS = [
   },
 ];
 
-function getInstallInstructions(): { title: string; steps: string[] } | null {
+function getInstallInstructions(): { title: string; subtitle: string; steps: string[] } | null {
   if (typeof window === 'undefined') return null;
   if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as { standalone?: boolean }).standalone) {
-    return { title: 'Echo is already installed', steps: ['You\'re using the installed app. Open it anytime from your home screen.'] };
+    return { title: 'Echo is already installed', subtitle: 'You\'re using the installed app. Open it anytime from your home screen.', steps: [] };
   }
   const ua = navigator.userAgent;
   if (/iPhone|iPad|iPod/.test(ua)) {
     return {
       title: 'Add to Home Screen — iPhone / iPad',
+      subtitle: 'Install Echo on your phone for quick access, offline support, and a full-screen experience.',
       steps: [
-        'Open Safari (other browsers may not support this).',
-        'Tap the Share button at the bottom of the screen.',
-        'Scroll down and tap "Add to Home Screen".',
-        'Tap "Add" in the top-right corner.',
-        'Find Echo on your home screen and enjoy the full experience.',
+        'Open this page in Safari (other browsers won\'t show the install option).',
+        'Tap the Share icon at the bottom of the screen — it looks like a square with an arrow pointing up.',
+        'Scroll down in the share sheet and tap "Add to Home Screen".',
+        'Tap "Add" in the top-right corner. Echo will appear on your home screen like a native app.',
       ],
     };
   }
   if (/Android/.test(ua)) {
     return {
       title: 'Add to Home Screen — Android',
+      subtitle: 'Install Echo on your phone for quick access, offline support, and a full-screen experience.',
       steps: [
-        'Open Chrome.',
-        'Tap the menu icon (three dots) in the top-right corner.',
-        'Tap "Add to Home Screen" or "Install app".',
-        'Tap "Add" or "Install" in the bottom sheet.',
-        'Find Echo on your home screen and enjoy the full experience.',
+        'Open this page in Chrome.',
+        'Tap the menu icon (three dots) in the top-right corner of Chrome.',
+        'Tap "Add to Home Screen" or "Install app". If a banner appears at the bottom, tap "Install".',
+        'Tap "Add" or "Install" in the dialog. Echo will appear on your home screen like a native app.',
       ],
     };
   }
   return {
-    title: 'Install Echo',
+    title: 'Install on Your Phone',
+    subtitle: 'Open this page on your phone\'s browser and follow the steps for iPhone or Android.',
     steps: [
-      'Open this page in Chrome or Edge.',
-      'Look for the install icon in the address bar (or menu → Cast, save, and share → Install page as app).',
-      'Follow the prompts to install Echo as a desktop app.',
+      'iPhone: Open in Safari, tap the Share icon, then "Add to Home Screen".',
+      'Android: Open in Chrome, tap the menu (⋮), then "Add to Home Screen" or "Install app".',
     ],
   };
 }
@@ -111,8 +112,11 @@ export function OnboardingOverlay({ onDone }: { onDone: () => void }) {
                       <s.icon size={32} />
                     </div>
                     <h2 className={styles.installTitle}>{installInfo?.title ?? 'Add to Home Screen'}</h2>
+                    {installInfo?.subtitle && (
+                      <p className={styles.slideDescription}>{installInfo.subtitle}</p>
+                    )}
                     <ol className={styles.installSteps}>
-                      {(installInfo?.steps ?? ['Open the browser menu and select "Add to Home Screen" or "Install App"']).map((instruction, i) => (
+                      {(installInfo?.steps ?? []).map((instruction, i) => (
                         <li key={i} className={styles.installStep}>{instruction}</li>
                       ))}
                     </ol>
@@ -158,17 +162,27 @@ export function OnboardingOverlay({ onDone }: { onDone: () => void }) {
 }
 
 export function OnboardingGate() {
+  const searchParams = useSearchParams();
+  const isWelcome = searchParams.get('welcome') === '1';
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    if (isWelcome) {
+      localStorage.removeItem(ONBOARDING_KEY);
+      setShow(true);
+      return;
+    }
     const done = localStorage.getItem(ONBOARDING_KEY);
     if (!done) setShow(true);
-  }, []);
+  }, [isWelcome]);
 
   const handleDone = useCallback(() => {
     localStorage.setItem(ONBOARDING_KEY, 'true');
     setShow(false);
-  }, []);
+    if (isWelcome) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [isWelcome]);
 
   if (!show) return null;
 

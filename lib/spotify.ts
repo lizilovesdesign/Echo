@@ -3,6 +3,17 @@ import { env } from './env';
 import { MusicTrack, MusicTrackSchema } from './validators/music';
 import { logger } from './logger';
 
+export interface CurrentlyPlaying {
+  isPlaying: boolean;
+  trackId: string;
+  trackName: string;
+  artist: string;
+  albumArtUrl: string;
+  previewUrl: string | null;
+  progressMs: number;
+  durationMs: number;
+}
+
 class SpotifyClient {
   private clientId = env.SPOTIFY_CLIENT_ID;
   private clientSecret = env.SPOTIFY_CLIENT_SECRET;
@@ -130,6 +141,84 @@ class SpotifyClient {
     } catch (error) {
       logger.error('spotify.track.fetch_failed', { trackId, error });
       return { previewUrl: null };
+    }
+  }
+
+  public async refreshUserToken(
+    refreshToken: string
+  ): Promise<{ accessToken: string; expiresIn: number } | null> {
+    try {
+      const basicAuth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
+      const response = await this.fetchWithTimeout('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${basicAuth}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        }),
+        cache: 'no-store',
+        timeout: 10000,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Spotify token refresh failed: ${response.status} ${errorText}`);
+      }
+
+      const data = await response.json();
+      return {
+        accessToken: data.access_token,
+        expiresIn: data.expires_in,
+      };
+    } catch (error) {
+      logger.error('spotify.token.refresh_failed', { error });
+      return null;
+    }
+  }
+
+  public async getCurrentlyPlaying(accessToken: string): Promise<CurrentlyPlaying | null> {
+    try {
+      const response = await this.fetchWithTimeout(
+        'https://api.spotify.com/v1/me/player/currently-playing',
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+
+      if (response.status === 204 || response.status === 404) {
+        return null;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Spotify currently-playing fetch failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data || !data.item) {
+        return null;
+      }
+
+      const track = data.item;
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      return {
+        isPlaying: data.is_playing ?? false,
+        trackId: track.id,
+        trackName: track.name,
+        artist: track.artists?.[0]?.name ?? 'Unknown Artist',
+        albumArtUrl: track.album?.images?.[0]?.url ?? fallbackArt,
+        previewUrl: track.preview_url ?? null,
+        progressMs: data.progress_ms ?? 0,
+        durationMs: track.duration_ms ?? 0,
+      };
+    } catch (error) {
+      logger.error('spotify.currently_playing.fetch_failed', { error });
+      return null;
     }
   }
 }

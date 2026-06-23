@@ -129,6 +129,7 @@
   color: var(--color-primary);
   background: linear-gradient(120deg, var(--color-primary) 0%, hsl(15, 100%, 65%) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

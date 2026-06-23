@@ -10,11 +10,14 @@ import {
   UserIcon,
   Moon01Icon,
   MusicNote01Icon,
+  MusicNote02Icon,
   Mail01Icon,
   Logout01Icon,
   Delete01Icon,
   Edit01Icon,
   LockIcon,
+  Link01Icon,
+  Unlink01Icon,
 } from 'hugeicons-react';
 import styles from './page.module.css';
 
@@ -29,6 +32,8 @@ export default function ProfilePage() {
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [spotifyConnected, setSpotifyConnected] = useState(false);
+  const [spotifyLoading, setSpotifyLoading] = useState(true);
 
   useEffect(() => {
     async function loadProfile() {
@@ -45,6 +50,23 @@ export default function ProfilePage() {
     }
     loadProfile();
   }, [supabase]);
+
+  useEffect(() => {
+    async function checkSpotify() {
+      try {
+        const res = await fetch('/api/auth/spotify/status');
+        const json = await res.json();
+        if (json.ok) {
+          setSpotifyConnected(json.data.connected);
+        }
+      } catch {
+        // Silently fail
+      } finally {
+        setSpotifyLoading(false);
+      }
+    }
+    checkSpotify();
+  }, []);
 
   const handleLogout = useCallback(async () => {
     setLoggingOut(true);
@@ -117,10 +139,33 @@ export default function ProfilePage() {
 
         <div className={styles.settingRow}>
           <div className={styles.settingInfo}>
-            <MusicNote01Icon size={18} className={styles.settingIcon} />
-            <span>Music service</span>
+            {spotifyConnected ? (
+              <MusicNote02Icon size={18} className={styles.settingIcon} />
+            ) : (
+              <MusicNote01Icon size={18} className={styles.settingIcon} />
+            )}
+            <span>Spotify</span>
           </div>
-          <span className={styles.settingValue}>Spotify</span>
+          {spotifyLoading ? (
+            <span className={styles.settingValue}>Checking...</span>
+          ) : spotifyConnected ? (
+            <button
+              onClick={async () => {
+                await fetch('/api/auth/spotify/unlink', { method: 'POST' });
+                setSpotifyConnected(false);
+              }}
+              className={styles.linkBtn}
+              aria-label="Disconnect Spotify"
+            >
+              <Unlink01Icon size={16} />
+              <span>Disconnect</span>
+            </button>
+          ) : (
+            <a href="/api/auth/spotify/link" className={styles.linkBtn}>
+              <Link01Icon size={16} />
+              <span>Connect</span>
+            </a>
+          )}
         </div>
       </div>
 
