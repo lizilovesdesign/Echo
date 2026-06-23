@@ -37,11 +37,22 @@ class PrismaEchoEntryRepository implements IEchoEntryRepository {
   }
 
   async create(userId: string, email: string, input: CreateEchoInput): Promise<EchoEntryRecord> {
-    await prisma.user.upsert({
-      where: { id: userId },
-      update: {},
-      create: { id: userId, email },
-    });
+    const existing = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!existing) {
+      const existingByEmail = await prisma.user.findUnique({ where: { email } });
+
+      if (existingByEmail && existingByEmail.id !== userId) {
+        const oldId = existingByEmail.id;
+        await prisma.$transaction([
+          prisma.echoEntry.updateMany({ where: { userId: oldId }, data: { userId } }),
+          prisma.user.delete({ where: { id: oldId } }),
+          prisma.user.create({ data: { id: userId, email } }),
+        ]);
+      } else {
+        await prisma.user.create({ data: { id: userId, email } });
+      }
+    }
 
     return prisma.echoEntry.create({
       data: {
