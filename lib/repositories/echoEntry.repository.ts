@@ -45,9 +45,24 @@ class PrismaEchoEntryRepository implements IEchoEntryRepository {
       if (existingByEmail && existingByEmail.id !== userId) {
         const oldId = existingByEmail.id;
         await prisma.$transaction([
-          prisma.echoEntry.updateMany({ where: { userId: oldId }, data: { userId } }),
-          prisma.user.delete({ where: { id: oldId } }),
-          prisma.user.create({ data: { id: userId, email } }),
+          // 1. Rename old user's email to free the unique constraint
+          prisma.user.update({
+            where: { id: oldId },
+            data: { email: `${email}_old_${oldId}` },
+          }),
+          // 2. Create the new user with target ID and original email
+          prisma.user.create({
+            data: { id: userId, email },
+          }),
+          // 3. Move all echo entries from old ID to new ID
+          prisma.echoEntry.updateMany({
+            where: { userId: oldId },
+            data: { userId },
+          }),
+          // 4. Delete the old user
+          prisma.user.delete({
+            where: { id: oldId },
+          }),
         ]);
       } else {
         await prisma.user.create({ data: { id: userId, email } });

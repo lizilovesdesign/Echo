@@ -3,8 +3,9 @@
   inset: 0;
   z-index: 300;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
+  padding: 24px;
   animation: fadeIn 0.3s ease;
 }
 
@@ -23,25 +24,55 @@
 .card {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
   background-color: var(--color-surface);
-  border-radius: 24px 24px 0 0;
-  padding: 40px 24px 32px;
+  border-radius: 24px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-variant);
+  border-radius: 4px;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 24px 16px;
+    gap: 16px;
+    max-height: 80vh;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .carousel {
   width: 100%;
   overflow: hidden;
+  flex: 1;
+  min-height: 0;
 }
 
 .carouselTrack {
@@ -55,20 +86,33 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding: 8px 0;
+  padding: 4px 0;
   text-align: center;
+}
+
+@media (max-width: 480px) {
+  .slide {
+    gap: 12px;
+  }
 }
 
 .iconCircle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background-color: var(--color-primary-container);
   color: var(--color-on-primary-container);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 480px) {
+  .iconCircle {
+    width: 56px;
+    height: 56px;
+  }
 }
 
 .slideTitle {
@@ -92,7 +136,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -104,10 +148,30 @@
   margin: 0;
 }
 
+.platformRow {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.platformSection {
+  width: 100%;
+}
+
+.platformHeading {
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 600;
+  color: var(--color-on-surface-variant);
+  margin: 0 0 6px;
+  text-align: left;
+}
+
 .installSteps {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
   width: 100%;
   text-align: left;
   padding: 0;
@@ -118,16 +182,14 @@
 
 .installStep {
   font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
+  font-size: var(--font-body-small-font-size);
   color: var(--color-on-surface);
-  line-height: var(--font-body-medium-line-height);
-  padding: 12px 16px;
+  line-height: 1.4;
+  padding: 8px 12px 8px 36px;
   background-color: var(--color-surface-container);
-  border-radius: 10px;
+  border-radius: 8px;
   counter-increment: step-counter;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  position: relative;
 }
 
 .installStep::before {
@@ -135,15 +197,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--color-primary);
   color: var(--color-on-primary);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   flex-shrink: 0;
-  margin-top: 1px;
+  position: absolute;
+  left: 8px;
+  top: 8px;
+}
+
+@media (max-width: 480px) {
+  .installStep {
+    font-size: 12px;
+    padding: 6px 10px 6px 32px;
+    line-height: 1.35;
+  }
+
+  .installStep::before {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    left: 7px;
+    top: 7px;
+  }
+
+  .platformRow {
+    gap: 12px;
+  }
 }
 
 .dots {
@@ -172,7 +256,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -203,7 +287,7 @@
   font-size: var(--font-body-small-font-size);
   color: var(--color-on-surface-variant);
   min-height: 44px;
-  padding: 8px;
+  padding: 6px;
   transition: color 0.15s;
 }
 

@@ -12,7 +12,7 @@ import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import styles from './EchoEntryForm.module.css';
 
-const STICKER_EMOJIS = ['🌟', '❤️', '🎶', '💭', '🔥', '✨', '🌸', '🎵'];
+const STICKER_EMOJIS = ['🌟', '❤️', '💔', '😢', '🌧️', '🥀', '🩹', '🎶', '💭', '🔥', '✨', '🌸'];
 
 const PROMPT_QUESTIONS: Record<string, string> = {
   reflect: 'What song has been living in your head today?',

@@ -118,10 +118,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 12px 16px;
   border-radius: var(--radius-interactive, 8px);
-  border: 1px solid var(--color-outline-variant);
-  background-color: var(--color-surface);
+  border: none;
+  background-color: var(--color-surface-container-low);
 }
 
 .trackArt {

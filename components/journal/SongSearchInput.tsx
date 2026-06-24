@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Search01Icon } from 'hugeicons-react';
 import { useEntryStore } from '@/lib/stores/entryStore';
 import { MusicTrack } from '@/lib/validators/music';
 import { Spinner } from '../ui/Spinner';
@@ -43,15 +44,28 @@ export function SongSearchInput() {
 
   return (
     <div className={styles.container}>
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="I'm listening to..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className={styles.input}
-        aria-label="Search for a song"
-      />
+      <div className={styles.searchWrapper}>
+        <Search01Icon className={styles.searchIcon} size={20} />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="I'm listening to..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className={styles.input}
+          aria-label="Search for a song"
+        />
+        {query.trim().length > 0 && (
+          <button
+            type="button"
+            className={styles.clearButton}
+            onClick={() => setQuery('')}
+            aria-label="Clear search"
+          >
+            ×
+          </button>
+        )}
+      </div>
 
       {isLoading && (
         <div className={styles.loadingWrapper}>

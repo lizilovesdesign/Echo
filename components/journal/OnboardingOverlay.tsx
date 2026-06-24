@@ -36,53 +36,8 @@ const STEPS = [
   },
 ];
 
-function getInstallInstructions(): { title: string; subtitle: string; steps: string[] } | null {
-  if (typeof window === 'undefined') return null;
-  if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as { standalone?: boolean }).standalone) {
-    return { title: 'Echo is already installed', subtitle: 'You\'re using the installed app. Open it anytime from your home screen.', steps: [] };
-  }
-  const ua = navigator.userAgent;
-  if (/iPhone|iPad|iPod/.test(ua)) {
-    return {
-      title: 'Add to Home Screen — iPhone / iPad',
-      subtitle: 'Install Echo on your phone for quick access, offline support, and a full-screen experience.',
-      steps: [
-        'Open this page in Safari (other browsers won\'t show the install option).',
-        'Tap the Share icon at the bottom of the screen — it looks like a square with an arrow pointing up.',
-        'Scroll down in the share sheet and tap "Add to Home Screen".',
-        'Tap "Add" in the top-right corner. Echo will appear on your home screen like a native app.',
-      ],
-    };
-  }
-  if (/Android/.test(ua)) {
-    return {
-      title: 'Add to Home Screen — Android',
-      subtitle: 'Install Echo on your phone for quick access, offline support, and a full-screen experience.',
-      steps: [
-        'Open this page in Chrome.',
-        'Tap the menu icon (three dots) in the top-right corner of Chrome.',
-        'Tap "Add to Home Screen" or "Install app". If a banner appears at the bottom, tap "Install".',
-        'Tap "Add" or "Install" in the dialog. Echo will appear on your home screen like a native app.',
-      ],
-    };
-  }
-  return {
-    title: 'Install on Your Phone',
-    subtitle: 'Open this page on your phone\'s browser and follow the steps for iPhone or Android.',
-    steps: [
-      'iPhone: Open in Safari, tap the Share icon, then "Add to Home Screen".',
-      'Android: Open in Chrome, tap the menu (⋮), then "Add to Home Screen" or "Install app".',
-    ],
-  };
-}
-
 export function OnboardingOverlay({ onDone }: { onDone: () => void }) {
   const [step, setStep] = useState(0);
-  const [installInfo, setInstallInfo] = useState<ReturnType<typeof getInstallInstructions>>(null);
-
-  useEffect(() => {
-    setInstallInfo(getInstallInstructions());
-  }, []);
 
   const isLast = step === STEPS.length - 1;
 
@@ -111,15 +66,30 @@ export function OnboardingOverlay({ onDone }: { onDone: () => void }) {
                     <div className={styles.iconCircle}>
                       <s.icon size={32} />
                     </div>
-                    <h2 className={styles.installTitle}>{installInfo?.title ?? 'Add to Home Screen'}</h2>
-                    {installInfo?.subtitle && (
-                      <p className={styles.slideDescription}>{installInfo.subtitle}</p>
-                    )}
-                    <ol className={styles.installSteps}>
-                      {(installInfo?.steps ?? []).map((instruction, i) => (
-                        <li key={i} className={styles.installStep}>{instruction}</li>
-                      ))}
-                    </ol>
+                    <h2 className={styles.installTitle}>Install Echo on Your Phone</h2>
+                    <p className={styles.slideDescription}>
+                      Add Echo to your home screen for quick access and the best experience.
+                    </p>
+                    <div className={styles.platformRow}>
+                      <div className={styles.platformSection}>
+                        <h3 className={styles.platformHeading}>iPhone / iPad</h3>
+                        <ol className={styles.installSteps}>
+                          <li className={styles.installStep}>Open this page in Safari</li>
+                          <li className={styles.installStep}>Tap the Share icon at the bottom of the screen</li>
+                          <li className={styles.installStep}>Scroll down and tap &ldquo;Add to Home Screen&rdquo;</li>
+                          <li className={styles.installStep}>Tap &ldquo;Add&rdquo; in the top-right corner</li>
+                        </ol>
+                      </div>
+                      <div className={styles.platformSection}>
+                        <h3 className={styles.platformHeading}>Android</h3>
+                        <ol className={styles.installSteps}>
+                          <li className={styles.installStep}>Open this page in Chrome</li>
+                          <li className={styles.installStep}>Tap the menu icon (⋮) in Chrome</li>
+                          <li className={styles.installStep}>Tap &ldquo;Add to Home Screen&rdquo; or &ldquo;Install app&rdquo;</li>
+                          <li className={styles.installStep}>Tap &ldquo;Add&rdquo; or &ldquo;Install&rdquo; in the dialog</li>
+                        </ol>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <>

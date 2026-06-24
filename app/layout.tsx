@@ -32,10 +32,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#1c1c1f' },
-    { media: '(prefers-color-scheme: light)', color: '#fff5f2' },
-  ],
+  themeColor: '#1c1c1f',
 };
 
 export default function RootLayout({
@@ -52,7 +49,7 @@ export default function RootLayout({
               (function() {
                 try {
                   var t = localStorage.getItem('theme');
-                  if (!t) { t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+                  if (!t) { t = 'dark'; }
                   if (t === 'dark') { document.documentElement.classList.add('dark', 'dark-theme'); }
                   else { document.documentElement.classList.add('light-theme'); }
                 } catch(e) {}
