@@ -154,6 +154,19 @@
   margin: 0;
 }
 
+.albumBadge {
+  display: inline-block;
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+  align-self: flex-start;
+}
+
 .entryMeta {
   display: flex;
   flex-direction: column;

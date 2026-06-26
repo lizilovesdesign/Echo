@@ -1,12 +1,7 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Sun01Icon, Moon01Icon, MusicNote01Icon, ArrowRight01Icon, HeartAddIcon } from 'hugeicons-react';
-import { useTheme } from '@/lib/theme-context';
-import { useMounted } from '@/lib/use-mounted';
-import { Button } from '@/components/ui/Button';
+import { MusicNote01Icon } from 'hugeicons-react';
+import { ThemeToggle, FooterThemeButton, HeroCta, FooterHeart } from '@/components/marketing/MarketingInteractive';
 import styles from './page.module.css';
 
 const floatingEntries = [
@@ -45,9 +40,6 @@ const floatingEntries = [
 ];
 
 export default function LandingPage() {
-  const mounted = useMounted();
-  const { theme, toggleTheme } = useTheme();
-  const router = useRouter();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -59,13 +51,7 @@ export default function LandingPage() {
         </div>
 
         <div className={styles.actions}>
-          <button
-            onClick={toggleTheme}
-            className={styles.themeToggle}
-            aria-label="Toggle dark/light theme"
-          >
-            {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
-          </button>
+          <ThemeToggle />
 
           <Link href="/login">
             <span className={styles.loginLink}>Log in</span>
@@ -104,9 +90,7 @@ export default function LandingPage() {
           </p>
 
           <div className={styles.ctaGroup}>
-            <Button size="md" variant="primary" className={styles.heroCta} onClick={() => router.push('/login?mode=signup')}>
-              Join Echo <ArrowRight01Icon size={16} className={styles.arrow} />
-            </Button>
+            <HeroCta />
           </div>
         </div>
       </main>
@@ -162,21 +146,10 @@ export default function LandingPage() {
 
           <div className={styles.footerBottom}>
             <p className={styles.footerCopyright}>
-              &copy; {currentYear} Echo. Made with <HeartAddIcon size={12} className={styles.heartIcon} /> for music lovers.
+              &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.
             </p>
             <div className={styles.footerTheme}>
-              <button
-                onClick={toggleTheme}
-                className={styles.footerThemeBtn}
-                aria-label="Switch theme"
-              >
-                {mounted ? (theme === 'dark' ? <Sun01Icon size={14} /> : <Moon01Icon size={14} />) : <div style={{ width: 14, height: 14 }} />}
-                {mounted ? (
-                  <span>{theme === 'dark' ? 'Light' : 'Dark'} Mode</span>
-                ) : (
-                  <span style={{ display: 'inline-block', width: 70 }} />
-                )}
-              </button>
+              <FooterThemeButton />
             </div>
           </div>
         </div>

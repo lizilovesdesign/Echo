@@ -19,6 +19,9 @@ export interface EchoEntryData {
   albumArtUrl: string;
   spotifyTrackId: string;
   previewUrl: string | null;
+  entryType: string;
+  albumName: string | null;
+  spotifyAlbumId: string | null;
   moodTag: MoodTag;
   note: string;
   stickers: string[];
@@ -59,6 +62,9 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
       albumArtUrl: entry.albumArtUrl,
       spotifyTrackId: entry.spotifyTrackId,
       previewUrl: entry.previewUrl,
+      entryType: entry.entryType,
+      albumName: entry.albumName,
+      spotifyAlbumId: entry.spotifyAlbumId,
       moodTag: entry.moodTag,
       note: entry.note,
       stickers: entry.stickers ?? [],
@@ -111,6 +117,9 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
           <div className={styles.trackDetails}>
             <h4 className={styles.songTitle}>{entry.songTitle}</h4>
             <p className={styles.artist}>{entry.artist}</p>
+            {entry.entryType === 'album' && (
+              <span className={styles.albumBadge}>Album</span>
+            )}
           </div>
         </div>
         <button

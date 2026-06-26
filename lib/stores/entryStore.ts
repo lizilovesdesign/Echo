@@ -19,6 +19,9 @@ interface EntryStore {
     albumArtUrl: string;
     spotifyTrackId: string;
     previewUrl: string | null;
+    entryType?: string;
+    albumName?: string | null;
+    spotifyAlbumId?: string | null;
     moodTag: MoodTag;
     note: string;
     stickers: string[];
@@ -45,6 +48,9 @@ export const useEntryStore = create<EntryStore>((set) => ({
         albumArtUrl: data.albumArtUrl,
         previewUrl: data.previewUrl,
         source: 'spotify',
+        entryType: (data.entryType as 'song' | 'album') || 'song',
+        albumName: data.albumName ?? undefined,
+        albumId: data.spotifyAlbumId ?? undefined,
       },
       note: data.note,
       moodTag: data.moodTag,

@@ -97,6 +97,19 @@
   color: var(--color-on-surface-variant);
 }
 
+.albumBadge {
+  display: inline-block;
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
 .deleteButton {
   background: none;
   border: none;

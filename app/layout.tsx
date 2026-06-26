@@ -43,6 +43,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link rel="preconnect" href="https://i.scdn.co" />
+        <link rel="dns-prefetch" href="https://api.fontshare.com" />
+        <link rel="dns-prefetch" href="https://i.scdn.co" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

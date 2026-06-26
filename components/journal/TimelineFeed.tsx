@@ -11,11 +11,19 @@ import { Button } from '../ui/Button';
 import styles from './TimelineFeed.module.css';
 
 type Filter = 'All' | MoodTag;
+type TypeFilter = 'all' | 'song' | 'album';
 
 const filters: Filter[] = ['All', ...MOOD_ORDER];
 
+const typeTabs: { key: TypeFilter; label: string }[] = [
+  { key: 'all', label: 'All entries' },
+  { key: 'song', label: 'Songs' },
+  { key: 'album', label: 'Albums' },
+];
+
 export function TimelineFeed() {
   const [activeFilter, setActiveFilter] = useState<Filter>('All');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
 
   const { data: entries = [], isLoading, error } = useQuery<EchoEntryData[]>({
     queryKey: ['echoes'],
@@ -30,9 +38,15 @@ export function TimelineFeed() {
   });
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'All') return entries;
-    return entries.filter((e) => e.moodTag === activeFilter);
-  }, [entries, activeFilter]);
+    let result = entries;
+    if (typeFilter !== 'all') {
+      result = result.filter((e) => e.entryType === typeFilter);
+    }
+    if (activeFilter !== 'All') {
+      result = result.filter((e) => e.moodTag === activeFilter);
+    }
+    return result;
+  }, [entries, activeFilter, typeFilter]);
 
   if (isLoading) {
     return (
@@ -75,6 +89,18 @@ export function TimelineFeed() {
 
   return (
     <div className={styles.feed}>
+      <div className={styles.typeTabRow}>
+        {typeTabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setTypeFilter(tab.key)}
+            className={`${styles.typeTab} ${typeFilter === tab.key ? styles.typeTabActive : ''}`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       <div className={styles.filterRow}>
         {filters.map((f) => {
           const isActive = activeFilter === f;

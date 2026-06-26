@@ -7,6 +7,9 @@ export const MusicTrackSchema = z.object({
   albumArtUrl: z.string().url(),
   source: z.enum(['spotify']),
   previewUrl: z.string().nullable().optional(),
+  entryType: z.enum(['song', 'album']).optional().default('song'),
+  albumName: z.string().optional(),
+  albumId: z.string().optional(),
 });
 
 export type MusicTrack = z.infer<typeof MusicTrackSchema>;

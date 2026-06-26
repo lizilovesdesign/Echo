@@ -81,6 +81,9 @@ export function HomeRecentEchoes() {
               <div className={styles.entryInfo}>
                 <p className={styles.songTitle}>{entry.songTitle}</p>
                 <p className={styles.artist}>{entry.artist}</p>
+                {entry.entryType === 'album' && (
+                  <span className={styles.albumBadge}>Album</span>
+                )}
               </div>
               <div className={styles.entryMeta}>
                 <span className={styles.moodEmoji} aria-label={entry.moodTag}>

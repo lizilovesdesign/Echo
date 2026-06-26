@@ -68,6 +68,61 @@ class SpotifyClient {
     }
   }
 
+  public async searchAlbums(query: string): Promise<MusicTrack[]> {
+    if (!query.trim()) return [];
+
+    try {
+      const accessToken = await this.getAccessToken();
+      const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=8`;
+
+      const response = await this.fetchWithTimeout(searchUrl, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Spotify album search failed: ${response.status} ${errorText}`);
+      }
+
+      const data = await response.json();
+      const items: unknown[] = data.albums?.items || [];
+
+      const rawAlbumSchema = z.object({
+        id: z.string(),
+        name: z.string(),
+        artists: z.array(z.object({ name: z.string() })).min(1),
+        images: z.array(z.object({ url: z.string() })).optional(),
+      });
+
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      return items.map((item) => {
+        const parsed = rawAlbumSchema.safeParse(item);
+        if (!parsed.success) return null;
+        const album = parsed.data;
+        const albumArtUrl = album.images?.[0]?.url ?? fallbackArt;
+
+        const validated = MusicTrackSchema.safeParse({
+          id: album.id,
+          name: album.name,
+          artist: album.artists[0].name,
+          albumArtUrl,
+          source: 'spotify',
+          previewUrl: null,
+          entryType: 'album',
+          albumName: album.name,
+          albumId: album.id,
+        });
+
+        return validated.success ? validated.data : null;
+      }).filter((t): t is MusicTrack => t !== null);
+    } catch (error) {
+      logger.error('spotify.album_search.failed', { query, error });
+      throw new Error('Album search failed. Please try again.');
+    }
+  }
+
   public async searchTracks(query: string): Promise<MusicTrack[]> {
     if (!query.trim()) return [];
 

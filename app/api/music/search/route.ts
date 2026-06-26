@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q');
+  const type = searchParams.get('type') || 'track';
 
   if (!query || !query.trim()) {
     return NextResponse.json(
@@ -37,10 +38,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tracks = await spotify.searchTracks(query);
-    return NextResponse.json({ ok: true, data: tracks });
+    const results = type === 'album'
+      ? await spotify.searchAlbums(query)
+      : await spotify.searchTracks(query);
+    return NextResponse.json({ ok: true, data: results });
   } catch (error) {
-    logger.error('music.search.internal_error', { query, error });
+    logger.error('music.search.internal_error', { query, type, error });
     return NextResponse.json(
       {
         ok: false,

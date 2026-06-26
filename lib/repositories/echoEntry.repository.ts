@@ -9,6 +9,9 @@ export interface EchoEntryRecord {
   albumArtUrl: string;
   spotifyTrackId: string;
   previewUrl: string | null;
+  entryType: string;
+  albumName: string | null;
+  spotifyAlbumId: string | null;
   moodTag: string;
   note: string;
   stickers: string[];
@@ -77,6 +80,9 @@ class PrismaEchoEntryRepository implements IEchoEntryRepository {
         albumArtUrl: input.albumArtUrl,
         spotifyTrackId: input.spotifyTrackId,
         previewUrl: input.previewUrl ?? null,
+        entryType: input.entryType ?? 'song',
+        albumName: input.albumName ?? null,
+        spotifyAlbumId: input.spotifyAlbumId ?? null,
         moodTag: input.moodTag,
         note: input.note,
         stickers: input.stickers ?? [],
