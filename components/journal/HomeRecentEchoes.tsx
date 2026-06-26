@@ -28,7 +28,7 @@ export function HomeRecentEchoes() {
     staleTime: 60_000,
   });
 
-  const recent = entries.slice(0, 3);
+  const recent = entries.slice(0, 4);
 
   return (
     <section className={styles.section} aria-label="Recent echoes">

@@ -7,7 +7,6 @@ interface Prompt {
   emoji: string;
   title: string;
   question: string;
-  accent: 'rose' | 'lavender' | 'amber' | 'mint';
 }
 
 const PROMPTS: Prompt[] = [
@@ -16,28 +15,24 @@ const PROMPTS: Prompt[] = [
     emoji: '🌱',
     title: 'Pause & reflect',
     question: 'What song has been living in your head today?',
-    accent: 'rose',
   },
   {
     id: 'intentions',
     emoji: '☀️',
     title: 'Set intentions',
     question: 'What feeling do you want to soundtrack right now?',
-    accent: 'amber',
   },
   {
     id: 'memory',
     emoji: '🎞️',
     title: 'Capture a memory',
     question: 'Which song teleports you to a specific moment?',
-    accent: 'lavender',
   },
   {
     id: 'gratitude',
     emoji: '💫',
     title: 'Express gratitude',
     question: 'Name a track that always lifts your spirit.',
-    accent: 'mint',
   },
 ];
 
@@ -54,7 +49,7 @@ export function JournalPrompts() {
             <Link
               key={prompt.id}
               href={`/create?prompt=${prompt.id}`}
-              className={`${styles.promptCard} ${styles[prompt.accent]}`}
+              className={styles.promptCard}
               aria-label={`Start: ${prompt.title}`}
             >
               <span className={styles.emoji} aria-hidden="true">

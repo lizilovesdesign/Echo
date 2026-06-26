@@ -53,7 +53,6 @@
   text-decoration: none;
   background-color: var(--card-bg);
   color: var(--card-text);
-  border-top: 3px solid transparent;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   -webkit-tap-highlight-color: transparent;
   animation: promptIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -107,12 +106,6 @@
   color: var(--card-muted);
 }
 
-/* Accent border colours — Natural Pop palette */
-.rose   { border-top-color: #C98670; } /* Muted Terracotta — warmth */
-.amber  { border-top-color: #8A9A5B; } /* Sage Moss — organic */
-.lavender { border-top-color: #6F7E9B; } /* Dusty Indigo — deep/soulful */
-.mint   { border-top-color: #708090; } /* Soft Slate — grounding */
-
 /* Dark mode — system preference */
 @media (prefers-color-scheme: dark) {
   .promptCard {
@@ -120,11 +113,6 @@
     --card-text: #E0DDDB;
     --card-muted: #9A9794;
   }
-
-  .rose   { border-top-color: #C98670; }
-  .amber  { border-top-color: #8A9A5B; }
-  .lavender { border-top-color: #6F7E9B; }
-  .mint   { border-top-color: #708090; }
 }
 
 /* Light mode — class-based (theme toggle) — overrides system @media */
@@ -134,11 +122,6 @@
   --card-muted: #756E69;
 }
 
-:global(.light-theme) .rose { border-top-color: #C98670; }
-:global(.light-theme) .amber { border-top-color: #8A9A5B; }
-:global(.light-theme) .lavender { border-top-color: #6F7E9B; }
-:global(.light-theme) .mint { border-top-color: #708090; }
-
 /* Dark mode — class-based (theme toggle) */
 :global(.dark) .promptCard,
 :global(.dark-theme) .promptCard {
@@ -146,12 +129,3 @@
   --card-text: #E0DDDB;
   --card-muted: #9A9794;
 }
-
-:global(.dark) .rose,
-:global(.dark-theme) .rose { border-top-color: #C98670; }
-:global(.dark) .amber,
-:global(.dark-theme) .amber { border-top-color: #8A9A5B; }
-:global(.dark) .lavender,
-:global(.dark-theme) .lavender { border-top-color: #6F7E9B; }
-:global(.dark) .mint,
-:global(.dark-theme) .mint { border-top-color: #708090; }
