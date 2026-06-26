@@ -1,7 +1,17 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
-import { TimelineFeed } from '@/components/journal/TimelineFeed';
+import { Spinner } from '@/components/ui/Spinner';
 import styles from './page.module.css';
+
+const TimelineFeed = dynamic(() => import('@/components/journal/TimelineFeed').then((m) => m.TimelineFeed), {
+  ssr: false,
+  loading: () => (
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+      <Spinner size="lg" />
+    </div>
+  ),
+});
 
 export const metadata: Metadata = {
   title: 'Your Timeline — Echo',

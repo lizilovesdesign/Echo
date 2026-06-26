@@ -1,12 +1,21 @@
 import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { UserGreeting } from '@/components/shared/UserGreeting';
 import { WeekCalendarStrip } from '@/components/shared/WeekCalendarStrip';
-import { NowPlaying } from '@/components/journal/NowPlaying';
 import { HomeRecentEchoes } from '@/components/journal/HomeRecentEchoes';
 import { JournalPrompts } from '@/components/journal/JournalPrompts';
-import { OnboardingGate } from '@/components/journal/OnboardingOverlay';
 import styles from './page.module.css';
+
+const OnboardingGate = dynamic(() => import('@/components/journal/OnboardingOverlay').then((m) => m.OnboardingGate), {
+  ssr: false,
+  loading: () => null,
+});
+
+const NowPlaying = dynamic(() => import('@/components/journal/NowPlaying').then((m) => m.NowPlaying), {
+  ssr: false,
+  loading: () => null,
+});
 
 export const metadata: Metadata = {
   title: 'Home — Echo',
