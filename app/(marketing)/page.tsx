@@ -124,9 +124,6 @@ export default function LandingPage() {
           <FadeUpItem delay={0.28}>
             <div className={styles.ctaGroup}>
               <HeroCta />
-              <a href="#features" className={styles.secondaryCta}>
-                See how it works
-              </a>
             </div>
           </FadeUpItem>
         </HeroAnimator>

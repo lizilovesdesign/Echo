@@ -109,7 +109,7 @@
   grid-template-rows: auto auto;
   gap: 48px;
   align-items: center;
-  padding: 64px 24px 80px;
+  padding: 64px 24px 0;
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
@@ -120,7 +120,7 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     min-height: 80vh;
-    padding: 80px 48px;
+    padding: 80px 48px 0;
     gap: 64px;
   }
 }
@@ -208,22 +208,6 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.secondaryCta {
-  font-family: var(--font-label-medium-font-family);
-  font-size: var(--font-label-medium-font-size);
-  color: var(--ink-secondary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  transition: color 0.2s;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.secondaryCta:hover {
-  color: var(--ink-primary);
 }
 
 .heroCta {
@@ -397,7 +381,7 @@
 
 .featuresSection {
   background-color: var(--color-background);
-  padding: 96px 24px;
+  padding: 64px 24px 96px;
 }
 
 .sectionHeader {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import styles from '@/app/(marketing)/page.module.css';
 
@@ -74,8 +74,6 @@ export function NotebookCard({
   delay,
   className,
 }: NotebookCardProps) {
-  const constraintsRef = useRef(null);
-
   return (
     <motion.div
       className={`${styles.notebookCard} ${className ?? ''}`}
@@ -84,26 +82,13 @@ export function NotebookCard({
       animate="visible"
       variants={cardReveal}
       transition={{ delay }}
-      // ── Drag ──────────────────────────────────────────────────────────────
-      drag
-      dragMomentum
-      dragElastic={0.18}
-      whileDrag={{
-        scale: 1.06,
-        rotate: tilt + 1.5,
-        zIndex: 50,
-        boxShadow: '0 20px 48px rgba(0,0,0,0.15)',
-        cursor: 'grabbing',
-        transition: { type: 'spring', stiffness: 300, damping: 25 },
-      }}
-      // ── Hover (non-drag) ─────────────────────────────────────────────────
+      // ── Hover / touch lift ───────────────────────────────────────────────
       whileHover={{
         y: -8,
         scale: 1.02,
         rotate: tilt * 0.4,
         transition: { type: 'spring', stiffness: 180, damping: 18 },
       }}
-      style={{ cursor: 'grab', touchAction: 'none' }}
     >
       {/* Ruled lines — background gradient approach so lines are always behind text */}
       <div className={styles.cardRuledLines} aria-hidden="true" />

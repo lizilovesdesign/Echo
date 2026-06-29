@@ -36,6 +36,14 @@
   padding-right: 48px;
 }
 
+.inputBase:-webkit-autofill,
+.inputBase:-webkit-autofill:hover,
+.inputBase:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-on-surface);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .inputBase:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px var(--color-primary-container);
