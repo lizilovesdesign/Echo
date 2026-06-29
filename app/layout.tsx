@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Echo — A Private Music & Emotional Journal',
-    description: 'Anchor your favorite songs to personal memories and moods in a secure, distraction-free emotional archive.',
+    description: 'Anchor your favorite songs to personal memories and moods.',
     siteName: 'Echo',
     images: [
       {
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Echo — A Private Music & Emotional Journal',
-    description: 'Anchor your favorite songs to personal memories and moods in a secure, distraction-free emotional archive.',
+    description: 'Anchor your favorite songs to personal memories and moods.',
     images: ['/icon-512.png'],
   },
 };
