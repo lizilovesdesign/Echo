@@ -54,6 +54,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={satoshi.variable}>
       <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <link rel="preconnect" href="https://i.scdn.co" />
         <link rel="dns-prefetch" href="https://i.scdn.co" />
         <script
