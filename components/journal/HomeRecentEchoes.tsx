@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { MusicNote02Icon } from 'hugeicons-react';
@@ -73,9 +74,11 @@ export function HomeRecentEchoes() {
               href="/timeline"
               className={styles.entryRow}
             >
-              <img
+              <Image
                 src={entry.albumArtUrl}
                 alt={`Album art for ${entry.songTitle}`}
+                width={44}
+                height={44}
                 className={styles.albumArt}
               />
               <div className={styles.entryInfo}>

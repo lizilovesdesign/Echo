@@ -21,7 +21,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const entries = await echoEntryRepository.findByUserId(session.userId);
+    const { searchParams } = new URL(request.url);
+    const limitParam = searchParams.get('limit');
+    const limit = limitParam ? parseInt(limitParam, 10) : undefined;
+    const entries = await echoEntryRepository.findByUserId(session.userId, limit);
     return NextResponse.json({ ok: true, data: entries });
   } catch (error) {
     logger.error('echoes.get.failed', { userId: session.userId, error });

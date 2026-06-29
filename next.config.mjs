@@ -15,6 +15,7 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', '@supabase/ssr'],
+    optimizePackageImports: ['hugeicons-react', 'date-fns', 'framer-motion'],
   },
 };
 

@@ -20,7 +20,7 @@ export interface EchoEntryRecord {
 }
 
 export interface IEchoEntryRepository {
-  findByUserId(userId: string): Promise<EchoEntryRecord[]>;
+  findByUserId(userId: string, limit?: number): Promise<EchoEntryRecord[]>;
   findById(id: string): Promise<EchoEntryRecord | null>;
   create(userId: string, email: string, input: CreateEchoInput): Promise<EchoEntryRecord>;
   update(id: string, data: Partial<CreateEchoInput>): Promise<EchoEntryRecord>;
@@ -28,10 +28,11 @@ export interface IEchoEntryRepository {
 }
 
 class PrismaEchoEntryRepository implements IEchoEntryRepository {
-  async findByUserId(userId: string): Promise<EchoEntryRecord[]> {
+  async findByUserId(userId: string, limit?: number): Promise<EchoEntryRecord[]> {
     return prisma.echoEntry.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
+      ...(limit ? { take: limit } : {}),
     });
   }
 

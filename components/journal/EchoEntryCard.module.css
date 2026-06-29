@@ -65,24 +65,6 @@
   cursor: not-allowed;
 }
 
-.playOverlaySpotify {
-  opacity: 0;
-  background: rgba(30, 215, 96, 0.35);
-  color: #fff;
-}
-
-.albumArtBtn:hover .playOverlaySpotify,
-.albumArtBtn:focus-visible .playOverlaySpotify {
-  opacity: 1;
-}
-
-@media (hover: none) {
-  .playOverlaySpotify {
-    opacity: 1;
-    background: rgba(30, 215, 96, 0.3);
-  }
-}
-
 .albumArtBtn:hover .playOverlay,
 .albumArtBtn:focus-visible .playOverlay {
   opacity: 1;

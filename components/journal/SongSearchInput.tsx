@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { Search01Icon } from 'hugeicons-react';
 import { useEntryStore } from '@/lib/stores/entryStore';
@@ -87,9 +88,11 @@ export function SongSearchInput() {
                 className={styles.trackButton}
                 onClick={() => setSelectedTrack(track)}
               >
-                <img
+                <Image
                   src={track.albumArtUrl}
                   alt={`Album art for ${track.name} by ${track.artist}`}
+                  width={40}
+                  height={40}
                   className={styles.albumArt}
                 />
                 <div className={styles.meta}>

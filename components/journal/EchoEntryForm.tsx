@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEntryStore } from '@/lib/stores/entryStore';
@@ -143,7 +144,7 @@ export function EchoEntryForm() {
           <SongSearchInput />
         ) : (
           <div className={styles.selectedTrack}>
-            <img src={selectedTrack.albumArtUrl} alt="" className={styles.trackArt} />
+            <Image src={selectedTrack.albumArtUrl} alt="" width={44} height={44} className={styles.trackArt} />
             <div className={styles.trackInfo}>
               <span className={styles.trackName}>{selectedTrack.name}</span>
               <span className={styles.trackArtist}>{selectedTrack.artist}</span>
