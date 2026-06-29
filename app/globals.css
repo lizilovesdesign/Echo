@@ -1,8 +1,24 @@
-/* Import Satoshi Font from Fontshare CDN */
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
-
 /* Import Generated Design Tokens */
 @import '../Color-Style/tokens/tokens.css';
+
+/* Override design token font families to use self-hosted Satoshi via next/font */
+:root {
+  --font-display-large-font-family: var(--font-satoshi);
+  --font-display-medium-font-family: var(--font-satoshi);
+  --font-display-small-font-family: var(--font-satoshi);
+  --font-headline-large-font-family: var(--font-satoshi);
+  --font-headline-medium-font-family: var(--font-satoshi);
+  --font-headline-small-font-family: var(--font-satoshi);
+  --font-title-large-font-family: var(--font-satoshi);
+  --font-title-medium-font-family: var(--font-satoshi);
+  --font-title-small-font-family: var(--font-satoshi);
+  --font-body-large-font-family: var(--font-satoshi);
+  --font-body-medium-font-family: var(--font-satoshi);
+  --font-body-small-font-family: var(--font-satoshi);
+  --font-label-large-font-family: var(--font-satoshi);
+  --font-label-medium-font-family: var(--font-satoshi);
+  --font-label-small-font-family: var(--font-satoshi);
+}
 
 /* Global Reset */
 *, *::before, *::after {

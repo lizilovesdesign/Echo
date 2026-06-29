@@ -1,8 +1,19 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 import Script from 'next/script';
 import { Providers } from './providers';
 import './globals.css';
+
+const satoshi = localFont({
+  src: [
+    { path: '../fonts/Satoshi-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../fonts/Satoshi-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../fonts/Satoshi-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-satoshi',
+  display: 'optional',
+});
 
 export const metadata: Metadata = {
   title: 'Echo — A Private Music & Emotional Journal',
@@ -41,11 +52,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={satoshi.variable}>
       <head>
-        <link rel="preconnect" href="https://api.fontshare.com" />
         <link rel="preconnect" href="https://i.scdn.co" />
-        <link rel="dns-prefetch" href="https://api.fontshare.com" />
         <link rel="dns-prefetch" href="https://i.scdn.co" />
         <script
           dangerouslySetInnerHTML={{
