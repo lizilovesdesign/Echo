@@ -27,6 +27,7 @@
   overflow-x: hidden;
   background-color: var(--color-background);
   color: var(--ink-primary);
+  animation: fadeSlideUp 0.35s ease both;
 }
 
 /* ─── Header / Nav ───────────────────────────────────────────────────────── */
@@ -376,6 +377,14 @@
 .card2 { top: 4%;   right: 2%;  }
 .card3 { top: 42%;  left: 8%;   }
 .card4 { top: 38%;  right: 4%;  }
+
+@media (max-width: 899px) {
+  .card1, .card2, .card3, .card4 {
+    top: auto;
+    left: auto;
+    right: auto;
+  }
+}
 
 /* ─── Features Section ────────────────────────────────────────────────────── */
 

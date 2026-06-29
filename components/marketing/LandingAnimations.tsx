@@ -10,12 +10,12 @@ const staggerContainer: Variants = {
 };
 
 const cardReveal: Variants = {
-  hidden: { opacity: 0, y: 30, rotate: 0 },
+  hidden: { opacity: 0, y: 20 },
   visible: (custom: number) => ({
     opacity: 1,
     y: 0,
     rotate: custom,
-    transition: { type: 'spring', stiffness: 60, damping: 14, mass: 1 },
+    transition: { duration: 0.5, ease: 'easeOut' },
   }),
 };
 
@@ -38,11 +38,11 @@ export function FadeUpItem({ children, delay = 0 }: { children: React.ReactNode;
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 32 },
+        hidden: { opacity: 0, y: 24 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { type: 'spring', stiffness: 80, damping: 18, delay },
+          transition: { duration: 0.5, ease: 'easeOut', delay },
         },
       }}
     >
@@ -84,15 +84,11 @@ export function NotebookCard({
       transition={{ delay }}
       // ── Hover / touch lift ───────────────────────────────────────────────
       whileHover={{
-        y: -8,
+        y: -6,
         scale: 1.02,
-        rotate: tilt * 0.4,
-        transition: { type: 'spring', stiffness: 180, damping: 18 },
+        transition: { duration: 0.2, ease: 'easeOut' },
       }}
     >
-      {/* Ruled lines — background gradient approach so lines are always behind text */}
-      <div className={styles.cardRuledLines} aria-hidden="true" />
-
       <div className={styles.cardContent}>
         {/* Mood label — sits above the ruled-line zone */}
         <div className={styles.cardMood}>
@@ -146,13 +142,13 @@ export function ScrollReveal({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       variants={{
-        hidden: { opacity: 0, y: 48 },
+        hidden: { opacity: 0, y: 32 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { type: 'spring', stiffness: 70, damping: 16, delay },
+          transition: { duration: 0.5, ease: 'easeOut', delay },
         },
       }}
     >
@@ -172,11 +168,10 @@ export function FeatureCardAnimator({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.97 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ type: 'spring', stiffness: 70, damping: 16, delay }}
-      whileHover={{ y: -5, transition: { type: 'spring', stiffness: 200, damping: 20 } }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.45, ease: 'easeOut', delay }}
     >
       {children}
     </motion.div>
@@ -188,10 +183,10 @@ export function FeatureCardAnimator({
 export function IllustrationReveal({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.92, y: 24 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ type: 'spring', stiffness: 60, damping: 18 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {children}
     </motion.div>
