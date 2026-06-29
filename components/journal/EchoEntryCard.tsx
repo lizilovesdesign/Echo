@@ -122,9 +122,6 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
               height={48}
               className={styles.albumArt}
             />
-            <span className={`${styles.playOverlay} ${hasError ? styles.playOverlayError : ''}`}>
-              {isLoading ? '⏳' : isPlaying ? '⏹' : '▶'}
-            </span>
           </button>
           <div className={styles.trackDetails}>
             <div className={styles.titleRow}>

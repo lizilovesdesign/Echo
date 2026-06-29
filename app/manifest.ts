@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Echo — Private Music Journal',
     short_name: 'Echo',
     description: 'Anchor songs to memories. Capture the feeling in seconds.',
-    start_url: '/',
+    start_url: '/login',
     display: 'standalone',
     background_color: '#1c1c1f',
     theme_color: '#1c1c1f',
