@@ -3,12 +3,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useTheme } from '@/lib/theme-context';
-import { useMounted } from '@/lib/use-mounted';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import {
   UserIcon,
-  Moon01Icon,
   MusicNote01Icon,
   MusicNote02Icon,
   Mail01Icon,
@@ -22,9 +19,7 @@ import {
 import styles from './page.module.css';
 
 export default function ProfilePage() {
-  const mounted = useMounted();
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
   const supabase = createBrowserSupabaseClient();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -124,21 +119,6 @@ export default function ProfilePage() {
 
         <div className={styles.settingRow}>
           <div className={styles.settingInfo}>
-            <Moon01Icon size={18} className={styles.settingIcon} />
-            <span>Dark mode</span>
-          </div>
-          <button
-            onClick={toggleTheme}
-            className={`${styles.toggle} ${theme === 'dark' ? styles.toggleActive : ''}`}
-            aria-label="Toggle dark mode"
-            aria-pressed={theme === 'dark'}
-          >
-            <span className={styles.toggleKnob} />
-          </button>
-        </div>
-
-        <div className={styles.settingRow}>
-          <div className={styles.settingInfo}>
             {spotifyConnected ? (
               <MusicNote02Icon size={18} className={styles.settingIcon} />
             ) : (
@@ -230,7 +210,6 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {!mounted && <div className={styles.placeholder} />}
       <div className={styles.navSpacer} aria-hidden="true" />
     </div>
   );

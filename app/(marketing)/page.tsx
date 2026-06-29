@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { MusicNote01Icon } from 'hugeicons-react';
-import { ThemeToggle, FooterThemeButton, HeroCta, FooterHeart } from '@/components/marketing/MarketingInteractive';
+import { HeroCta, FooterHeart } from '@/components/marketing/MarketingInteractive';
 import {
   HeroAnimator,
   FadeUpItem,
@@ -89,7 +89,6 @@ export default function LandingPage() {
           <span>Echo</span>
         </div>
         <div className={styles.actions}>
-          <ThemeToggle />
           <Link href="/login">
             <span className={styles.loginLink}>Log in</span>
           </Link>
@@ -196,9 +195,6 @@ export default function LandingPage() {
             <p className={styles.footerCopyright}>
               &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.
             </p>
-            <div className={styles.footerTheme}>
-              <FooterThemeButton />
-            </div>
           </div>
         </div>
       </footer>

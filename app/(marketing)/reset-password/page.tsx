@@ -2,10 +2,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MusicNote01Icon, Sun01Icon, Moon01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
+import { MusicNote01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
-import { useTheme } from '@/lib/theme-context';
-import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Spinner } from '@/components/ui/Spinner';
@@ -19,8 +17,6 @@ export default function ResetPasswordPage() {
   const [success, setSuccess] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const mounted = useMounted();
-  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
 
@@ -84,9 +80,6 @@ export default function ResetPasswordPage() {
             <MusicNote01Icon className={styles.logoIcon} />
             <span>Echo</span>
           </div>
-          <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle dark/light theme">
-            {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
-          </button>
         </header>
         <main className={styles.main}>
           <div className={styles.card}>
@@ -111,9 +104,6 @@ export default function ResetPasswordPage() {
           <MusicNote01Icon className={styles.logoIcon} />
           <span>Echo</span>
         </div>
-        <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle dark/light theme">
-          {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
-        </button>
       </header>
 
       <main className={styles.main}>

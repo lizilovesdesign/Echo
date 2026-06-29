@@ -2,10 +2,8 @@
 
 import React, { useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MusicNote01Icon, Sun01Icon, Moon01Icon, ArrowLeft01Icon, ViewIcon, ViewOffIcon } from 'hugeicons-react';
+import { MusicNote01Icon, ArrowLeft01Icon, ViewIcon, ViewOffIcon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
-import { useTheme } from '@/lib/theme-context';
-import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Spinner } from '@/components/ui/Spinner';
@@ -53,8 +51,6 @@ function LoginPageContent() {
   const [resending, setResending] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const mounted = useMounted();
-  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
 
@@ -232,13 +228,6 @@ function LoginPageContent() {
           <MusicNote01Icon className={styles.logoIcon} />
           <span>Echo</span>
         </div>
-        <button
-          onClick={toggleTheme}
-          className={styles.themeToggle}
-          aria-label="Toggle dark/light theme"
-        >
-          {mounted ? (theme === 'dark' ? <Sun01Icon size={18} /> : <Moon01Icon size={18} />) : <div style={{ width: 18, height: 18 }} />}
-        </button>
       </header>
 
       <main className={styles.main}>

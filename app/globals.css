@@ -38,7 +38,6 @@ body {
   color: var(--color-on-background);
   
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -106,40 +105,4 @@ body {
   }
 }
 
-/* Light theme class overrides system dark mode preference */
-:root.light-theme {
-  --color-primary: hsl(9, 100%, 70%);
-  --color-on-primary: hsl(0, 0%, 100%);
-  --color-primary-container: hsl(9, 100%, 83%);
-  --color-on-primary-container: hsl(8, 74%, 30%);
-  --color-secondary: hsl(9, 51%, 41%);
-  --color-on-secondary: hsl(0, 0%, 100%);
-  --color-secondary-container: hsl(9, 100%, 83%);
-  --color-on-secondary-container: hsl(9, 61%, 30%);
-  --color-tertiary: hsl(10, 30%, 40%);
-  --color-on-tertiary: hsl(0, 0%, 100%);
-  --color-tertiary-container: hsl(9, 89%, 82%);
-  --color-on-tertiary-container: hsl(10, 36%, 30%);
-  --color-error: hsl(3, 71%, 41%);
-  --color-on-error: hsl(0, 0%, 100%);
-  --color-error-container: hsl(3, 100%, 81%);
-  --color-on-error-container: hsl(3, 89%, 29%);
-  --color-background: hsl(7, 100%, 98%);
-  --color-on-background: hsl(9, 12%, 11%);
-  --color-surface: hsl(7, 100%, 98%);
-  --color-on-surface: hsl(9, 12%, 11%);
-  --color-surface-variant: hsl(0, 9%, 89%);
-  --color-on-surface-variant: hsl(0, 1%, 28%);
-  --color-outline: hsl(0, 1%, 47%);
-  --color-outline-variant: hsl(15, 4%, 78%);
-  --color-inverse-surface: hsl(8, 8%, 20%);
-  --color-inverse-on-surface: hsl(8, 65%, 95%);
-  --color-inverse-primary: hsl(9, 100%, 83%);
-  --color-surface-dim: hsl(8, 22%, 86%);
-  --color-surface-bright: hsl(7, 100%, 98%);
-  --color-surface-container-lowest: hsl(0, 0%, 100%);
-  --color-surface-container-low: hsl(8, 88%, 97%);
-  --color-surface-container: hsl(8, 52%, 94%);
-  --color-surface-container-high: hsl(8, 40%, 92%);
-  --color-surface-container-highest: hsl(8, 29%, 90%);
-}
+

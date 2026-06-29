@@ -1,28 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeContext, Theme } from '@/lib/theme-context';
-
-function getInitialTheme(): Theme {
-  if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('theme') as Theme | null;
-    if (saved) return saved;
-    return 'dark';
-  }
-  return 'dark';
-}
-
-function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  root.classList.remove('light-theme', 'dark', 'dark-theme');
-  if (theme === 'dark') {
-    root.classList.add('dark');
-    root.classList.add('dark-theme');
-  } else {
-    root.classList.add('light-theme');
-  }
-}
+import { ThemeContext } from '@/lib/theme-context';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -38,20 +18,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
-  useEffect(() => {
-    applyTheme(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  }, []);
+  const noop = () => {};
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme: noop }}>
         {children}
       </ThemeContext.Provider>
     </QueryClientProvider>

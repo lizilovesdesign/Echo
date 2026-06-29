@@ -223,6 +223,20 @@
   flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
+  min-width: 0;
+}
+
+.stickersRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.stickersRow::-webkit-scrollbar {
+  display: none;
 }
 
 .stickersLabel {

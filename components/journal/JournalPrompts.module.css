@@ -80,26 +80,7 @@
   color: var(--card-muted);
 }
 
-/* Dark mode — system preference */
-@media (prefers-color-scheme: dark) {
-  .promptCard {
-    --card-bg: var(--color-surface-container-low);
-    --card-text: #E0DDDB;
-    --card-muted: #9A9794;
-  }
-}
-
-/* Light mode — class-based (theme toggle) — overrides system @media */
-:global(.light-theme) .promptCard {
-  --card-bg: var(--color-surface-container-low);
-  --card-text: #3D3835;
-  --card-muted: #756E69;
-}
-
-/* Dark mode — class-based (theme toggle) */
-:global(.dark) .promptCard,
-:global(.dark-theme) .promptCard {
-  --card-bg: var(--color-surface-container-low);
+.promptCard {
   --card-text: #E0DDDB;
   --card-muted: #9A9794;
 }

@@ -52,26 +52,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={satoshi.variable}>
+    <html lang="en" className={`${satoshi.variable} dark dark-theme`}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <link rel="preconnect" href="https://i.scdn.co" />
         <link rel="dns-prefetch" href="https://i.scdn.co" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var t = localStorage.getItem('theme');
-                  if (!t) { t = 'dark'; }
-                  if (t === 'dark') { document.documentElement.classList.add('dark', 'dark-theme'); }
-                  else { document.documentElement.classList.add('light-theme'); }
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
       </head>
       <body>
         <Providers>{children}</Providers>
