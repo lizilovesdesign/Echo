@@ -39,12 +39,7 @@
   min-height: 44px;
   color: var(--color-on-surface-variant);
   text-decoration: none;
-  transition: color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
-}
-
-.item:hover {
-  color: var(--color-primary);
 }
 
 .item.active {
@@ -53,24 +48,6 @@
 
 .item.active .label {
   color: var(--color-primary);
-}
-
-.icon {
-  transition: transform 0.2s ease;
-}
-
-.item.active .icon {
-  transform: translateY(-2px);
-}
-
-.item.active .icon svg {
-  animation: iconPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes iconPop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
 }
 
 .label {
@@ -97,16 +74,6 @@
   color: var(--color-on-primary);
   text-decoration: none;
   box-shadow: 0 4px 16px hsla(9, 100%, 70%, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
-}
-
-.fab:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 22px hsla(9, 100%, 70%, 0.55);
-}
-
-.fab:active {
-  transform: scale(0.96);
 }

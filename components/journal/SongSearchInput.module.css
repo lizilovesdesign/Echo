@@ -34,7 +34,6 @@
   font-family: var(--font-body-large-font-family);
   font-size: var(--font-body-large-font-size);
   outline: none;
-  transition: all 0.2s ease;
 }
 
 .input:focus {
@@ -74,10 +73,6 @@
   color: var(--color-on-surface-variant);
 }
 
-.loadingText {
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
 .noResults {
   padding: 12px;
   text-align: center;
@@ -113,15 +108,6 @@
   cursor: pointer;
   min-height: 52px; /* Touch target size > 44px */
   border-radius: var(--radius-interactive, 8px);
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.trackButton:hover {
-  background-color: var(--color-surface-container-low);
-}
-
-.trackButton:active {
-  transform: scale(0.98);
 }
 
 .albumArt {

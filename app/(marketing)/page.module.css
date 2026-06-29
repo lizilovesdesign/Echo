@@ -25,7 +25,7 @@
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--paper-warm);
+  background-color: var(--color-background);
   color: var(--ink-primary);
 }
 
@@ -393,71 +393,10 @@
 .card3 { top: 42%;  left: 8%;   }
 .card4 { top: 38%;  right: 4%;  }
 
-/* ─── Mid-page Strip (text + illustration) ───────────────────────────────── */
-
-.ctaStrip {
-  background-color: var(--color-surface-container-low);
-  color: var(--color-on-surface);
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
-  overflow: hidden;
-}
-
-@media (min-width: 768px) {
-  .ctaStrip {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: left;
-    gap: 32px;
-    padding: 20px 64px;
-  }
-}
-
-.ctaStripCopy {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 400px;
-}
-
-.ctaStripText {
-  font-family: var(--font-headline-small-font-family);
-  font-size: var(--font-headline-small-font-size);
-  font-weight: var(--font-headline-small-font-weight);
-  line-height: var(--font-headline-small-line-height);
-}
-
-.ctaStripSubtext {
-  font-family: var(--font-body-large-font-family);
-  font-size: var(--font-body-large-font-size);
-  opacity: 0.7;
-}
-
-/* Illustration wrapper */
-.illustrationWrap {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.illustration {
-  width: clamp(100px, 18vw, 180px);
-  height: auto;
-  user-select: none;
-  pointer-events: none;
-  border-radius: 12px;
-}
-
 /* ─── Features Section ────────────────────────────────────────────────────── */
 
 .featuresSection {
-  background-color: var(--paper-warm);
+  background-color: var(--color-background);
   padding: 96px 24px;
 }
 

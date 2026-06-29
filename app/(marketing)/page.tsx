@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { MusicNote01Icon } from 'hugeicons-react';
 import { ThemeToggle, FooterThemeButton, HeroCta, FooterHeart } from '@/components/marketing/MarketingInteractive';
 import {
@@ -10,7 +9,6 @@ import {
   ScatterGallery,
   ScrollReveal,
   FeatureCardAnimator,
-  IllustrationReveal,
 } from '@/components/marketing/LandingAnimations';
 import styles from './page.module.css';
 
@@ -149,31 +147,6 @@ export default function LandingPage() {
           ))}
         </ScatterGallery>
       </main>
-
-      {/* ── Mid-page strip: text + illustration ────────────────────── */}
-      {/* Changes: replaced button with music listener illustration */}
-      <ScrollReveal className={styles.ctaStrip}>
-        <div className={styles.ctaStripCopy}>
-          <p className={styles.ctaStripText}>
-            Every song you love holds a memory.
-          </p>
-          <p className={styles.ctaStripSubtext}>
-            Start capturing them before they fade.
-          </p>
-        </div>
-        <IllustrationReveal>
-          <div className={styles.illustrationWrap}>
-            <Image
-              src="/music-listener.png"
-              alt="A person sitting peacefully, listening to music with headphones"
-              width={240}
-              height={200}
-              className={styles.illustration}
-              priority={false}
-            />
-          </div>
-        </IllustrationReveal>
-      </ScrollReveal>
 
       {/* ── Features ──────────────────────────────────────────────────── */}
       {/* Changes: removed border on cards, removed ::before accent strip */}

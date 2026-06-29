@@ -4,13 +4,4 @@
   border-radius: var(--radius-container, 12px);
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.card:active {
-  transform: scale(0.99);
 }
