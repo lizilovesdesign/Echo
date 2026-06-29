@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  min-height: 100%;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
@@ -9,12 +9,10 @@
 }
 
 .scrollContent {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 0 16px;
-  overflow-y: auto;
 }
 
 .header {
@@ -285,7 +283,7 @@
   padding: 12px 16px;
   padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   background-color: var(--color-background);
-  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .saveBtn {
