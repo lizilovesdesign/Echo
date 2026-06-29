@@ -139,96 +139,100 @@ export function EchoEntryForm() {
         <h1 className={styles.headerTitle}>{editingEntryId ? 'Edit Echo' : 'New Echo'}</h1>
       </header>
 
-      <div className={styles.songSection}>
-        {!selectedTrack ? (
-          <SongSearchInput />
-        ) : (
-          <div className={styles.selectedTrack}>
-            <Image src={selectedTrack.albumArtUrl} alt="" width={44} height={44} className={styles.trackArt} />
-            <div className={styles.trackInfo}>
-              <span className={styles.trackName}>{selectedTrack.name}</span>
-              <span className={styles.trackArtist}>{selectedTrack.artist}</span>
-            </div>
-            {selectedTrack.previewUrl && (
-              <button
-                type="button"
-                className={styles.playBtn}
-                onClick={handlePlayPreview}
-                aria-label={isPlaying ? 'Stop preview' : 'Play preview'}
-              >
-                {isPlaying ? '⏹' : '▶'}
+      <div className={styles.scrollContent}>
+        <div className={styles.songSection}>
+          {!selectedTrack ? (
+            <SongSearchInput />
+          ) : (
+            <div className={styles.selectedTrack}>
+              <Image src={selectedTrack.albumArtUrl} alt="" width={44} height={44} className={styles.trackArt} />
+              <div className={styles.trackInfo}>
+                <span className={styles.trackName}>{selectedTrack.name}</span>
+                <span className={styles.trackArtist}>{selectedTrack.artist}</span>
+              </div>
+              {selectedTrack.previewUrl && (
+                <button
+                  type="button"
+                  className={styles.playBtn}
+                  onClick={handlePlayPreview}
+                  aria-label={isPlaying ? 'Stop preview' : 'Play preview'}
+                >
+                  {isPlaying ? '⏹' : '▶'}
+                </button>
+              )}
+              <button type="button" className={styles.clearTrack} onClick={clearEntry}>
+                ×
               </button>
-            )}
-            <button type="button" className={styles.clearTrack} onClick={clearEntry}>
-              ×
-            </button>
-          </div>
-        )}
-      </div>
-
-      <MoodSelector selectedMood={selectedMood} onSelectMood={setSelectedMood} />
-
-      <div className={styles.stickyNote}>
-        {stickers.length > 0 && (
-          <div className={styles.stickersContainer}>
-            {stickers.map((st, idx) => (
-              <span key={idx} className={styles.sticker}>{st}</span>
-            ))}
-          </div>
-        )}
-        <textarea
-          className={styles.noteTextarea}
-          placeholder="What memories does this song bring up? How do you feel right now?"
-          value={note}
-          onChange={(e) => setNote(e.target.value.slice(0, 500))}
-          maxLength={500}
-        />
-        <div className={styles.counter}>{note.length} / 500</div>
-      </div>
-
-      <div className={styles.stickersSection}>
-        <span className={styles.stickersLabel}>Stickers</span>
-        <div className={styles.stickersRow}>
-          {STICKER_EMOJIS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              className={styles.stickerBtn}
-              onClick={() => addSticker(emoji)}
-              disabled={stickers.length >= 5}
-            >
-              {emoji}
-            </button>
-          ))}
-          {stickers.length > 0 && (
-            <button
-              type="button"
-              className={styles.clearStickers}
-              onClick={() => setStickers([])}
-            >
-              Clear
-            </button>
+            </div>
           )}
         </div>
+
+        <MoodSelector selectedMood={selectedMood} onSelectMood={setSelectedMood} />
+
+        <div className={styles.stickyNote}>
+          {stickers.length > 0 && (
+            <div className={styles.stickersContainer}>
+              {stickers.map((st, idx) => (
+                <span key={idx} className={styles.sticker}>{st}</span>
+              ))}
+            </div>
+          )}
+          <textarea
+            className={styles.noteTextarea}
+            placeholder="What memories does this song bring up? How do you feel right now?"
+            value={note}
+            onChange={(e) => setNote(e.target.value.slice(0, 500))}
+            maxLength={500}
+          />
+          <div className={styles.counter}>{note.length} / 500</div>
+        </div>
+
+        <div className={styles.stickersSection}>
+          <span className={styles.stickersLabel}>Stickers</span>
+          <div className={styles.stickersRow}>
+            {STICKER_EMOJIS.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                className={styles.stickerBtn}
+                onClick={() => addSticker(emoji)}
+                disabled={stickers.length >= 5}
+              >
+                {emoji}
+              </button>
+            ))}
+            {stickers.length > 0 && (
+              <button
+                type="button"
+                className={styles.clearStickers}
+                onClick={() => setStickers([])}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {validationError && <p className={styles.error}>{validationError}</p>}
       </div>
 
-      {validationError && <p className={styles.error}>{validationError}</p>}
-
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={mutation.isPending}
-        className={styles.saveBtn}
-      >
-        {mutation.isPending ? (
-          <>
-            <Spinner size="sm" />
-            Saving memory...
-          </>
-        ) : (
-          'Save Echo'
-        )}
-      </Button>
+      <div className={styles.footer}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={mutation.isPending}
+          className={styles.saveBtn}
+        >
+          {mutation.isPending ? (
+            <>
+              <Spinner size="sm" />
+              Saving memory...
+            </>
+          ) : (
+            'Save Echo'
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
