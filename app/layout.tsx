@@ -15,7 +15,10 @@ const satoshi = localFont({
   display: 'optional',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || 'https://echo-journaling.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Echo — A Private Music & Emotional Journal',
   description: 'Bridge the gap between music discovery and emotional reflection. Anchor your favorite tracks to personal memories and moods in a secure, distraction-free emotional archive.',
   keywords: ['music journal', 'emotional reflection', 'spotify diary', 'mood tracking', 'private journal'],
@@ -35,6 +38,27 @@ export const metadata: Metadata = {
     apple: [
       { url: '/icon-192.svg', sizes: '192x192', type: 'image/svg+xml' },
     ],
+  },
+  openGraph: {
+    title: 'Echo — A Private Music & Emotional Journal',
+    description: 'Anchor your favorite songs to personal memories and moods in a secure, distraction-free emotional archive.',
+    siteName: 'Echo',
+    images: [
+      {
+        url: '/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'Echo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Echo — A Private Music & Emotional Journal',
+    description: 'Anchor your favorite songs to personal memories and moods in a secure, distraction-free emotional archive.',
+    images: ['/icon-512.png'],
   },
 };
 
