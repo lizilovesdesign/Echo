@@ -43,14 +43,6 @@ export const metadata: Metadata = {
     title: 'Echo — A Private Music & Emotional Journal',
     description: 'Anchor your favorite songs to personal memories and moods.',
     siteName: 'Echo',
-    images: [
-      {
-        url: '/icon-512.png',
-        width: 512,
-        height: 512,
-        alt: 'Echo',
-      },
-    ],
     locale: 'en_US',
     type: 'website',
   },
@@ -58,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary',
     title: 'Echo — A Private Music & Emotional Journal',
     description: 'Anchor your favorite songs to personal memories and moods.',
-    images: ['/icon-512.png'],
+    images: ['/icon-192.png'],
   },
 };
 
