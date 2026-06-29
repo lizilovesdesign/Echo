@@ -11,8 +11,9 @@
 .scrollContent {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   padding: 0 16px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .header {
@@ -277,13 +278,6 @@
 
 .clearStickers:hover {
   background: var(--color-surface-container-high);
-}
-
-.footer {
-  padding: 12px 16px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-  background-color: var(--color-background);
-  margin-top: auto;
 }
 
 .saveBtn {

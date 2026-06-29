@@ -214,9 +214,7 @@ export function EchoEntryForm() {
         </div>
 
         {validationError && <p className={styles.error}>{validationError}</p>}
-      </div>
 
-      <div className={styles.footer}>
         <Button
           type="submit"
           variant="primary"
