@@ -8,7 +8,6 @@ import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
 import { PasswordStrength } from '@/components/ui/PasswordStrength';
 import styles from './page.module.css';
@@ -243,7 +242,7 @@ function LoginPageContent() {
       </header>
 
       <main className={styles.main}>
-        <Card className={styles.loginCard}>
+        <div className={styles.loginCard}>
           <div className={styles.cardHeader}>
             {showForgotPassword ? (
               <>
@@ -262,7 +261,7 @@ function LoginPageContent() {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form} noValidate>
             {isSignUp && (
               <Input
                 label="Name or Nickname"
@@ -404,7 +403,7 @@ function LoginPageContent() {
               </button>
             </div>
           )}
-        </Card>
+        </div>
       </main>
     </div>
   );

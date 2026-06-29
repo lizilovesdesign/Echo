@@ -58,20 +58,15 @@
 }
 
 .loginCard {
-  max-width: 440px;
+  max-width: 400px;
   width: 100%;
-  padding: 32px 24px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 480px) {
-  .loginCard {
-    padding: 24px 16px;
-    gap: 20px;
-  }
+  border: none;
+  background: none;
+  box-shadow: none;
 }
 
 .cardHeader {
@@ -84,7 +79,8 @@
 .cardHeader h2 {
   font-family: var(--font-title-large-font-family);
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--color-on-surface);
 }
 
 .cardHeader p {
@@ -120,9 +116,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--color-outline-variant);
+  color: var(--color-on-surface-variant);
   font-family: var(--font-body-small-font-family);
   font-size: var(--font-body-small-font-size);
+  opacity: 0.5;
 }
 
 .divider::before,
@@ -141,15 +138,20 @@
   width: 100%;
   min-height: 48px;
   padding: 0 24px;
-  border-radius: var(--radius-interactive, 8px);
-  border: 1px solid var(--color-outline-variant);
-  background-color: var(--color-surface);
+  border-radius: 999px;
+  border: none;
+  background-color: var(--color-surface-container-low);
   color: var(--color-on-surface);
   font-family: var(--font-label-large-font-family);
   font-size: var(--font-label-large-font-size);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.15s;
+}
+
+.googleBtn:hover:not(:disabled) {
+  background-color: var(--color-surface-container);
 }
 
 .googleBtn:disabled {
@@ -158,37 +160,40 @@
 }
 
 .submitBtn {
-  margin-top: 8px;
+  margin-top: 4px;
   width: 100%;
-  font-weight: 500;
+  min-height: 48px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: var(--font-label-large-font-size);
 }
 
 .spinner {
   margin-right: 8px;
 }
 
-/* Password strength */
 .passwordWrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Forgot password */
 .forgotLink {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-primary);
+  color: var(--color-on-surface-variant);
   font-family: var(--font-body-small-font-family);
   font-size: var(--font-body-small-font-size);
   text-align: right;
   min-height: 44px;
   padding: 4px 0;
   align-self: flex-end;
+  transition: color 0.15s;
 }
 
 .forgotLink:hover {
+  color: var(--color-primary);
   text-decoration: underline;
 }
 
@@ -211,6 +216,7 @@
   font-size: var(--font-body-small-font-size);
   min-height: 44px;
   padding: 8px;
+  transition: color 0.15s;
 }
 
 .backLink:hover {
@@ -221,7 +227,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   font-family: var(--font-body-small-font-family);
   font-size: var(--font-body-small-font-size);
   color: var(--color-on-surface-variant);
@@ -232,9 +238,10 @@
   border: none;
   cursor: pointer;
   color: var(--color-primary);
-  font-weight: 500;
+  font-weight: 600;
   min-height: 44px;
   padding: 4px 8px;
+  transition: color 0.15s;
 }
 
 .toggleBtn:hover {
@@ -258,21 +265,21 @@
 
 .resendBtn {
   background: none;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-outline-variant);
   cursor: pointer;
-  color: var(--color-primary);
+  color: var(--color-on-surface);
   font-family: var(--font-label-small-font-family);
   font-size: var(--font-label-small-font-size);
-  font-weight: 500;
+  font-weight: 600;
   min-height: 44px;
   padding: 8px 20px;
   border-radius: 999px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s, border-color 0.15s;
 }
 
 .resendBtn:hover:not(:disabled) {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
+  background-color: var(--color-surface-container-low);
+  border-color: var(--color-on-surface);
 }
 
 .resendBtn:disabled {

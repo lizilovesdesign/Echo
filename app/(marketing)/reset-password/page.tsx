@@ -8,7 +8,6 @@ import { useTheme } from '@/lib/theme-context';
 import { useMounted } from '@/lib/use-mounted';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Spinner';
 import styles from './page.module.css';
 
@@ -90,7 +89,7 @@ export default function ResetPasswordPage() {
           </button>
         </header>
         <main className={styles.main}>
-          <Card className={styles.card}>
+          <div className={styles.card}>
             <div className={styles.successState}>
               <CheckmarkCircle01Icon size={48} className={styles.successIcon} />
               <h2>Password updated</h2>
@@ -99,7 +98,7 @@ export default function ResetPasswordPage() {
                 Go to Timeline
               </Button>
             </div>
-          </Card>
+          </div>
         </main>
       </div>
     );
@@ -118,13 +117,13 @@ export default function ResetPasswordPage() {
       </header>
 
       <main className={styles.main}>
-        <Card className={styles.card}>
+        <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h2>Set a new password</h2>
             <p>Choose a strong password for your Echo account.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <Input
               label="New Password"
               type="password"
@@ -161,7 +160,7 @@ export default function ResetPasswordPage() {
               )}
             </Button>
           </form>
-        </Card>
+        </div>
       </main>
     </div>
   );
