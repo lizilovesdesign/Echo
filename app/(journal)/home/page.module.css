@@ -9,3 +9,9 @@
 .navSpacer {
   height: calc(64px + env(safe-area-inset-bottom, 0px) + 16px);
 }
+
+@media (min-width: 1024px) {
+  .navSpacer {
+    display: none;
+  }
+}
