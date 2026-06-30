@@ -96,8 +96,6 @@ function LoginPageContent() {
         if (error) throw error;
 
         if (data.session) {
-          localStorage.removeItem('echo::onboarding-done');
-
           fetch('/api/auth/after-signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

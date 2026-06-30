@@ -17,10 +17,6 @@ function InactivityTracker() {
     // Do not run on marketing/auth pages
     if (!pathname || pathname === '/' || pathname.startsWith('/login') || pathname.startsWith('/auth')) return;
 
-    // Check if added to homescreen (PWA standalone mode)
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
-    if (!isStandalone) return;
-
     let timeoutId: NodeJS.Timeout;
     const TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes of inactivity
 

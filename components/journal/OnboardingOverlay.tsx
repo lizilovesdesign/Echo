@@ -5,8 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { MusicNote01Icon, AddCircleIcon, BookOpen01Icon, CheckmarkCircle01Icon } from 'hugeicons-react';
 import styles from './OnboardingOverlay.module.css';
 
-const ONBOARDING_KEY = 'echo::onboarding-done';
-
 const STEPS = [
   {
     icon: MusicNote01Icon,
@@ -137,17 +135,10 @@ export function OnboardingGate() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (isWelcome) {
-      localStorage.removeItem(ONBOARDING_KEY);
-      setShow(true);
-      return;
-    }
-    const done = localStorage.getItem(ONBOARDING_KEY);
-    if (!done) setShow(true);
+    if (isWelcome) setShow(true);
   }, [isWelcome]);
 
   const handleDone = useCallback(() => {
-    localStorage.setItem(ONBOARDING_KEY, 'true');
     setShow(false);
     if (isWelcome) {
       window.history.replaceState(null, '', window.location.pathname);
