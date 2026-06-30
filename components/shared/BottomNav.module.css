@@ -98,18 +98,18 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 240px;
+    width: 280px;
     z-index: 100;
     background-color: var(--color-surface-container-lowest);
     border-right: 1px solid var(--color-outline-variant);
-    padding: 24px 16px;
+    padding: 24px 12px;
     overflow-y: auto;
   }
 
   .sidebarItems {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
 
   .logo {
@@ -118,23 +118,23 @@
     font-weight: 600;
     color: var(--color-primary);
     text-decoration: none;
-    padding: 4px 16px 24px;
-    margin-bottom: 12px;
+    padding: 4px 12px 24px;
+    margin-bottom: 8px;
     border-bottom: 1px solid var(--color-outline-variant);
   }
 
   .sidebarItem {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 8px;
+    gap: 16px;
+    padding: 14px 12px;
+    border-radius: 28px;
     color: var(--color-on-surface-variant);
     text-decoration: none;
     font-family: var(--font-body-large-font-family);
     font-size: var(--font-body-large-font-size);
     font-weight: 500;
-    min-height: 48px;
+    min-height: 56px;
     transition: background-color 0.15s;
   }
 
