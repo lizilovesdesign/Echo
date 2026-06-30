@@ -293,12 +293,15 @@ function LoginPageContent() {
                   endAdornment={
                     <button
                       type="button"
-                      onClick={() => setShowPassword((v) => !v)}
+                      onPointerDown={(e) => {
+                        e.preventDefault();
+                        setShowPassword((v) => !v);
+                      }}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                       tabIndex={-1}
                       style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: 0, color: 'inherit' }}
                     >
-                      {showPassword ? <ViewOffIcon size={18} /> : <ViewIcon size={18} />}
+                      {showPassword ? <ViewIcon size={18} /> : <ViewOffIcon size={18} />}
                     </button>
                   }
                 />
