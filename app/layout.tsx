@@ -47,18 +47,18 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/icon-512.png',
-        width: 512,
-        height: 512,
-        alt: 'Echo Logo',
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 800,
+        alt: 'with love, always',
       },
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Echo — A Private Music & Emotional Journal',
     description: 'Anchor your favorite songs to personal memories and moods.',
-    images: ['/icon-512.png'],
+    images: ['/og-image.jpg'],
   },
 };
 
