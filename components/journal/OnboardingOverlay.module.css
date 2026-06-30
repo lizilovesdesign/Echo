@@ -70,9 +70,19 @@
 
 .carousel {
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   flex: 1;
   min-height: 0;
+  overscroll-behavior: contain;
+}
+
+.carousel::-webkit-scrollbar {
+  width: 4px;
+}
+.carousel::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-variant);
+  border-radius: 4px;
 }
 
 .carouselTrack {

@@ -45,12 +45,20 @@ export const metadata: Metadata = {
     siteName: 'Echo',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'Echo Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary',
     title: 'Echo — A Private Music & Emotional Journal',
     description: 'Anchor your favorite songs to personal memories and moods.',
-    images: ['/icon-192.png'],
+    images: ['/icon-512.png'],
   },
 };
 
