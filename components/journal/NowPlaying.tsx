@@ -85,19 +85,20 @@ export function NowPlaying() {
   const currentlyPlaying = data.currentlyPlaying;
 
   if (!currentlyPlaying) {
-    if (lastTrack) {
-      return (
-        <div className={styles.container}>
-          <div className={styles.listeningBar}>
-            <MusicNote02Icon size={16} className={styles.mutedIcon} />
-            <span className={styles.mutedText}>
-              Was listening to <strong>{lastTrack.trackName}</strong> by {lastTrack.artist}
-            </span>
-          </div>
+    return (
+      <div className={styles.container}>
+        <div className={styles.listeningBar}>
+          <MusicNote02Icon size={16} className={styles.mutedIcon} />
+          <span className={styles.mutedText}>
+            {lastTrack ? (
+              <>Was listening to <strong>{lastTrack.trackName}</strong> by {lastTrack.artist}</>
+            ) : (
+              'Was listening too...'
+            )}
+          </span>
         </div>
-      );
-    }
-    return null;
+      </div>
+    );
   }
 
   return (

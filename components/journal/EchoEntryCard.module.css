@@ -168,6 +168,10 @@
   padding: 12px;
   border-radius: 8px;
   margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .deleteWarning {

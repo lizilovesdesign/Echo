@@ -266,7 +266,6 @@ function LoginPageContent() {
 
             {!showForgotPassword && (
               <>
-                <div className={styles.divider}>or continue with</div>
                 <button
                   type="button"
                   className={styles.googleBtn}
@@ -281,6 +280,7 @@ function LoginPageContent() {
                   </svg>
                   {googleLoading ? 'Redirecting...' : 'Continue with Google'}
                 </button>
+                <div className={styles.divider}>or continue with</div>
               </>
             )}
 
