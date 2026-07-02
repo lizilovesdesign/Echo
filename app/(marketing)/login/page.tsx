@@ -249,21 +249,6 @@ function LoginPageContent() {
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
-            {isSignUp && (
-              <Input
-                label="Name or Nickname"
-                type="text"
-                placeholder="What should we call you?"
-                value={displayName}
-                onChange={(e) => { setDisplayName(e.target.value); }}
-                onBlur={() => handleBlur('displayName')}
-                disabled={loading}
-                error={nameError}
-                required
-                autoComplete="nickname"
-              />
-            )}
-
             {!showForgotPassword && (
               <>
                 <button
@@ -282,6 +267,21 @@ function LoginPageContent() {
                 </button>
                 <div className={styles.divider}>or</div>
               </>
+            )}
+
+            {isSignUp && (
+              <Input
+                label="Name or Nickname"
+                type="text"
+                placeholder="What should we call you?"
+                value={displayName}
+                onChange={(e) => { setDisplayName(e.target.value); }}
+                onBlur={() => handleBlur('displayName')}
+                disabled={loading}
+                error={nameError}
+                required
+                autoComplete="nickname"
+              />
             )}
 
             <Input
