@@ -280,7 +280,7 @@ function LoginPageContent() {
                   </svg>
                   {googleLoading ? 'Redirecting...' : 'Continue with Google'}
                 </button>
-                <div className={styles.divider}>or continue with</div>
+                <div className={styles.divider}>or</div>
               </>
             )}
 
