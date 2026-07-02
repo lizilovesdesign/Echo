@@ -27,8 +27,8 @@ export function UserGreeting() {
       if (!data.user) return;
       const meta = data.user.user_metadata ?? {};
       const displayName =
-        meta.full_name ||
         meta.name ||
+        meta.full_name ||
         data.user.email?.split('@')[0] ||
         'there';
       const avatarUrl = meta.avatar_url || meta.picture || null;

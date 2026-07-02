@@ -15,19 +15,19 @@ DROP POLICY IF EXISTS "users_delete_own" ON public.users;
 
 CREATE POLICY "users_select_own" ON public.users
   FOR SELECT TO authenticated
-  USING (id = auth.uid());
+  USING (id = auth.uid()::text);
 
 CREATE POLICY "users_insert_own" ON public.users
   FOR INSERT TO authenticated
-  WITH CHECK (id = auth.uid());
+  WITH CHECK (id = auth.uid()::text);
 
 CREATE POLICY "users_update_own" ON public.users
   FOR UPDATE TO authenticated
-  USING (id = auth.uid());
+  USING (id = auth.uid()::text);
 
 CREATE POLICY "users_delete_own" ON public.users
   FOR DELETE TO authenticated
-  USING (id = auth.uid());
+  USING (id = auth.uid()::text);
 
 -- ─── echo_entries ─────────────────────────────────────────────────
 
@@ -40,16 +40,16 @@ DROP POLICY IF EXISTS "entries_delete_own" ON public.echo_entries;
 
 CREATE POLICY "entries_select_own" ON public.echo_entries
   FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid()::text);
 
 CREATE POLICY "entries_insert_own" ON public.echo_entries
   FOR INSERT TO authenticated
-  WITH CHECK (user_id = auth.uid());
+  WITH CHECK (user_id = auth.uid()::text);
 
 CREATE POLICY "entries_update_own" ON public.echo_entries
   FOR UPDATE TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid()::text);
 
 CREATE POLICY "entries_delete_own" ON public.echo_entries
   FOR DELETE TO authenticated
-  USING (user_id = auth.uid());
+  USING (user_id = auth.uid()::text);
