@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home01Icon, BookOpen01Icon, UserIcon, AddCircleIcon } from 'hugeicons-react';
+import { MusicNote01Icon, Home01Icon, BookOpen01Icon, UserIcon, AddCircleIcon } from 'hugeicons-react';
 import styles from './BottomNav.module.css';
 
 const BOTTOM_ITEMS = [
@@ -42,6 +42,7 @@ export function BottomNav() {
     <>
       <nav className={styles.sidebar} aria-label="Main navigation">
         <Link href="/home" className={styles.logo}>
+          <MusicNote01Icon size={24} />
           Echo
         </Link>
         <div className={styles.sidebarItems}>
