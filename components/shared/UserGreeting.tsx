@@ -20,7 +20,7 @@ function getGreeting(): string {
 export function UserGreeting() {
   const [user, setUser] = useState<UserMeta | null>(null);
 
-  useEffect(() => {
+  const fetchUser = React.useCallback(() => {
     const supabase = createBrowserSupabaseClient();
 
     supabase.auth.getUser().then(({ data }) => {
@@ -35,6 +35,17 @@ export function UserGreeting() {
       setUser({ displayName, avatarUrl });
     });
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+
+    const supabase = createBrowserSupabaseClient();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      fetchUser();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [fetchUser]);
 
   const greeting = getGreeting();
   const firstName = user?.displayName.split(' ')[0] ?? '';

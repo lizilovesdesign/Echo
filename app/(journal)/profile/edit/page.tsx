@@ -10,6 +10,7 @@ export default function EditProfilePage() {
   const router = useRouter();
   const supabase = createBrowserSupabaseClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [originalName, setOriginalName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -23,6 +24,7 @@ export default function EditProfilePage() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+          setUserId(user.id);
           const displayName = user.user_metadata?.name ?? user.email?.split('@')[0] ?? '';
           setName(displayName);
           setOriginalName(displayName);
@@ -63,17 +65,23 @@ export default function EditProfilePage() {
       let newAvatarUrl = avatarUrl;
 
       if (avatarFile) {
-        const formData = new FormData();
-        formData.append('file', avatarFile);
+        const ext = avatarFile.name.split('.').pop() ?? 'png';
+        const fileName = `${userId}/${Date.now()}.${ext}`;
 
-        const res = await fetch('/api/auth/avatar', { method: 'POST', body: formData });
-        const json = await res.json();
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, avatarFile, {
+            contentType: avatarFile.type,
+            upsert: true,
+          });
 
-        if (!res.ok || !json.ok) {
-          throw new Error(json.error?.message || json.error || 'Failed to upload image.');
-        }
+        if (uploadError) throw new Error(uploadError.message);
 
-        newAvatarUrl = json.data?.url;
+        const { data: urlData } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(fileName);
+
+        newAvatarUrl = urlData.publicUrl;
       }
 
       const metadata: Record<string, string> = {};
