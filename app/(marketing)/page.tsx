@@ -153,25 +153,15 @@ export default function LandingPage() {
           ))}
         </div>
         <div className={styles.footerInner}>
-          <div className={styles.footerTop}>
-            <div className={styles.footerBrand}>
-              <div className={styles.footerLogo}>
-                <MusicNote01Icon size={20} className={styles.footerLogoIcon} />
-                <span>Echo</span>
-              </div>
-              <p className={styles.footerTagline}>
-                Permanently archiving the soundtrack of your life.
-              </p>
+          <div className={styles.footerBrand}>
+            <div className={styles.footerLogo}>
+              <MusicNote01Icon size={20} className={styles.footerLogoIcon} />
+              <span>Echo</span>
             </div>
           </div>
-
-          <div className={styles.footerDivider} />
-
-          <div className={styles.footerBottom}>
-            <p className={styles.footerCopyright}>
-              &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.
-            </p>
-          </div>
+          <p className={styles.footerCopyright}>
+            &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.
+          </p>
         </div>
       </footer>
     </div>

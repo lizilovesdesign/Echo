@@ -486,14 +486,9 @@
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 48px 0 24px;
+  padding: 32px 0;
   position: relative;
   z-index: 1;
-}
-
-.footerTop {
-  display: flex;
-  justify-content: center;
 }
 
 .footerBrand {
@@ -518,41 +513,15 @@
   color: var(--sage);
 }
 
-.footerTagline {
-  font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
-  color: var(--ink-secondary);
-  line-height: 1.5;
-  max-width: 280px;
-}
-
-.footerDivider {
-  height: 1px;
-  background-color: var(--color-outline-variant);
-  margin: 32px 0 24px;
-}
-
-.footerBottom {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@media (min-width: 768px) {
-  .footerBottom {
-    flex-direction: row;
-  }
-}
-
 .footerCopyright {
   font-family: var(--font-body-small-font-family);
   font-size: var(--font-body-small-font-size);
   color: var(--ink-secondary);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
+  margin-top: 16px;
 }
 
 .heartIcon {
