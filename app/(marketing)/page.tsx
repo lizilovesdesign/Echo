@@ -153,12 +153,6 @@ export default function LandingPage() {
           ))}
         </div>
         <div className={styles.footerInner}>
-          <div className={styles.footerBrand}>
-            <div className={styles.footerLogo}>
-              <MusicNote01Icon size={20} className={styles.footerLogoIcon} />
-              <span>Echo</span>
-            </div>
-          </div>
           <p className={styles.footerCopyright}>
             &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.
           </p>
