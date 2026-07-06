@@ -23,11 +23,21 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   overflow-x: hidden;
   background-color: var(--color-background);
   color: var(--ink-primary);
   animation: fadeSlideUp 0.35s ease both;
+}
+
+/* ─── 100 vh Viewport Shell (nav + hero) ─────────────────────────────────── */
+
+.heroViewport {
+  position: relative;
+  height: 100vh;
+  min-height: 560px;            /* floor so small phones don't crush content */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;             /* clips the ambient orbs cleanly */
 }
 
 /* ─── Header / Nav ───────────────────────────────────────────────────────── */
@@ -85,13 +95,13 @@
 
 .heroSection {
   position: relative;
-  flex: 1;
+  flex: 1;                       /* fills remaining height inside .heroViewport */
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
   gap: 48px;
   align-items: center;
-  padding: 64px 24px 0;
+  padding: 32px 24px 0;
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
@@ -101,10 +111,104 @@
   .heroSection {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
-    min-height: 80vh;
-    padding: 80px 48px 0;
+    padding: 40px 48px 0;
     gap: 64px;
   }
+}
+
+/* ─── Ambient Floating Orbs ──────────────────────────────────────────────── */
+
+.ambientOrbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orbDrift 12s ease-in-out infinite;
+}
+
+.orb1 {
+  width: 420px;
+  height: 420px;
+  top: -15%;
+  left: -10%;
+  background: var(--color-primary-container);
+  opacity: 0.35;
+  animation-duration: 14s;
+  animation-delay: 0s;
+}
+
+.orb2 {
+  width: 320px;
+  height: 320px;
+  bottom: -10%;
+  right: 5%;
+  background: var(--color-secondary-container);
+  opacity: 0.28;
+  animation-duration: 18s;
+  animation-delay: -6s;
+}
+
+.orb3 {
+  width: 240px;
+  height: 240px;
+  top: 40%;
+  left: 55%;
+  background: var(--color-tertiary-container);
+  opacity: 0.2;
+  animation-duration: 22s;
+  animation-delay: -11s;
+}
+
+@keyframes orbDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(24px, -18px) scale(1.05); }
+  66%       { transform: translate(-16px, 12px) scale(0.96); }
+}
+
+/* ─── Scroll Hint Chevron ─────────────────────────────────────────────────── */
+
+.scrollHint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  animation: hintFadeIn 1.2s ease 1.5s both;
+}
+
+.scrollChevron {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-right: 2px solid var(--ink-secondary);
+  border-bottom: 2px solid var(--ink-secondary);
+  transform: rotate(45deg);
+  opacity: 0.45;
+  animation: chevronBounce 1.8s ease-in-out infinite;
+}
+
+@keyframes chevronBounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.45; }
+  50%       { transform: rotate(45deg) translateY(5px); opacity: 0.7; }
+}
+
+@keyframes hintFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .scrollHint { display: none; }
 }
 
 /* ─── Hero Copy Column ───────────────────────────────────────────────────── */
@@ -367,80 +471,7 @@
   }
 }
 
-/* ─── Features Section ────────────────────────────────────────────────────── */
 
-.featuresSection {
-  background-color: var(--color-background);
-  padding: 64px 24px 96px;
-}
-
-.sectionHeader {
-  text-align: center;
-  max-width: 500px;
-  margin: 0 auto 56px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sectionHeader h2 {
-  font-family: var(--font-headline-medium-font-family);
-  font-size: var(--font-headline-medium-font-size);
-  font-weight: var(--font-headline-medium-font-weight);
-  color: var(--ink-primary);
-}
-
-.sectionHeader p {
-  font-family: var(--font-body-large-font-family);
-  font-size: var(--font-body-large-font-size);
-  color: var(--ink-secondary);
-}
-
-.featuresGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-  max-width: 1040px;
-  margin: 0 auto;
-}
-
-@media (min-width: 768px) {
-  .featuresGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Feature cards: borderless, no accent stripe, clean and minimal */
-.featureItem {
-  background-color: transparent;   /* no background fill */
-  border-radius: 12px;
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  /* Extremely subtle shadow only — no border */
-  box-shadow: none;
-  position: relative;
-}
-
-.featureIcon {
-  font-size: 28px;
-  line-height: 1;
-}
-
-.featureItem h3 {
-  font-family: var(--font-title-small-font-family);
-  font-size: var(--font-title-small-font-size);
-  font-weight: var(--font-title-small-font-weight);
-  color: var(--ink-primary);
-}
-
-.featureItem p {
-  font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
-  line-height: var(--font-body-medium-line-height);
-  color: var(--ink-secondary);
-}
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
 

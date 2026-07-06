@@ -7,8 +7,6 @@ import {
   FadeUpItem,
   NotebookCard,
   ScatterGallery,
-  ScrollReveal,
-  FeatureCardAnimator,
 } from '@/components/marketing/LandingAnimations';
 import styles from './page.module.css';
 
@@ -53,25 +51,7 @@ const notebookCards = [
   },
 ];
 
-// ─── Feature Items ────────────────────────────────────────────────────────
 
-const features = [
-  {
-    icon: '🔒',
-    title: 'Absolute Privacy',
-    description: 'No feeds, no likes, no profiles. Your memories belong strictly and entirely to you.',
-  },
-  {
-    icon: '⚡',
-    title: '20-Second Capture',
-    description: 'An optimized flow to catalogue a feeling, anchor a song, and save the moment instantly.',
-  },
-  {
-    icon: '💭',
-    title: 'Musical Time Capsule',
-    description: 'Every entry freezes a moment — revisit who you were through the songs that defined it.',
-  },
-];
 
 // ─── Page ────────────────────────────────────────────────────────────────
 
@@ -81,91 +61,87 @@ export default function LandingPage() {
   return (
     <div className={styles.container}>
 
-      {/* ── Nav ─────────────────────────────────────────────────────── */}
-      {/* Changes: removed Features and Journal nav links */}
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <MusicNote01Icon className={styles.logoIcon} />
-          <span>Echo</span>
+      {/* ── 100 vh viewport: Nav + Hero ─────────────────────────────── */}
+      <div className={styles.heroViewport}>
+
+        {/* Ambient floating orbs */}
+        <div className={styles.ambientOrbs} aria-hidden="true">
+          <span className={`${styles.orb} ${styles.orb1}`} />
+          <span className={`${styles.orb} ${styles.orb2}`} />
+          <span className={`${styles.orb} ${styles.orb3}`} />
         </div>
-        <div className={styles.actions}>
-          <Link href="/login">
-            <span className={styles.loginLink}>Log in</span>
-          </Link>
-        </div>
-      </header>
 
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <main className={styles.heroSection}>
-        {/* Left hero column */}
-        <HeroAnimator>
-          <FadeUpItem delay={0}>
-            <div className={styles.heroBadge}>
-              <span className={styles.heroBadgeDot} aria-hidden="true" />
-              <span>Private Music Journal</span>
-            </div>
-          </FadeUpItem>
+        {/* ── Nav ───────────────────────────────────────────────────── */}
+        {/* Changes: removed Features and Journal nav links */}
+        <header className={styles.header}>
+          <div className={styles.logo}>
+            <MusicNote01Icon className={styles.logoIcon} />
+            <span>Echo</span>
+          </div>
+          <div className={styles.actions}>
+            <Link href="/login">
+              <span className={styles.loginLink}>Log in</span>
+            </Link>
+          </div>
+        </header>
 
-          <FadeUpItem delay={0.08}>
-            <h1 className={styles.title}>
-              Your life has a<br />
-              <span className={styles.highlight}>soundtrack.</span>
-            </h1>
-          </FadeUpItem>
-
-          <FadeUpItem delay={0.18}>
-            <p className={styles.subtitle}>
-              Anchor songs to memories. Capture the feeling in under 20 seconds.
-              A strictly private emotional archive — yours forever.
-            </p>
-          </FadeUpItem>
-
-          <FadeUpItem delay={0.28}>
-            <div className={styles.ctaGroup}>
-              <HeroCta />
-            </div>
-          </FadeUpItem>
-        </HeroAnimator>
-
-        {/* Right scattered draggable notebook cards */}
-        <ScatterGallery>
-          {notebookCards.map((card, i) => (
-            <NotebookCard
-              key={i}
-              mood={card.mood}
-              song={card.song}
-              artist={card.artist}
-              note={card.note}
-              tilt={card.tilt}
-              delay={card.delay}
-              className={styles[card.position]}
-            />
-          ))}
-        </ScatterGallery>
-      </main>
-
-      {/* ── Features ──────────────────────────────────────────────────── */}
-      {/* Changes: removed border on cards, removed ::before accent strip */}
-      <section id="features" className={styles.featuresSection} aria-labelledby="features-heading">
-        <ScrollReveal className={styles.sectionHeader}>
-          <h2 id="features-heading">Why Echo?</h2>
-          <p>Strictly private, designed to capture reflections instantaneously.</p>
-        </ScrollReveal>
-
-        <div className={styles.featuresGrid}>
-          {features.map((feature, i) => (
-            <FeatureCardAnimator key={i} delay={i * 0.12}>
-              <div className={styles.featureItem}>
-                <div className={styles.featureIcon}>{feature.icon}</div>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
+        {/* ── Hero ──────────────────────────────────────────────────── */}
+        <main className={styles.heroSection}>
+          {/* Left hero column */}
+          <HeroAnimator>
+            <FadeUpItem delay={0}>
+              <div className={styles.heroBadge}>
+                <span className={styles.heroBadgeDot} aria-hidden="true" />
+                <span>Private Music Journal</span>
               </div>
-            </FeatureCardAnimator>
-          ))}
-        </div>
-      </section>
+            </FadeUpItem>
 
-      {/* Bottom CTA section removed per user request */}
+            <FadeUpItem delay={0.08}>
+              <h1 className={styles.title}>
+                Your life has a<br />
+                <span className={styles.highlight}>soundtrack.</span>
+              </h1>
+            </FadeUpItem>
+
+            <FadeUpItem delay={0.18}>
+              <p className={styles.subtitle}>
+                Anchor songs to memories. Capture the feeling in under 20 seconds.
+                A strictly private emotional archive — yours forever.
+              </p>
+            </FadeUpItem>
+
+            <FadeUpItem delay={0.28}>
+              <div className={styles.ctaGroup}>
+                <HeroCta />
+              </div>
+            </FadeUpItem>
+          </HeroAnimator>
+
+          {/* Right scattered draggable notebook cards */}
+          <ScatterGallery>
+            {notebookCards.map((card, i) => (
+              <NotebookCard
+                key={i}
+                mood={card.mood}
+                song={card.song}
+                artist={card.artist}
+                note={card.note}
+                tilt={card.tilt}
+                delay={card.delay}
+                className={styles[card.position]}
+              />
+            ))}
+          </ScatterGallery>
+        </main>
+
+        {/* Scroll-hint chevron */}
+        <div className={styles.scrollHint} aria-hidden="true">
+          <span className={styles.scrollChevron} />
+        </div>
+
+      </div>
+
+      {/* Features section removed — 100vh single screen design */}
 
       {/* ── Footer ────────────────────────────────────────────────────── */}
       <footer className={styles.footer}>
