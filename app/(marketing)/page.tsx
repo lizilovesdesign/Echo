@@ -127,10 +127,7 @@ export default function LandingPage() {
           </ScatterGallery>
         </main>
 
-        {/* Scroll-hint chevron */}
-        <div className={styles.scrollHint} aria-hidden="true">
-          <span className={styles.scrollChevron} />
-        </div>
+
 
       </div>
 
