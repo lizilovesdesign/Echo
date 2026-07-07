@@ -145,13 +145,6 @@ export default function LandingPage() {
 
       {/* ── Footer ────────────────────────────────────────────────────── */}
       <footer className={styles.footer}>
-        <div className={styles.notesContainer} aria-hidden="true">
-          {['♪', '♫', '♩', '♬', '♪', '♫'].map((note, i) => (
-            <span key={i} className={`${styles.floatingNote} ${styles[`note${i + 1}`]}`}>
-              {note}
-            </span>
-          ))}
-        </div>
         <div className={styles.footerInner}>
           <p className={styles.footerCopyright}>
             &copy; {currentYear} Echo. Made with <FooterHeart /> for music lovers.

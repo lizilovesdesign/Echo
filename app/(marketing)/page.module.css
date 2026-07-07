@@ -33,11 +33,17 @@
 
 .heroViewport {
   position: relative;
-  height: 100vh;
-  min-height: 560px;            /* floor so small phones don't crush content */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;             /* clips the ambient orbs cleanly */
+}
+
+@media (min-width: 900px) {
+  .heroViewport {
+    height: 100vh;
+    min-height: 560px;
+    overflow: hidden;
+  }
 }
 
 /* ─── Header / Nav ───────────────────────────────────────────────────────── */
@@ -478,7 +484,6 @@
 .footer {
   position: relative;
   padding: 0 24px;
-  overflow: hidden;
 }
 
 .footerInner {
@@ -512,37 +517,5 @@
   50%       { transform: scale(1.25); }
 }
 
-/* ─── Floating music notes (footer) ─────────────────────────────────────── */
 
-.notesContainer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
 
-@keyframes noteFloat {
-  0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.6); }
-  20%  { opacity: 0.5; }
-  80%  { opacity: 0.3; }
-  100% { opacity: 0; transform: translateY(-100px) rotate(25deg) scale(1); }
-}
-
-.floatingNote {
-  position: absolute;
-  font-size: 18px;
-  color: var(--sage);
-  opacity: 0;
-  animation: noteFloat 4s ease-in-out infinite;
-}
-
-.note1 { left:  8%; bottom: 60%; animation-delay: 0s;   font-size: 14px; }
-.note2 { left: 20%; bottom: 40%; animation-delay: 0.8s; font-size: 20px; }
-.note3 { left: 50%; bottom: 55%; animation-delay: 1.6s; font-size: 16px; }
-.note4 { left: 70%; bottom: 35%; animation-delay: 2.4s; font-size: 22px; }
-.note5 { left: 85%; bottom: 50%; animation-delay: 3.2s; font-size: 15px; }
-.note6 { left: 35%; bottom: 30%; animation-delay: 4s;   font-size: 18px; }
-
-@media (max-width: 480px) {
-  .floatingNote { display: none; }
-}
