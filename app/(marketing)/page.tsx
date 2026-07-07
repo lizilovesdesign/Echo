@@ -64,13 +64,6 @@ export default function LandingPage() {
       {/* ── 100 vh viewport: Nav + Hero ─────────────────────────────── */}
       <div className={styles.heroViewport}>
 
-        {/* Ambient floating orbs */}
-        <div className={styles.ambientOrbs} aria-hidden="true">
-          <span className={`${styles.orb} ${styles.orb1}`} />
-          <span className={`${styles.orb} ${styles.orb2}`} />
-          <span className={`${styles.orb} ${styles.orb3}`} />
-        </div>
-
         {/* ── Nav ───────────────────────────────────────────────────── */}
         {/* Changes: removed Features and Journal nav links */}
         <header className={styles.header}>

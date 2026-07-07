@@ -42,9 +42,10 @@
   .heroViewport {
     height: 100vh;
     min-height: 560px;
-    overflow: hidden;
+    /* overflow intentionally omitted — orbs live on the outer container */
   }
 }
+
 
 /* ─── Header / Nav ───────────────────────────────────────────────────────── */
 
@@ -122,61 +123,7 @@
   }
 }
 
-/* ─── Ambient Floating Orbs ──────────────────────────────────────────────── */
 
-.ambientOrbs {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: orbDrift 12s ease-in-out infinite;
-}
-
-.orb1 {
-  width: 420px;
-  height: 420px;
-  top: -15%;
-  left: -10%;
-  background: var(--color-primary-container);
-  opacity: 0.35;
-  animation-duration: 14s;
-  animation-delay: 0s;
-}
-
-.orb2 {
-  width: 320px;
-  height: 320px;
-  bottom: -10%;
-  right: 5%;
-  background: var(--color-secondary-container);
-  opacity: 0.28;
-  animation-duration: 18s;
-  animation-delay: -6s;
-}
-
-.orb3 {
-  width: 240px;
-  height: 240px;
-  top: 40%;
-  left: 55%;
-  background: var(--color-tertiary-container);
-  opacity: 0.2;
-  animation-duration: 22s;
-  animation-delay: -11s;
-}
-
-@keyframes orbDrift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(24px, -18px) scale(1.05); }
-  66%       { transform: translate(-16px, 12px) scale(0.96); }
-}
 
 /* ─── Scroll Hint Chevron ─────────────────────────────────────────────────── */
 
@@ -483,6 +430,7 @@
 
 .footer {
   position: relative;
+  background-color: transparent;
   padding: 0 24px;
 }
 
@@ -490,7 +438,7 @@
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px 0;
+  padding: 16px 0;
   position: relative;
   z-index: 1;
 }
