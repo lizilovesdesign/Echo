@@ -199,40 +199,118 @@
 
 }
 
-/* Dark Theme Color Roles (always active) */
+/* Light Theme Color Roles */
 :root {
   --color-primary: hsl(9, 100%, 70%);
-  --color-on-primary: hsl(5, 96%, 20%);
-  --color-primary-container: hsl(8, 74%, 30%);
-  --color-on-primary-container: hsl(8, 100%, 92%);
-  --color-secondary: hsl(9, 100%, 83%);
-  --color-on-secondary: hsl(8, 79%, 21%);
-  --color-secondary-container: hsl(9, 61%, 30%);
-  --color-on-secondary-container: hsl(8, 100%, 92%);
-  --color-tertiary: hsl(9, 89%, 82%);
-  --color-on-tertiary: hsl(10, 47%, 21%);
-  --color-tertiary-container: hsl(10, 36%, 30%);
-  --color-on-tertiary-container: hsl(8, 100%, 92%);
-  --color-error: hsl(3, 100%, 81%);
-  --color-on-error: hsl(3, 100%, 16%);
-  --color-error-container: hsl(3, 89%, 29%);
-  --color-on-error-container: hsl(3, 100%, 93%);
-  --color-background: hsl(9, 12%, 6%);
-  --color-on-background: hsl(8, 29%, 90%);
-  --color-surface: hsl(9, 12%, 6%);
-  --color-on-surface: hsl(8, 29%, 90%);
-  --color-surface-variant: hsl(0, 1%, 28%);
-  --color-on-surface-variant: hsl(15, 4%, 78%);
-  --color-outline: hsl(0, 1%, 57%);
-  --color-outline-variant: hsl(0, 1%, 28%);
-  --color-inverse-surface: hsl(8, 29%, 90%);
-  --color-inverse-on-surface: hsl(8, 8%, 20%);
-  --color-inverse-primary: hsl(8, 60%, 40%);
-  --color-surface-dim: hsl(9, 12%, 6%);
-  --color-surface-bright: hsl(8, 8%, 24%);
-  --color-surface-container-lowest: hsl(9, 12%, 4%);
-  --color-surface-container-low: hsl(9, 12%, 11%);
-  --color-surface-container: hsl(9, 12%, 12%);
-  --color-surface-container-high: hsl(8, 10%, 17%);
-  --color-surface-container-highest: hsl(8, 8%, 22%);
+  --color-on-primary: hsl(0, 0%, 100%);
+  --color-primary-container: hsl(9, 100%, 83%);
+  --color-on-primary-container: hsl(8, 74%, 30%);
+  --color-secondary: hsl(9, 51%, 41%);
+  --color-on-secondary: hsl(0, 0%, 100%);
+  --color-secondary-container: hsl(9, 100%, 83%);
+  --color-on-secondary-container: hsl(9, 61%, 30%);
+  --color-tertiary: hsl(10, 30%, 40%);
+  --color-on-tertiary: hsl(0, 0%, 100%);
+  --color-tertiary-container: hsl(9, 89%, 82%);
+  --color-on-tertiary-container: hsl(10, 36%, 30%);
+  --color-error: hsl(3, 71%, 41%);
+  --color-on-error: hsl(0, 0%, 100%);
+  --color-error-container: hsl(3, 100%, 81%);
+  --color-on-error-container: hsl(3, 89%, 29%);
+  --color-background: hsl(7, 100%, 98%);
+  --color-on-background: hsl(9, 12%, 11%);
+  --color-surface: hsl(7, 100%, 98%);
+  --color-on-surface: hsl(9, 12%, 11%);
+  --color-surface-variant: hsl(0, 9%, 89%);
+  --color-on-surface-variant: hsl(0, 1%, 28%);
+  --color-outline: hsl(0, 1%, 47%);
+  --color-outline-variant: hsl(15, 4%, 78%);
+  --color-inverse-surface: hsl(8, 8%, 20%);
+  --color-inverse-on-surface: hsl(8, 65%, 95%);
+  --color-inverse-primary: hsl(9, 100%, 83%);
+  --color-surface-dim: hsl(8, 22%, 86%);
+  --color-surface-bright: hsl(7, 100%, 98%);
+  --color-surface-container-lowest: hsl(0, 0%, 100%);
+  --color-surface-container-low: hsl(8, 88%, 97%);
+  --color-surface-container: hsl(8, 52%, 94%);
+  --color-surface-container-high: hsl(8, 40%, 92%);
+  --color-surface-container-highest: hsl(8, 29%, 90%);
+}
+
+/* Dark Theme Color Roles */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #1db954;
+    --color-on-primary: #000000;
+    --color-primary-container: #1ed760;
+    --color-on-primary-container: #000000;
+    --color-secondary: #b3b3b3;
+    --color-on-secondary: #000000;
+    --color-secondary-container: #282828;
+    --color-on-secondary-container: #ffffff;
+    --color-tertiary: #1db954;
+    --color-on-tertiary: #000000;
+    --color-tertiary-container: #282828;
+    --color-on-tertiary-container: #ffffff;
+    --color-error: #f15e6c;
+    --color-on-error: #000000;
+    --color-error-container: #e22134;
+    --color-on-error-container: #ffffff;
+    --color-background: #121212;
+    --color-on-background: #ffffff;
+    --color-surface: #121212;
+    --color-on-surface: #ffffff;
+    --color-surface-variant: #181818;
+    --color-on-surface-variant: #b3b3b3;
+    --color-outline: #282828;
+    --color-outline-variant: #333333;
+    --color-inverse-surface: #ffffff;
+    --color-inverse-on-surface: #000000;
+    --color-inverse-primary: #1ed760;
+    --color-surface-dim: #000000;
+    --color-surface-bright: #282828;
+    --color-surface-container-lowest: #000000;
+    --color-surface-container-low: #121212;
+    --color-surface-container: #181818;
+    --color-surface-container-high: #282828;
+    --color-surface-container-highest: #333333;
+  }
+}
+
+/* Class-based Dark Theme Selector */
+.dark, .dark-theme {
+  --color-primary: #1db954;
+  --color-on-primary: #000000;
+  --color-primary-container: #1ed760;
+  --color-on-primary-container: #000000;
+  --color-secondary: #b3b3b3;
+  --color-on-secondary: #000000;
+  --color-secondary-container: #282828;
+  --color-on-secondary-container: #ffffff;
+  --color-tertiary: #1db954;
+  --color-on-tertiary: #000000;
+  --color-tertiary-container: #282828;
+  --color-on-tertiary-container: #ffffff;
+  --color-error: #f15e6c;
+  --color-on-error: #000000;
+  --color-error-container: #e22134;
+  --color-on-error-container: #ffffff;
+  --color-background: #121212;
+  --color-on-background: #ffffff;
+  --color-surface: #121212;
+  --color-on-surface: #ffffff;
+  --color-surface-variant: #181818;
+  --color-on-surface-variant: #b3b3b3;
+  --color-outline: #282828;
+  --color-outline-variant: #333333;
+  --color-inverse-surface: #ffffff;
+  --color-inverse-on-surface: #000000;
+  --color-inverse-primary: #1ed760;
+  --color-surface-dim: #000000;
+  --color-surface-bright: #282828;
+  --color-surface-container-lowest: #000000;
+  --color-surface-container-low: #121212;
+  --color-surface-container: #181818;
+  --color-surface-container-high: #282828;
+  --color-surface-container-highest: #333333;
 }
