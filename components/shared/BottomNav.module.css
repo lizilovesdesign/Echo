@@ -98,9 +98,10 @@
     top: 12px;
     left: 0;
     bottom: 12px;
-    width: 280px;
+    width: 220px;
     z-index: 100;
     background-color: var(--color-surface);
+    border-right: 1px solid var(--color-outline-variant);
     border-radius: 0 16px 16px 0;
     padding: 20px 12px;
     overflow-y: auto;
