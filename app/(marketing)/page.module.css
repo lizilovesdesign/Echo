@@ -5,9 +5,9 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .container {
-  --paper-base:     var(--color-surface-container-lowest);
-  --paper-warm:     var(--color-surface-container-low);
-  --paper-mid:      var(--color-surface-container);
+  --paper-base:     var(--color-surface-container-high);
+  --paper-warm:     var(--color-surface-container);
+  --paper-mid:      var(--color-surface-container-highest);
   --paper-shadow:   var(--color-surface-dim);
   --paper-rule:     var(--color-outline-variant);
   --paper-tape:     var(--color-primary-container);
