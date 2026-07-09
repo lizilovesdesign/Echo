@@ -3,6 +3,7 @@
 import React, { Suspense } from 'react';
 import { EchoEntryForm } from '@/components/journal/EchoEntryForm';
 import { Spinner } from '@/components/ui/Spinner';
+import styles from './page.module.css';
 
 function CreateEntryFallback() {
   return (
@@ -14,8 +15,10 @@ function CreateEntryFallback() {
 
 export default function CreateEntryPage() {
   return (
-    <Suspense fallback={<CreateEntryFallback />}>
-      <EchoEntryForm />
-    </Suspense>
+    <div className={styles.container}>
+      <Suspense fallback={<CreateEntryFallback />}>
+        <EchoEntryForm />
+      </Suspense>
+    </div>
   );
 }

@@ -14,9 +14,17 @@ export async function GET(request: Request) {
       const supabase = createServerSupabaseClient();
       const { error } = await supabase.auth.exchangeCodeForSession(code);
       if (!error) {
-        if (type !== 'recovery') {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user?.email) {
+        if (type === 'recovery') {
+          return NextResponse.redirect(`${origin}/reset-password`);
+        }
+
+        let isNewUser = false;
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          isNewUser = new Date().getTime() - new Date(user.created_at).getTime() < 60000;
+          
+          if (isNewUser && user.email) {
             const name = user.user_metadata?.full_name || 'there';
             // Fire welcome email in background — don't block the redirect if it fails
             sendWelcomeEmail(user.email, name).catch((e) =>
@@ -24,10 +32,9 @@ export async function GET(request: Request) {
             );
           }
         }
-        if (type === 'recovery') {
-          return NextResponse.redirect(`${origin}/reset-password`);
-        }
-        return NextResponse.redirect(`${origin}${next}${next.includes('?') ? '&' : '?'}welcome=1`);
+
+        const redirectUrl = `${origin}${next}${isNewUser ? (next.includes('?') ? '&welcome=1' : '?welcome=1') : ''}`;
+        return NextResponse.redirect(redirectUrl);
       }
     }
 

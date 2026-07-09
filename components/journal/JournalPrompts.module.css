@@ -37,6 +37,15 @@
   width: max-content;
 }
 
+@media (min-width: 1024px) {
+  .scrollContainer {
+    margin: 0 -40px;
+  }
+  .promptList {
+    padding: 4px 40px 16px;
+  }
+}
+
 /* Prompt card base */
 .promptCard {
   --card-bg: var(--color-surface-container-low);

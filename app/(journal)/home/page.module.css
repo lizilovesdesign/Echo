@@ -1,6 +1,9 @@
 /* Home page */
 
 .page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 /* Breathing room at the bottom so content clears the 64px fixed nav bar
