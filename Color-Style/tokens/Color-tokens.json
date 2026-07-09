@@ -191,22 +191,22 @@
                 "onErrorContainer": "#ffffff",
                 "background": "#121212",
                 "onBackground": "#ffffff",
-                "surface": "#121212",
+                "surface": "#181818",
                 "onSurface": "#ffffff",
-                "surfaceVariant": "#181818",
+                "surfaceVariant": "#282828",
                 "onSurfaceVariant": "#b3b3b3",
-                "outline": "#282828",
-                "outlineVariant": "#333333",
+                "outline": "#3e3e3e",
+                "outlineVariant": "#282828",
                 "inverseSurface": "#ffffff",
                 "inverseOnSurface": "#000000",
                 "inversePrimary": "{color.palette.primary.40}",
-                "surfaceDim": "#000000",
-                "surfaceBright": "#282828",
+                "surfaceDim": "#121212",
+                "surfaceBright": "#333333",
                 "surfaceContainerLowest": "#000000",
-                "surfaceContainerLow": "#121212",
-                "surfaceContainer": "#181818",
-                "surfaceContainerHigh": "#282828",
-                "surfaceContainerHighest": "#333333"
+                "surfaceContainerLow": "#181818",
+                "surfaceContainer": "#282828",
+                "surfaceContainerHigh": "#333333",
+                "surfaceContainerHighest": "#3e3e3e"
             }
         }
     }

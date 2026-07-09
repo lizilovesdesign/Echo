@@ -258,22 +258,22 @@
     --color-on-error-container: #ffffff;
     --color-background: #121212;
     --color-on-background: #ffffff;
-    --color-surface: #121212;
+    --color-surface: #181818;
     --color-on-surface: #ffffff;
-    --color-surface-variant: #181818;
+    --color-surface-variant: #282828;
     --color-on-surface-variant: #b3b3b3;
-    --color-outline: #282828;
-    --color-outline-variant: #333333;
+    --color-outline: #3e3e3e;
+    --color-outline-variant: #282828;
     --color-inverse-surface: #ffffff;
     --color-inverse-on-surface: #000000;
     --color-inverse-primary: hsl(8, 60%, 40%);
-    --color-surface-dim: #000000;
-    --color-surface-bright: #282828;
+    --color-surface-dim: #121212;
+    --color-surface-bright: #333333;
     --color-surface-container-lowest: #000000;
-    --color-surface-container-low: #121212;
-    --color-surface-container: #181818;
-    --color-surface-container-high: #282828;
-    --color-surface-container-highest: #333333;
+    --color-surface-container-low: #181818;
+    --color-surface-container: #282828;
+    --color-surface-container-high: #333333;
+    --color-surface-container-highest: #3e3e3e;
   }
 }
 
@@ -297,20 +297,20 @@
   --color-on-error-container: #ffffff;
   --color-background: #121212;
   --color-on-background: #ffffff;
-  --color-surface: #121212;
+  --color-surface: #181818;
   --color-on-surface: #ffffff;
-  --color-surface-variant: #181818;
+  --color-surface-variant: #282828;
   --color-on-surface-variant: #b3b3b3;
-  --color-outline: #282828;
-  --color-outline-variant: #333333;
+  --color-outline: #3e3e3e;
+  --color-outline-variant: #282828;
   --color-inverse-surface: #ffffff;
   --color-inverse-on-surface: #000000;
   --color-inverse-primary: hsl(8, 60%, 40%);
-  --color-surface-dim: #000000;
-  --color-surface-bright: #282828;
+  --color-surface-dim: #121212;
+  --color-surface-bright: #333333;
   --color-surface-container-lowest: #000000;
-  --color-surface-container-low: #121212;
-  --color-surface-container: #181818;
-  --color-surface-container-high: #282828;
-  --color-surface-container-highest: #333333;
+  --color-surface-container-low: #181818;
+  --color-surface-container: #282828;
+  --color-surface-container-high: #333333;
+  --color-surface-container-highest: #3e3e3e;
 }
