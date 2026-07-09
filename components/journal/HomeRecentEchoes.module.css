@@ -28,7 +28,7 @@
   color: var(--color-primary);
   text-decoration: none;
   min-height: 44px;
-  padding: 0 8px;
+  padding: 0;
 }
 
 .seeAll:hover {
