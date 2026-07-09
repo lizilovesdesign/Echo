@@ -117,9 +117,10 @@
 @media (min-width: 900px) {
   .heroSection {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto;
     padding: 40px 48px 0;
     gap: 64px;
+    align-items: start;
   }
 }
 
