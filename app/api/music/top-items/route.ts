@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
   const timeRange = searchParams.get('time_range') ?? 'medium_term';
   const limit = Math.min(Number(searchParams.get('limit') ?? '20'), 50);
 
-  if (type !== 'artists' && type !== 'tracks') {
+  if (type !== 'artists' && type !== 'tracks' && type !== 'albums') {
     return NextResponse.json(
-      { ok: false, error: { code: 'BAD_REQUEST', message: 'type must be "artists" or "tracks".' } },
+      { ok: false, error: { code: 'BAD_REQUEST', message: 'type must be "artists", "tracks", or "albums".' } },
       { status: 400 }
     );
   }

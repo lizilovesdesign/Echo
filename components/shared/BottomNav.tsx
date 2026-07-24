@@ -8,15 +8,15 @@ import styles from './BottomNav.module.css';
 
 const BOTTOM_ITEMS = [
   { href: '/home', label: 'Home', Icon: Home01Icon },
-  { href: '/top-items', label: 'Top', Icon: CrownIcon },
   { href: '/timeline', label: 'Memories', Icon: BookOpen01Icon },
+  { href: '/top-items', label: 'Top', Icon: CrownIcon },
   { href: '/profile', label: 'Profile', Icon: UserIcon },
 ] as const;
 
 const SIDEBAR_ITEMS = [
   { href: '/home', label: 'Home', Icon: Home01Icon },
-  { href: '/top-items', label: 'Top Items', Icon: CrownIcon },
   { href: '/timeline', label: 'Memories', Icon: BookOpen01Icon },
+  { href: '/top-items', label: 'Top Items', Icon: CrownIcon },
   { href: '/create', label: 'Create', Icon: AddCircleIcon },
   { href: '/profile', label: 'Profile', Icon: UserIcon },
 ] as const;

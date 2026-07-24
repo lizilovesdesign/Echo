@@ -288,7 +288,7 @@ class SpotifyClient {
 
   public async getTopItems(
     accessToken: string,
-    type: 'artists' | 'tracks',
+    type: 'artists' | 'tracks' | 'albums',
     timeRange: string = 'medium_term',
     limit: number = 20
   ): Promise<TopItem[]> {
@@ -321,6 +321,21 @@ class SpotifyClient {
             image: images?.[0]?.url ?? fallbackArt,
             genres: artist.genres as string[],
             popularity: artist.popularity as number,
+          };
+        });
+      }
+
+      if (type === 'albums') {
+        return items.map((item) => {
+          const album = item as Record<string, unknown>;
+          const images = album.images as { url: string }[] | undefined;
+          const artists = album.artists as { name: string }[] | undefined;
+          return {
+            id: album.id as string,
+            name: album.name as string,
+            image: images?.[0]?.url ?? fallbackArt,
+            artist: artists?.[0]?.name ?? 'Unknown Artist',
+            popularity: album.popularity as number,
           };
         });
       }
