@@ -3,6 +3,15 @@ import { env } from './env';
 import { MusicTrack, MusicTrackSchema } from './validators/music';
 import { logger } from './logger';
 
+export interface TopItem {
+  id: string;
+  name: string;
+  image: string;
+  artist?: string;
+  genres?: string[];
+  popularity?: number;
+}
+
 export interface CurrentlyPlaying {
   isPlaying: boolean;
   trackId: string;
@@ -274,6 +283,64 @@ class SpotifyClient {
     } catch (error) {
       logger.error('spotify.currently_playing.fetch_failed', { error });
       return null;
+    }
+  }
+
+  public async getTopItems(
+    accessToken: string,
+    type: 'artists' | 'tracks',
+    timeRange: string = 'medium_term',
+    limit: number = 20
+  ): Promise<TopItem[]> {
+    try {
+      const url = `https://api.spotify.com/v1/me/top/${type}?time_range=${timeRange}&limit=${limit}`;
+      const response = await this.fetchWithTimeout(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (response.status === 403) {
+        throw new Error('INSUFFICIENT_SCOPE');
+      }
+
+      if (!response.ok) {
+        throw new Error(`Spotify top ${type} fetch failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const items: unknown[] = data.items || [];
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      if (type === 'artists') {
+        return items.map((item) => {
+          const artist = item as Record<string, unknown>;
+          const images = artist.images as { url: string }[] | undefined;
+          return {
+            id: artist.id as string,
+            name: artist.name as string,
+            image: images?.[0]?.url ?? fallbackArt,
+            genres: artist.genres as string[],
+            popularity: artist.popularity as number,
+          };
+        });
+      }
+
+      return items.map((item) => {
+        const track = item as Record<string, unknown>;
+        const album = track.album as Record<string, unknown> | undefined;
+        const images = album?.images as { url: string }[] | undefined;
+        const artists = track.artists as { name: string }[] | undefined;
+        return {
+          id: track.id as string,
+          name: track.name as string,
+          image: images?.[0]?.url ?? fallbackArt,
+          artist: artists?.[0]?.name ?? 'Unknown Artist',
+          popularity: track.popularity as number,
+        };
+      });
+    } catch (error) {
+      logger.error('spotify.top_items.fetch_failed', { type, error });
+      throw error;
     }
   }
 }

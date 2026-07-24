@@ -3,17 +3,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MusicNote01Icon, Home01Icon, BookOpen01Icon, UserIcon, AddCircleIcon } from 'hugeicons-react';
+import { MusicNote01Icon, Home01Icon, BookOpen01Icon, UserIcon, AddCircleIcon, CrownIcon } from 'hugeicons-react';
 import styles from './BottomNav.module.css';
 
 const BOTTOM_ITEMS = [
   { href: '/home', label: 'Home', Icon: Home01Icon },
+  { href: '/top-items', label: 'Top', Icon: CrownIcon },
   { href: '/timeline', label: 'Memories', Icon: BookOpen01Icon },
   { href: '/profile', label: 'Profile', Icon: UserIcon },
 ] as const;
 
 const SIDEBAR_ITEMS = [
   { href: '/home', label: 'Home', Icon: Home01Icon },
+  { href: '/top-items', label: 'Top Items', Icon: CrownIcon },
   { href: '/timeline', label: 'Memories', Icon: BookOpen01Icon },
   { href: '/create', label: 'Create', Icon: AddCircleIcon },
   { href: '/profile', label: 'Profile', Icon: UserIcon },
