@@ -29,12 +29,6 @@ const TIME_RANGES: { key: TimeRange; label: string }[] = [
   { key: 'long_term', label: 'All time' },
 ];
 
-const TOP_3_QUIPS: Record<TabKey, string[]> = {
-  artists: ['Your absolute favorite', 'A close second', 'Rounding out the top three'],
-  tracks: ['Your #1 earworm', 'You keep coming back to this one', 'A solid third place'],
-  albums: ['The album you had on repeat', 'Nearly took the crown', 'Top three complete'],
-};
-
 const RANK_MEDALS = ['🥇', '🥈', '🥉'];
 
 function PodiumItem({ item, rank, isArtist, delay }: { item: TopItem; rank: number; isArtist: boolean; delay: number }) {
@@ -50,16 +44,13 @@ function PodiumItem({ item, rank, isArtist, delay }: { item: TopItem; rank: numb
           src={item.image}
           alt={item.name}
           fill
-          sizes={isFirst ? '120px' : '96px'}
+          sizes={isFirst ? '120px' : '88px'}
           className={styles.podiumImage}
           unoptimized
         />
       </div>
       <span className={styles.podiumName}>{item.name}</span>
       {item.artist && <span className={styles.podiumArtist}>{item.artist}</span>}
-      {item.genres && item.genres.length > 0 && (
-        <span className={styles.podiumGenre}>{item.genres[0]}</span>
-      )}
     </div>
   );
 }
@@ -77,7 +68,7 @@ export function TopItemsView() {
     setIsLoading(true);
     setHasError(false);
     try {
-      const res = await fetch(`/api/music/top-items?type=${tab}&time_range=${range}&limit=20`);
+      const res = await fetch(`/api/music/top-items?type=${tab}&time_range=${range}&limit=5`);
       if (!res.ok) {
         setHasError(true);
         return;
@@ -194,30 +185,27 @@ export function TopItemsView() {
           )}
 
           {restItems.length > 0 && (
-            <div className={styles.list}>
+            <div className={styles.restRow}>
               {restItems.map((item, i) => (
                 <div
                   key={item.id}
-                  className={styles.row}
-                  style={{ animationDelay: `${(i + 3) * 50}ms` }}
+                  className={styles.restItem}
+                  style={{ animationDelay: `${(i + 3) * 80}ms` }}
                 >
-                  <span className={styles.rank}>{i + 4}</span>
-                  <div className={`${styles.imageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
+                  <span className={styles.restRank}>{i + 4}</span>
+                  <div className={`${styles.restImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      sizes="48px"
-                      className={styles.rowImage}
+                      sizes="44px"
+                      className={styles.restImage}
                       unoptimized
                     />
                   </div>
-                  <div className={styles.info}>
-                    <span className={styles.name}>{item.name}</span>
-                    {item.artist && <span className={styles.artist}>{item.artist}</span>}
-                    {item.genres && item.genres.length > 0 && (
-                      <span className={styles.genre}>{item.genres[0]}</span>
-                    )}
+                  <div className={styles.restInfo}>
+                    <span className={styles.restName}>{item.name}</span>
+                    {item.artist && <span className={styles.restArtist}>{item.artist}</span>}
                   </div>
                 </div>
               ))}

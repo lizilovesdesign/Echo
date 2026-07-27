@@ -90,7 +90,7 @@
   display: flex;
   gap: 12px;
   align-items: flex-end;
-  padding: 8px 0 16px;
+  padding: 8px 0;
 }
 
 .podiumItem {
@@ -182,70 +182,56 @@
   white-space: nowrap;
 }
 
-.podiumGenre {
-  font-family: var(--font-body-small-font-family);
-  font-size: var(--font-body-small-font-size);
-  color: var(--color-primary);
-  text-transform: capitalize;
-}
+/* ─── Rest Row (#4 and #5 side by side) ─── */
 
-/* ─── List (4+) ─── */
-
-.list {
+.restRow {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  gap: 12px;
 }
 
-.row {
+.restItem {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px;
+  gap: 10px;
+  padding: 10px 12px;
   border-radius: 12px;
-  min-height: 64px;
-  transition: background-color 0.15s;
-  animation: fadeSlideUp 0.4s ease-out both;
-}
-
-.row:hover {
   background-color: var(--color-surface-container);
+  min-width: 0;
+  animation: fadeIn 0.4s ease-out both;
 }
 
-.rank {
+.restRank {
   flex-shrink: 0;
-  width: 24px;
-  text-align: center;
   font-family: var(--font-label-large-font-family);
   font-size: var(--font-label-large-font-size);
   font-weight: 500;
-  color: var(--color-on-surface-variant);
+  color: var(--color-primary);
 }
 
-.imageWrap {
+.restImageWrap {
   position: relative;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   overflow: hidden;
-  background-color: var(--color-surface-container);
+  background-color: var(--color-surface-container-high);
 }
 
-.rowImage {
+.restImage {
   object-fit: cover;
 }
 
-.info {
+.restInfo {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
-  flex: 1;
 }
 
-.name {
-  font-family: var(--font-body-large-font-family);
-  font-size: var(--font-body-large-font-size);
+.restName {
+  font-family: var(--font-body-medium-font-family);
+  font-size: var(--font-body-medium-font-size);
   font-weight: 500;
   color: var(--color-on-surface);
   white-space: nowrap;
@@ -253,20 +239,29 @@
   text-overflow: ellipsis;
 }
 
-.artist {
-  font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
+.restArtist {
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
   color: var(--color-on-surface-variant);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.genre {
-  font-family: var(--font-body-small-font-family);
-  font-size: var(--font-body-small-font-size);
-  color: var(--color-primary);
-  text-transform: capitalize;
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ─── Skeleton ─── */
@@ -323,18 +318,7 @@
   50% { opacity: 1; }
 }
 
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ─── Connect / Error / Empty States ─── */
+/* ─── States ─── */
 
 .connectCard {
   display: flex;
