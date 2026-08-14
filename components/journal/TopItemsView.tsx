@@ -145,27 +145,28 @@ export function TopItemsView() {
         <div className={styles.empty}>Nothing here yet. Keep listening!</div>
       ) : (
         <ol className={styles.rankList} role="tabpanel">
-          {items.map((item, idx) => (
-            <li key={item.id} className={styles.rankItem}>
-              <span className={styles.rankBadge}>{idx + 1}</span>
-              <div className={`${styles.rankImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  sizes="44px"
-                  className={styles.rankImage}
-                  unoptimized
-                />
-              </div>
-              <div className={styles.rankInfo}>
-                <span className={styles.rankName}>{item.name}</span>
-                {rankSubtitle(item, isArtist) && (
-                  <span className={styles.rankSubtitle}>{rankSubtitle(item, isArtist)}</span>
-                )}
-              </div>
-            </li>
-          ))}
+          {items.map((item, idx) => {
+            const subtitle = rankSubtitle(item, isArtist);
+            return (
+              <li key={item.id} className={styles.rankItem}>
+                <span className={styles.rankBadge}>{idx + 1}</span>
+                <div className={`${styles.rankImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    sizes="44px"
+                    className={styles.rankImage}
+                    unoptimized
+                  />
+                </div>
+                <div className={styles.rankInfo}>
+                  <span className={styles.rankName}>{item.name}</span>
+                  {subtitle && <span className={styles.rankSubtitle}>{subtitle}</span>}
+                </div>
+              </li>
+            );
+          })}
         </ol>
       )}
     </div>
