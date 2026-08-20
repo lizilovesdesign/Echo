@@ -16,10 +16,10 @@ interface TopItem {
   popularity?: number;
 }
 
-const TABS: { key: TabKey; label: string }[] = [
-  { key: 'artists', label: 'Artists' },
-  { key: 'tracks', label: 'Songs' },
-  { key: 'albums', label: 'Albums' },
+const TABS: { key: TabKey; label: string; emoji: string }[] = [
+  { key: 'artists', label: 'Artists', emoji: '🎤' },
+  { key: 'tracks', label: 'Songs', emoji: '🎵' },
+  { key: 'albums', label: 'Albums', emoji: '💿' },
 ];
 
 const TIME_RANGES: { key: TimeRange; label: string }[] = [
@@ -27,6 +27,12 @@ const TIME_RANGES: { key: TimeRange; label: string }[] = [
   { key: 'medium_term', label: '6 months' },
   { key: 'long_term', label: 'All time' },
 ];
+
+const TAB_HEADLINES: Record<TabKey, string> = {
+  artists: 'Your musical obsessions',
+  tracks: 'Songs on repeat',
+  albums: 'Albums you can\'t stop playing',
+};
 
 function capitalize(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1);
@@ -37,6 +43,22 @@ function rankSubtitle(item: TopItem, isArtist: boolean): string {
     return item.genres && item.genres.length > 0 ? capitalize(item.genres[0]) : '';
   }
   return item.artist ?? '';
+}
+
+function getRankBadgeClass(rank: number): string {
+  if (rank === 1) return `${styles.rankBadge} ${styles.rankGold}`;
+  if (rank === 2) return `${styles.rankBadge} ${styles.rankSilver}`;
+  if (rank === 3) return `${styles.rankBadge} ${styles.rankBronze}`;
+  return styles.rankBadge;
+}
+
+function getFunFact(popularity?: number): string {
+  if (popularity === undefined) return '';
+  if (popularity >= 90) return 'Absolute banger 🔥';
+  if (popularity >= 75) return 'Crowd favorite ⭐';
+  if (popularity >= 60) return 'Solid taste 🎶';
+  if (popularity >= 40) return 'Hidden gem 💎';
+  return 'Deep cut 🌱';
 }
 
 export function TopItemsView() {
@@ -97,6 +119,33 @@ export function TopItemsView() {
   }
 
   const isArtist = activeTab === 'artists';
+  const top3 = items.slice(0, 3);
+  const rest = items.slice(3);
+
+  const renderListItem = (item: TopItem, idx: number) => {
+    const subtitle = rankSubtitle(item, isArtist);
+    const funFact = getFunFact(item.popularity);
+    return (
+      <li key={item.id} className={styles.rankItem}>
+        <span className={getRankBadgeClass(idx + 1)}>{idx + 1}</span>
+        <div className={`${styles.rankImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            sizes="44px"
+            className={styles.rankImage}
+            unoptimized
+          />
+        </div>
+        <div className={styles.rankInfo}>
+          <span className={styles.rankName}>{item.name}</span>
+          {subtitle && <span className={styles.rankSubtitle}>{subtitle}</span>}
+        </div>
+        {funFact && <span className={styles.funFact}>{funFact}</span>}
+      </li>
+    );
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -109,6 +158,7 @@ export function TopItemsView() {
             className={`${styles.tab} ${activeTab === tab.key ? styles.tabActive : ''}`}
             onClick={() => setActiveTab(tab.key)}
           >
+            <span className={styles.tabEmoji}>{tab.emoji}</span>
             {tab.label}
           </button>
         ))}
@@ -144,30 +194,87 @@ export function TopItemsView() {
       ) : items.length === 0 ? (
         <div className={styles.empty}>Nothing here yet. Keep listening!</div>
       ) : (
-        <ol className={styles.rankList} role="tabpanel">
-          {items.map((item, idx) => {
-            const subtitle = rankSubtitle(item, isArtist);
-            return (
-              <li key={item.id} className={styles.rankItem}>
-                <span className={styles.rankBadge}>{idx + 1}</span>
-                <div className={`${styles.rankImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="44px"
-                    className={styles.rankImage}
-                    unoptimized
-                  />
-                </div>
-                <div className={styles.rankInfo}>
-                  <span className={styles.rankName}>{item.name}</span>
-                  {subtitle && <span className={styles.rankSubtitle}>{subtitle}</span>}
-                </div>
-              </li>
-            );
-          })}
-        </ol>
+        <>
+          {top3.length > 0 && (
+            <>
+              <p className={styles.podiumHeadline}>{TAB_HEADLINES[activeTab]} ✨</p>
+              <div className={styles.podium} role="tabpanel">
+                {top3.length >= 2 && (
+                  <div className={`${styles.podiumItem} ${styles.podiumLeft}`}>
+                    <div className={styles.podiumImageWrap}>
+                      <Image
+                        src={top3[1].image}
+                        alt={top3[1].name}
+                        fill
+                        sizes="56px"
+                        className={styles.podiumImage}
+                        unoptimized
+                      />
+                    </div>
+                    <span className={`${styles.podiumBadge} ${styles.rankSilver}`}>2</span>
+                    <div className={styles.podiumInfo}>
+                      <span className={styles.podiumName}>{top3[1].name}</span>
+                      {rankSubtitle(top3[1], isArtist) && (
+                        <span className={styles.podiumSubtitle}>{rankSubtitle(top3[1], isArtist)}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {top3.length >= 1 && (
+                  <div className={`${styles.podiumItem} ${styles.podiumCenter}`}>
+                    <span className={styles.podiumCrown}>👑</span>
+                    <div className={`${styles.podiumImageWrap} ${styles.podiumImageLarge}`}>
+                      <Image
+                        src={top3[0].image}
+                        alt={top3[0].name}
+                        fill
+                        sizes="72px"
+                        className={styles.podiumImage}
+                        unoptimized
+                      />
+                    </div>
+                    <span className={`${styles.podiumBadge} ${styles.rankGold}`}>1</span>
+                    <div className={styles.podiumInfo}>
+                      <span className={styles.podiumName}>{top3[0].name}</span>
+                      {rankSubtitle(top3[0], isArtist) && (
+                        <span className={styles.podiumSubtitle}>{rankSubtitle(top3[0], isArtist)}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {top3.length >= 3 && (
+                  <div className={`${styles.podiumItem} ${styles.podiumRight}`}>
+                    <div className={styles.podiumImageWrap}>
+                      <Image
+                        src={top3[2].image}
+                        alt={top3[2].name}
+                        fill
+                        sizes="56px"
+                        className={styles.podiumImage}
+                        unoptimized
+                      />
+                    </div>
+                    <span className={`${styles.podiumBadge} ${styles.rankBronze}`}>3</span>
+                    <div className={styles.podiumInfo}>
+                      <span className={styles.podiumName}>{top3[2].name}</span>
+                      {rankSubtitle(top3[2], isArtist) && (
+                        <span className={styles.podiumSubtitle}>{rankSubtitle(top3[2], isArtist)}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {rest.length > 0 && (
+            <ol className={styles.rankList}>
+              {rest.map((item, idx) => renderListItem(item, idx + 3))}
+            </ol>
+          )}
+        </>
       )}
     </div>
   );

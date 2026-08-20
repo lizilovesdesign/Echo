@@ -286,6 +286,62 @@ class SpotifyClient {
     }
   }
 
+  public async getTopAlbums(
+    accessToken: string,
+    timeRange: string = 'medium_term',
+    limit: number = 20
+  ): Promise<TopItem[]> {
+    try {
+      const url = `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=50`;
+      const response = await this.fetchWithTimeout(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (response.status === 403) {
+        throw new Error('INSUFFICIENT_SCOPE');
+      }
+
+      if (!response.ok) {
+        throw new Error(`Spotify top tracks fetch failed for albums: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawTracks: unknown[] = data.items || [];
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      const albumMap = new Map<string, { id: string; name: string; image: string; artist: string; trackCount: number }>();
+
+      for (const raw of rawTracks) {
+        const track = raw as Record<string, unknown>;
+        const album = track.album as Record<string, unknown> | undefined;
+        if (!album) continue;
+
+        const albumId = album.id as string;
+        const albumName = album.name as string;
+        const images = album.images as { url: string }[] | undefined;
+        const artists = album.artists as { name: string }[] | undefined;
+        const image = images?.[0]?.url ?? fallbackArt;
+        const artist = artists?.[0]?.name ?? 'Unknown Artist';
+
+        const existing = albumMap.get(albumId);
+        if (existing) {
+          existing.trackCount++;
+        } else {
+          albumMap.set(albumId, { id: albumId, name: albumName, image, artist, trackCount: 1 });
+        }
+      }
+
+      return Array.from(albumMap.values())
+        .sort((a, b) => b.trackCount - a.trackCount)
+        .slice(0, limit)
+        .map(({ trackCount, ...rest }) => rest);
+    } catch (error) {
+      logger.error('spotify.top_albums.fetch_failed', { error });
+      throw error;
+    }
+  }
+
   public async getTopItems(
     accessToken: string,
     type: 'artists' | 'tracks' | 'albums',

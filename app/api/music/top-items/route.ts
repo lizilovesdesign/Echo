@@ -53,7 +53,13 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const items = await spotify.getTopItems(accessToken!, type, timeRange, limit);
+    let items;
+
+    if (type === 'albums') {
+      items = await spotify.getTopAlbums(accessToken!, timeRange, limit);
+    } else {
+      items = await spotify.getTopItems(accessToken!, type, timeRange, limit);
+    }
 
     return NextResponse.json({
       ok: true,
