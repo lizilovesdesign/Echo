@@ -32,7 +32,10 @@
 
 /* Avatar */
 .avatarWrapper {
+  display: block;
   flex-shrink: 0;
+  cursor: pointer;
+  line-height: 0;
 }
 
 .avatar {

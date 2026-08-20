@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { UserIcon } from 'hugeicons-react';
 import { createBrowserSupabaseClient } from '@/lib/supabase-client';
 import styles from './UserGreeting.module.css';
@@ -57,7 +58,7 @@ export function UserGreeting() {
         <h1 className={styles.name}>{firstName || 'Welcome back'} 👋</h1>
       </div>
 
-      <div className={styles.avatarWrapper}>
+      <Link href="/profile" className={styles.avatarWrapper} aria-label="Go to profile">
         {user?.avatarUrl ? (
           <img
             src={user.avatarUrl}
@@ -70,7 +71,7 @@ export function UserGreeting() {
             <UserIcon size={22} />
           </div>
         )}
-      </div>
+      </Link>
     </div>
   );
 }
