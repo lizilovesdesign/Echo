@@ -2,8 +2,10 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
   });
 
   const supabase = createServerClient(
@@ -11,43 +13,40 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
+        // v0.3.x API — get/set/remove (not getAll/setAll which is v0.5+)
+        get(name: string) {
+          return request.cookies.get(name)?.value;
         },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          // Update the request cookies
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          
-          // Re-create the response since we modified the request
-          supabaseResponse = NextResponse.next({
-            request,
+        set(name: string, value: string, options: CookieOptions) {
+          // Apply to request so Server Components can read the refreshed token
+          request.cookies.set({ name, value, ...options });
+          // Recreate the response so we can write the cookie to the browser
+          response = NextResponse.next({
+            request: { headers: request.headers },
           });
-          
-          // Apply the cookies to the response
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          response.cookies.set({ name, value, ...options });
+        },
+        remove(name: string, options: CookieOptions) {
+          request.cookies.set({ name, value: '', ...options });
+          response = NextResponse.next({
+            request: { headers: request.headers },
+          });
+          response.cookies.set({ name, value: '', ...options });
         },
       },
     }
   );
 
-  // Calling getUser() automatically triggers a token refresh
-  // if the access token has expired and the refresh token is valid.
+  // getUser() automatically refreshes the access token when it has expired,
+  // and the set() callback above writes the new session cookies to the response.
   await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return response;
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
+    // Run on all paths except static files, images, and favicon
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

@@ -81,8 +81,10 @@ export function TopItemsView() {
   const [needsReauth, setNeedsReauth] = useState(false);
 
   const switchTab = (tab: TabKey) => {
-    // Clear items immediately so stale data never renders under the new tab's logic
+    // Clear stale data immediately so no stale items/state are processed under the new tab
     setItems([]);
+    setHasError(false);
+    setNeedsReauth(false);
     setActiveTab(tab);
   };
 
@@ -142,11 +144,12 @@ export function TopItemsView() {
   const toDisplayItem = (item: TopItem | TopGenre): DisplayItem => {
     // Runtime guard — never rely on activeTab alone since items may still be stale
     if (isTopGenre(item)) {
+      const swatches = Array.isArray(item.swatches) ? item.swatches : [];
       return {
         id: item.id,
         name: titleCase(item.name),
         subtitle: `${item.artistCount} artist${item.artistCount === 1 ? '' : 's'}`,
-        images: item.swatches,
+        images: swatches,
         isCircle: false,
       };
     }
