@@ -35,8 +35,8 @@ interface DisplayItem {
 const TABS: { key: TabKey; label: string; emoji: string }[] = [
   { key: 'artists', label: 'Artists', emoji: '🎤' },
   { key: 'tracks', label: 'Songs', emoji: '🎵' },
-  { key: 'albums', label: 'Albums', emoji: '💿' },
   { key: 'genres', label: 'Genres', emoji: '🎧' },
+  { key: 'albums', label: 'Albums', emoji: '💿' },
 ];
 
 const TIME_RANGES: { key: string; label: string; apiRange: TimeRange }[] = [
