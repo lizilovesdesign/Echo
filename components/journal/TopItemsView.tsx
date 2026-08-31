@@ -67,6 +67,10 @@ function rankSubtitle(item: TopItem, isArtist: boolean): string {
   return item.artist ?? '';
 }
 
+function isTopGenre(item: TopItem | TopGenre): item is TopGenre {
+  return 'swatches' in item;
+}
+
 export function TopItemsView() {
   const [activeTab, setActiveTab] = useState<TabKey>('artists');
   const [timeRangeKey, setTimeRangeKey] = useState<string>('this_week');
@@ -76,9 +80,16 @@ export function TopItemsView() {
   const [isConnected, setIsConnected] = useState(true);
   const [needsReauth, setNeedsReauth] = useState(false);
 
+  const switchTab = (tab: TabKey) => {
+    // Clear items immediately so stale data never renders under the new tab's logic
+    setItems([]);
+    setActiveTab(tab);
+  };
+
   const fetchTopItems = useCallback(async (tab: TabKey, range: TimeRange) => {
     setIsLoading(true);
     setHasError(false);
+    setItems([]);
     try {
       const res = await fetch(`/api/music/top-items?type=${tab}&time_range=${range}&limit=5`);
       if (!res.ok) {
@@ -129,22 +140,21 @@ export function TopItemsView() {
   const isGenre = activeTab === 'genres';
 
   const toDisplayItem = (item: TopItem | TopGenre): DisplayItem => {
-    if (isGenre) {
-      const genre = item as TopGenre;
+    // Runtime guard — never rely on activeTab alone since items may still be stale
+    if (isTopGenre(item)) {
       return {
-        id: genre.id,
-        name: titleCase(genre.name),
-        subtitle: `${genre.artistCount} artist${genre.artistCount === 1 ? '' : 's'}`,
-        images: genre.swatches,
+        id: item.id,
+        name: titleCase(item.name),
+        subtitle: `${item.artistCount} artist${item.artistCount === 1 ? '' : 's'}`,
+        images: item.swatches,
         isCircle: false,
       };
     }
-    const track = item as TopItem;
     return {
-      id: track.id,
-      name: track.name,
-      subtitle: rankSubtitle(track, isArtist),
-      images: track.image ? [track.image] : [],
+      id: item.id,
+      name: item.name,
+      subtitle: rankSubtitle(item, isArtist),
+      images: item.image ? [item.image] : [],
       isCircle: isArtist,
     };
   };
@@ -152,9 +162,10 @@ export function TopItemsView() {
   const displayItems = items.map(toDisplayItem);
   const heroItem = displayItems.length > 0 ? displayItems[0] : null;
 
-  const collageImages = isGenre
-    ? (items as TopGenre[]).flatMap((genre) => genre.swatches).slice(0, 5)
-    : (items as TopItem[]).map((track) => track.image).slice(0, 5);
+  const collageImages = items
+    .flatMap((item) => (isTopGenre(item) ? item.swatches : [item.image]))
+    .filter(Boolean)
+    .slice(0, 5) as string[];
 
   const renderThumb = (item: DisplayItem) => {
     if (item.images.length <= 1) {
@@ -199,7 +210,7 @@ export function TopItemsView() {
             role="tab"
             aria-selected={activeTab === tab.key}
             className={`${styles.tab} ${activeTab === tab.key ? styles.tabActive : ''}`}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => switchTab(tab.key)}
           >
             <span className={styles.tabEmoji}>{tab.emoji}</span>
             {tab.label}
