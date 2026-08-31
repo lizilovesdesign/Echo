@@ -22,10 +22,11 @@ const TABS: { key: TabKey; label: string; emoji: string }[] = [
   { key: 'albums', label: 'Albums', emoji: '💿' },
 ];
 
-const TIME_RANGES: { key: TimeRange; label: string }[] = [
-  { key: 'short_term', label: '4 weeks' },
-  { key: 'medium_term', label: '6 months' },
-  { key: 'long_term', label: 'All time' },
+const TIME_RANGES: { key: string; label: string; apiRange: TimeRange }[] = [
+  { key: 'this_week', label: 'This week', apiRange: 'short_term' },
+  { key: 'last_week', label: 'Last week', apiRange: 'short_term' },
+  { key: 'last_month', label: 'Last month', apiRange: 'medium_term' },
+  { key: 'all_time', label: 'All time', apiRange: 'long_term' },
 ];
 
 const TAB_HEADLINES: Record<TabKey, string> = {
@@ -47,7 +48,7 @@ function rankSubtitle(item: TopItem, isArtist: boolean): string {
 
 export function TopItemsView() {
   const [activeTab, setActiveTab] = useState<TabKey>('artists');
-  const [timeRange, setTimeRange] = useState<TimeRange>('medium_term');
+  const [timeRangeKey, setTimeRangeKey] = useState<string>('this_week');
   const [items, setItems] = useState<TopItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -79,8 +80,9 @@ export function TopItemsView() {
   }, []);
 
   useEffect(() => {
-    fetchTopItems(activeTab, timeRange);
-  }, [activeTab, timeRange, fetchTopItems]);
+    const range = TIME_RANGES.find(tr => tr.key === timeRangeKey)?.apiRange ?? 'short_term';
+    fetchTopItems(activeTab, range);
+  }, [activeTab, timeRangeKey, fetchTopItems]);
 
   if (!isConnected) {
     return (
@@ -151,8 +153,8 @@ export function TopItemsView() {
         {TIME_RANGES.map((tr) => (
           <button
             key={tr.key}
-            className={`${styles.timeRangeBtn} ${timeRange === tr.key ? styles.timeRangeActive : ''}`}
-            onClick={() => setTimeRange(tr.key)}
+            className={`${styles.timeRangeBtn} ${timeRangeKey === tr.key ? styles.timeRangeActive : ''}`}
+            onClick={() => setTimeRangeKey(tr.key)}
           >
             {tr.label}
           </button>
