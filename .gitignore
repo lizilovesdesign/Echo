@@ -10,3 +10,4 @@ scripts/
 .env.production.local
 *.tsbuildinfo
 next-env.d.ts
+.vercel

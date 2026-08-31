@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
   const timeRange = searchParams.get('time_range') ?? 'medium_term';
   const limit = Math.min(Number(searchParams.get('limit') ?? '20'), 50);
 
-  if (type !== 'artists' && type !== 'tracks' && type !== 'albums') {
+  if (type !== 'artists' && type !== 'tracks' && type !== 'albums' && type !== 'genres') {
     return NextResponse.json(
-      { ok: false, error: { code: 'BAD_REQUEST', message: 'type must be "artists", "tracks", or "albums".' } },
+      { ok: false, error: { code: 'BAD_REQUEST', message: 'type must be "artists", "tracks", "albums", or "genres".' } },
       { status: 400 }
     );
   }
@@ -57,6 +57,8 @@ export async function GET(request: NextRequest) {
 
     if (type === 'albums') {
       items = await spotify.getTopAlbums(accessToken!, timeRange, limit);
+    } else if (type === 'genres') {
+      items = await spotify.getTopGenres(accessToken!, timeRange, limit);
     } else {
       items = await spotify.getTopItems(accessToken!, type, timeRange, limit);
     }

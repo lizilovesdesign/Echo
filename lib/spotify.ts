@@ -12,6 +12,14 @@ export interface TopItem {
   popularity?: number;
 }
 
+export interface TopGenre {
+  id: string;
+  name: string;
+  artistCount: number;
+  weight: number;
+  swatches: string[];
+}
+
 export interface CurrentlyPlaying {
   isPlaying: boolean;
   trackId: string;
@@ -411,6 +419,76 @@ class SpotifyClient {
       });
     } catch (error) {
       logger.error('spotify.top_items.fetch_failed', { type, error });
+      throw error;
+    }
+  }
+
+  /**
+   * Derives a ranked list of the user's top genres from their top artists.
+   *
+   * The Spotify Web API exposes genres only per-artist (there is no "top genres"
+   * endpoint), so this aggregates a wide sample of top artists, weights each
+   * artist by their rank (higher-ranked artists contribute more), and tallies the
+   * weights across every genre. Each returned genre carries the album-art swatches
+   * of the highest-ranked artists who share that genre, so the UI can render a
+   * fanned visual collage consistent with the artist/track/album recap pattern.
+   */
+  public async getTopGenres(
+    accessToken: string,
+    timeRange: string = 'medium_term',
+    limit: number = 5
+  ): Promise<TopGenre[]> {
+    try {
+      const url = `https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=50`;
+      const response = await this.fetchWithTimeout(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (response.status === 403) {
+        throw new Error('INSUFFICIENT_SCOPE');
+      }
+
+      if (!response.ok) {
+        throw new Error(`Spotify top artists fetch failed for genres: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const artists: unknown[] = data.items || [];
+      const fallbackArt =
+        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
+
+      const genreMap = new Map<string, { weight: number; artists: { name: string; image: string }[] }>();
+
+      artists.forEach((raw, index) => {
+        const artist = raw as Record<string, unknown>;
+        const weight = artists.length - index;
+        const genres = (artist.genres as string[] | undefined) ?? [];
+        const images = artist.images as { url: string }[] | undefined;
+        const image = images?.[0]?.url ?? fallbackArt;
+        const name = artist.name as string;
+
+        for (const genre of genres) {
+          const entry = genreMap.get(genre) ?? { weight: 0, artists: [] };
+          entry.weight += weight;
+          if (entry.artists.length < 4 && !entry.artists.some((a) => a.name === name)) {
+            entry.artists.push({ name, image });
+          }
+          genreMap.set(genre, entry);
+        }
+      });
+
+      return Array.from(genreMap.entries())
+        .map(([name, entry]) => ({
+          id: name,
+          name,
+          artistCount: entry.artists.length,
+          weight: entry.weight,
+          swatches: entry.artists.map((a) => a.image),
+        }))
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, limit);
+    } catch (error) {
+      logger.error('spotify.top_genres.fetch_failed', { error });
       throw error;
     }
   }

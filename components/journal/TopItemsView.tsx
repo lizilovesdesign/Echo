@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './TopItemsView.module.css';
 
-type TabKey = 'artists' | 'tracks' | 'albums';
+type TabKey = 'artists' | 'tracks' | 'albums' | 'genres';
 type TimeRange = 'short_term' | 'medium_term' | 'long_term';
 
 interface TopItem {
@@ -16,10 +16,27 @@ interface TopItem {
   popularity?: number;
 }
 
+interface TopGenre {
+  id: string;
+  name: string;
+  artistCount: number;
+  weight: number;
+  swatches: string[];
+}
+
+interface DisplayItem {
+  id: string;
+  name: string;
+  subtitle: string;
+  images: string[];
+  isCircle: boolean;
+}
+
 const TABS: { key: TabKey; label: string; emoji: string }[] = [
   { key: 'artists', label: 'Artists', emoji: '🎤' },
   { key: 'tracks', label: 'Songs', emoji: '🎵' },
   { key: 'albums', label: 'Albums', emoji: '💿' },
+  { key: 'genres', label: 'Genres', emoji: '🎧' },
 ];
 
 const TIME_RANGES: { key: string; label: string; apiRange: TimeRange }[] = [
@@ -33,15 +50,19 @@ const TAB_HEADLINES: Record<TabKey, string> = {
   artists: 'Your Top Artists',
   tracks: 'Your Top Tracks',
   albums: 'Your Top Albums',
+  genres: 'Your Top Genres',
 };
 
-function capitalize(word: string): string {
-  return word.charAt(0).toUpperCase() + word.slice(1);
+function titleCase(value: string): string {
+  return value
+    .split(/[\s/]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 function rankSubtitle(item: TopItem, isArtist: boolean): string {
   if (isArtist) {
-    return item.genres && item.genres.length > 0 ? capitalize(item.genres[0]) : '';
+    return item.genres && item.genres.length > 0 ? titleCase(item.genres[0]) : '';
   }
   return item.artist ?? '';
 }
@@ -49,7 +70,7 @@ function rankSubtitle(item: TopItem, isArtist: boolean): string {
 export function TopItemsView() {
   const [activeTab, setActiveTab] = useState<TabKey>('artists');
   const [timeRangeKey, setTimeRangeKey] = useState<string>('this_week');
-  const [items, setItems] = useState<TopItem[]>([]);
+  const [items, setItems] = useState<TopItem[] | TopGenre[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
@@ -80,7 +101,7 @@ export function TopItemsView() {
   }, []);
 
   useEffect(() => {
-    const range = TIME_RANGES.find(tr => tr.key === timeRangeKey)?.apiRange ?? 'short_term';
+    const range = TIME_RANGES.find((tr) => tr.key === timeRangeKey)?.apiRange ?? 'short_term';
     fetchTopItems(activeTab, range);
   }, [activeTab, timeRangeKey, fetchTopItems]);
 
@@ -105,32 +126,69 @@ export function TopItemsView() {
   }
 
   const isArtist = activeTab === 'artists';
-  const heroItem = items.length > 0 ? items[0] : null;
+  const isGenre = activeTab === 'genres';
 
-  const renderListItem = (item: TopItem, idx: number) => {
-    const subtitle = rankSubtitle(item, isArtist);
-    return (
-      <li key={item.id} className={styles.rankItem}>
-        <span className={styles.rankNumber}>{idx + 1}</span>
-        <div className={styles.rankContent}>
-          <div className={`${styles.rankImageWrap} ${isArtist ? styles.circleImage : styles.squareImage}`}>
-            <Image
-              src={item.image}
-              alt={item.name}
-              fill
-              sizes="64px"
-              className={styles.rankImage}
-              unoptimized
-            />
-          </div>
-          <div className={styles.rankInfo}>
-            <span className={styles.rankName}>{item.name}</span>
-            {subtitle && <span className={styles.rankSubtitle}>{subtitle}</span>}
-          </div>
+  const toDisplayItem = (item: TopItem | TopGenre): DisplayItem => {
+    if (isGenre) {
+      const genre = item as TopGenre;
+      return {
+        id: genre.id,
+        name: titleCase(genre.name),
+        subtitle: `${genre.artistCount} artist${genre.artistCount === 1 ? '' : 's'}`,
+        images: genre.swatches,
+        isCircle: false,
+      };
+    }
+    const track = item as TopItem;
+    return {
+      id: track.id,
+      name: track.name,
+      subtitle: rankSubtitle(track, isArtist),
+      images: track.image ? [track.image] : [],
+      isCircle: isArtist,
+    };
+  };
+
+  const displayItems = items.map(toDisplayItem);
+  const heroItem = displayItems.length > 0 ? displayItems[0] : null;
+
+  const collageImages = isGenre
+    ? (items as TopGenre[]).flatMap((genre) => genre.swatches).slice(0, 5)
+    : (items as TopItem[]).map((track) => track.image).slice(0, 5);
+
+  const renderThumb = (item: DisplayItem) => {
+    if (item.images.length <= 1) {
+      return (
+        <div className={`${styles.rankImageWrap} ${item.isCircle ? styles.circleImage : styles.squareImage}`}>
+          {item.images[0] && (
+            <Image src={item.images[0]} alt="" fill sizes="64px" className={styles.rankImage} unoptimized />
+          )}
         </div>
-      </li>
+      );
+    }
+    return (
+      <div className={styles.swatchGrid}>
+        {item.images.slice(0, 4).map((src, i) => (
+          <div key={i} className={styles.swatchTile}>
+            <Image src={src} alt="" fill sizes="32px" className={styles.rankImage} unoptimized />
+          </div>
+        ))}
+      </div>
     );
   };
+
+  const renderListItem = (item: DisplayItem, idx: number) => (
+    <li key={item.id} className={styles.rankItem}>
+      <span className={styles.rankNumber}>{idx + 1}</span>
+      <div className={styles.rankContent}>
+        {renderThumb(item)}
+        <div className={styles.rankInfo}>
+          <span className={styles.rankName}>{item.name}</span>
+          {item.subtitle && <span className={styles.rankSubtitle}>{item.subtitle}</span>}
+        </div>
+      </div>
+    </li>
+  );
 
   return (
     <div className={styles.wrapper}>
@@ -182,41 +240,56 @@ export function TopItemsView() {
       ) : (
         <div className={styles.recapContainer}>
           <h2 className={styles.recapHeadline}>{TAB_HEADLINES[activeTab]}</h2>
-          
+
           {heroItem && (
             <div className={styles.heroSection}>
-              <div className={`${styles.heroImageWrap} ${isArtist ? styles.heroCircle : styles.heroSquare}`}>
-                <Image
-                  src={heroItem.image}
-                  alt={heroItem.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 400px"
-                  className={styles.heroImage}
-                  priority
-                  unoptimized
-                />
-              </div>
+              {heroItem.images.length <= 1 ? (
+                <div className={`${styles.heroImageWrap} ${heroItem.isCircle ? styles.heroCircle : styles.heroSquare}`}>
+                  {heroItem.images[0] && (
+                    <Image
+                      src={heroItem.images[0]}
+                      alt={heroItem.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className={styles.heroImage}
+                      priority
+                      unoptimized
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className={styles.heroSwatchGrid}>
+                  {heroItem.images.slice(0, 4).map((src, i) => (
+                    <div key={i} className={styles.heroSwatchTile}>
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        sizes="160px"
+                        className={styles.heroImage}
+                        priority
+                        unoptimized
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           <ol className={styles.rankList}>
-            {items.map((item, idx) => renderListItem(item, idx))}
+            {displayItems.map((item, idx) => renderListItem(item, idx))}
           </ol>
-          
-          <div className={styles.collageGrid}>
-            {items.slice(0, 5).map((item) => (
-              <div key={`collage-${item.id}`} className={styles.collageItem}>
-                <Image
-                  src={item.image}
-                  alt=""
-                  fill
-                  sizes="100px"
-                  className={styles.collageImage}
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
+
+          {collageImages.length > 0 && (
+            <div className={styles.collageGrid}>
+              {collageImages.map((src, i) => (
+                <div key={`collage-${i}`} className={styles.collageItem}>
+                  <Image src={src} alt="" fill sizes="100px" className={styles.collageImage} unoptimized />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

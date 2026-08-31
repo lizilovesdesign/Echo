@@ -153,6 +153,27 @@
   object-fit: cover;
 }
 
+/* Genre hero swatch collage */
+
+.heroSwatchGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 8px;
+  width: 240px;
+  height: 240px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+.heroSwatchTile {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-surface-container-high);
+}
+
 /* ─── Ranked List ─── */
 
 .rankList {
@@ -221,6 +242,28 @@
 
 .rankImage {
   object-fit: cover;
+}
+
+/* Genre list swatch collage */
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+  padding: 3px;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-surface-container-high);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.swatchTile {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .rankInfo {
@@ -432,6 +475,11 @@
 
 @media (min-width: 480px) {
   .heroImageWrap {
+    width: 300px;
+    height: 300px;
+  }
+
+  .heroSwatchGrid {
     width: 300px;
     height: 300px;
   }
