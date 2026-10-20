@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { formatDistanceToNow } from 'date-fns';
 import { Delete01Icon } from 'hugeicons-react';
+import { formatEntryDate } from '@/lib/formatDate';
 import { MoodTag } from '@/lib/validators/echoEntry';
 import { useEntryStore } from '@/lib/stores/entryStore';
 import { useAudioPreview } from '@/lib/hooks/useAudioPreview';
@@ -97,7 +97,7 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
     window.open(`https://open.spotify.com/track/${entry.spotifyTrackId}`, '_blank', 'noopener');
   };
 
-  const timeAgo = formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true });
+  const formattedDate = formatEntryDate(entry.createdAt);
 
   return (
     <Card
@@ -159,7 +159,7 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
             <span key={idx} className={styles.stickerEmoji}>{st}</span>
           ))}
         </div>
-        <span className={styles.timestamp}>{timeAgo}</span>
+        <span className={styles.timestamp}>{formattedDate}</span>
       </div>
 
       {entry.note && <p className={styles.note}>{entry.note}</p>}

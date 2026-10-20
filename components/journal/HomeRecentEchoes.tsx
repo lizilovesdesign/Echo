@@ -4,9 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { formatDistanceToNow } from 'date-fns';
 import { MusicNote02Icon } from 'hugeicons-react';
 import { EchoEntryData } from '@/components/journal/EchoEntryCard';
+import { formatEntryDate } from '@/lib/formatDate';
 import { Spinner } from '@/components/ui/Spinner';
 import styles from './HomeRecentEchoes.module.css';
 
@@ -93,7 +93,7 @@ export function HomeRecentEchoes() {
                   {moodEmojis[entry.moodTag] ?? '🎵'}
                 </span>
                 <span className={styles.timestamp}>
-                  {formatDistanceToNow(new Date(entry.createdAt), { addSuffix: true })}
+                  {formatEntryDate(entry.createdAt)}
                 </span>
               </div>
             </Link>
