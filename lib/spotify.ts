@@ -8,16 +8,7 @@ export interface TopItem {
   name: string;
   image: string;
   artist?: string;
-  genres?: string[];
   popularity?: number;
-}
-
-export interface TopGenre {
-  id: string;
-  name: string;
-  artistCount: number;
-  weight: number;
-  swatches: string[];
 }
 
 export interface CurrentlyPlaying {
@@ -383,7 +374,6 @@ class SpotifyClient {
             id: artist.id as string,
             name: artist.name as string,
             image: images?.[0]?.url ?? fallbackArt,
-            genres: artist.genres as string[],
             popularity: artist.popularity as number,
           };
         });
@@ -420,143 +410,6 @@ class SpotifyClient {
     } catch (error) {
       logger.error('spotify.top_items.fetch_failed', { type, error });
       throw error;
-    }
-  }
-
-  /**
-   * Derives a ranked list of the user's top genres from their top artists.
-   *
-   * The Spotify Web API exposes genres only per-artist (there is no "top genres"
-   * endpoint), so this aggregates a wide sample of top artists, weights each
-   * artist by their rank (higher-ranked artists contribute more), and tallies the
-   * weights across every genre. Each returned genre carries the album-art swatches
-   * of the highest-ranked artists who share that genre, so the UI can render a
-   * fanned visual collage consistent with the artist/track/album recap pattern.
-   *
-   * Spotify intermittently returns top-item artist objects with an empty genres
-   * array. When that happens this retries once against the catalog artists
-   * endpoint (by id, one batched request) before returning an empty list, and
-   * logs which path produced the result so an empty response is diagnosable.
-   */
-  public async getTopGenres(
-    accessToken: string,
-    timeRange: string = 'medium_term',
-    limit: number = 5
-  ): Promise<TopGenre[]> {
-    try {
-      const url = `https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=50`;
-      const response = await this.fetchWithTimeout(url, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (response.status === 403) {
-        throw new Error('INSUFFICIENT_SCOPE');
-      }
-
-      if (!response.ok) {
-        throw new Error(`Spotify top artists fetch failed for genres: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const artists: unknown[] = data.items || [];
-      const fallbackArt =
-        'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
-
-      let ranked = artists.map((raw, index) => {
-        const artist = raw as Record<string, unknown>;
-        const images = artist.images as { url: string }[] | undefined;
-        return {
-          id: artist.id as string,
-          name: artist.name as string,
-          image: images?.[0]?.url ?? fallbackArt,
-          genres: Array.isArray(artist.genres) ? (artist.genres as string[]) : [],
-          weight: artists.length - index,
-        };
-      });
-
-      let genreMap = this.buildGenreMap(ranked);
-
-      if (genreMap.size === 0 && ranked.length > 0) {
-        const catalogGenres = await this.fetchArtistGenresByIds(
-          ranked.map((artist) => artist.id),
-          accessToken
-        );
-        if (catalogGenres) {
-          ranked = ranked.map((artist) => ({
-            ...artist,
-            genres: catalogGenres.get(artist.id) ?? [],
-          }));
-          genreMap = this.buildGenreMap(ranked);
-        }
-        logger.warn('spotify.top_genres.fallback_to_catalog', {
-          artistCount: ranked.length,
-          catalogGenresFound: catalogGenres ? catalogGenres.size : null,
-          genreCount: genreMap.size,
-        });
-      }
-
-      return Array.from(genreMap.entries())
-        .map(([name, entry]) => ({
-          id: name,
-          name,
-          artistCount: entry.artists.length,
-          weight: entry.weight,
-          swatches: entry.artists.map((a) => a.image),
-        }))
-        .sort((a, b) => b.weight - a.weight)
-        .slice(0, limit);
-    } catch (error) {
-      logger.error('spotify.top_genres.fetch_failed', { error });
-      throw error;
-    }
-  }
-
-  private buildGenreMap(
-    ranked: { name: string; image: string; genres: string[]; weight: number }[]
-  ): Map<string, { weight: number; artists: { name: string; image: string }[] }> {
-    const genreMap = new Map<string, { weight: number; artists: { name: string; image: string }[] }>();
-
-    for (const artist of ranked) {
-      for (const genre of artist.genres) {
-        const entry = genreMap.get(genre) ?? { weight: 0, artists: [] };
-        entry.weight += artist.weight;
-        if (entry.artists.length < 4 && !entry.artists.some((a) => a.name === artist.name)) {
-          entry.artists.push({ name: artist.name, image: artist.image });
-        }
-        genreMap.set(genre, entry);
-      }
-    }
-
-    return genreMap;
-  }
-
-  private async fetchArtistGenresByIds(
-    ids: string[],
-    accessToken: string
-  ): Promise<Map<string, string[]> | null> {
-    if (ids.length === 0) return new Map();
-    try {
-      const url = `https://api.spotify.com/v1/artists?ids=${ids.join(',')}`;
-      const response = await this.fetchWithTimeout(url, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      if (!response.ok) {
-        throw new Error(`Spotify catalog artists fetch failed: ${response.status}`);
-      }
-      const data = await response.json();
-      const catalogArtists: unknown[] = Array.isArray(data.artists) ? data.artists : [];
-      const genresById = new Map<string, string[]>();
-      for (const raw of catalogArtists) {
-        if (!raw) continue; // the catalog endpoint can return null entries for unknown ids
-        const artist = raw as Record<string, unknown>;
-        if (typeof artist.id === 'string' && Array.isArray(artist.genres)) {
-          genresById.set(artist.id, artist.genres as string[]);
-        }
-      }
-      return genresById;
-    } catch (error) {
-      logger.warn('spotify.top_genres.catalog_fallback_failed', { error });
-      return null;
     }
   }
 }
