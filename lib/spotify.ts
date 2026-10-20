@@ -432,6 +432,11 @@ class SpotifyClient {
    * weights across every genre. Each returned genre carries the album-art swatches
    * of the highest-ranked artists who share that genre, so the UI can render a
    * fanned visual collage consistent with the artist/track/album recap pattern.
+   *
+   * Spotify intermittently returns top-item artist objects with an empty genres
+   * array. When that happens this retries once against the catalog artists
+   * endpoint (by id, one batched request) before returning an empty list, and
+   * logs which path produced the result so an empty response is diagnosable.
    */
   public async getTopGenres(
     accessToken: string,
@@ -457,25 +462,38 @@ class SpotifyClient {
       const fallbackArt =
         'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=200&auto=format&fit=crop';
 
-      const genreMap = new Map<string, { weight: number; artists: { name: string; image: string }[] }>();
-
-      artists.forEach((raw, index) => {
+      let ranked = artists.map((raw, index) => {
         const artist = raw as Record<string, unknown>;
-        const weight = artists.length - index;
-        const genres = (artist.genres as string[] | undefined) ?? [];
         const images = artist.images as { url: string }[] | undefined;
-        const image = images?.[0]?.url ?? fallbackArt;
-        const name = artist.name as string;
-
-        for (const genre of genres) {
-          const entry = genreMap.get(genre) ?? { weight: 0, artists: [] };
-          entry.weight += weight;
-          if (entry.artists.length < 4 && !entry.artists.some((a) => a.name === name)) {
-            entry.artists.push({ name, image });
-          }
-          genreMap.set(genre, entry);
-        }
+        return {
+          id: artist.id as string,
+          name: artist.name as string,
+          image: images?.[0]?.url ?? fallbackArt,
+          genres: Array.isArray(artist.genres) ? (artist.genres as string[]) : [],
+          weight: artists.length - index,
+        };
       });
+
+      let genreMap = this.buildGenreMap(ranked);
+
+      if (genreMap.size === 0 && ranked.length > 0) {
+        const catalogGenres = await this.fetchArtistGenresByIds(
+          ranked.map((artist) => artist.id),
+          accessToken
+        );
+        if (catalogGenres) {
+          ranked = ranked.map((artist) => ({
+            ...artist,
+            genres: catalogGenres.get(artist.id) ?? [],
+          }));
+          genreMap = this.buildGenreMap(ranked);
+        }
+        logger.warn('spotify.top_genres.fallback_to_catalog', {
+          artistCount: ranked.length,
+          catalogGenresFound: catalogGenres ? catalogGenres.size : null,
+          genreCount: genreMap.size,
+        });
+      }
 
       return Array.from(genreMap.entries())
         .map(([name, entry]) => ({
@@ -490,6 +508,55 @@ class SpotifyClient {
     } catch (error) {
       logger.error('spotify.top_genres.fetch_failed', { error });
       throw error;
+    }
+  }
+
+  private buildGenreMap(
+    ranked: { name: string; image: string; genres: string[]; weight: number }[]
+  ): Map<string, { weight: number; artists: { name: string; image: string }[] }> {
+    const genreMap = new Map<string, { weight: number; artists: { name: string; image: string }[] }>();
+
+    for (const artist of ranked) {
+      for (const genre of artist.genres) {
+        const entry = genreMap.get(genre) ?? { weight: 0, artists: [] };
+        entry.weight += artist.weight;
+        if (entry.artists.length < 4 && !entry.artists.some((a) => a.name === artist.name)) {
+          entry.artists.push({ name: artist.name, image: artist.image });
+        }
+        genreMap.set(genre, entry);
+      }
+    }
+
+    return genreMap;
+  }
+
+  private async fetchArtistGenresByIds(
+    ids: string[],
+    accessToken: string
+  ): Promise<Map<string, string[]> | null> {
+    if (ids.length === 0) return new Map();
+    try {
+      const url = `https://api.spotify.com/v1/artists?ids=${ids.join(',')}`;
+      const response = await this.fetchWithTimeout(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) {
+        throw new Error(`Spotify catalog artists fetch failed: ${response.status}`);
+      }
+      const data = await response.json();
+      const catalogArtists: unknown[] = Array.isArray(data.artists) ? data.artists : [];
+      const genresById = new Map<string, string[]>();
+      for (const raw of catalogArtists) {
+        if (!raw) continue; // the catalog endpoint can return null entries for unknown ids
+        const artist = raw as Record<string, unknown>;
+        if (typeof artist.id === 'string' && Array.isArray(artist.genres)) {
+          genresById.set(artist.id, artist.genres as string[]);
+        }
+      }
+      return genresById;
+    } catch (error) {
+      logger.warn('spotify.top_genres.catalog_fallback_failed', { error });
+      return null;
     }
   }
 }

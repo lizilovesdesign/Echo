@@ -250,7 +250,11 @@ export function TopItemsView() {
       ) : hasError ? (
         <div className={styles.error}>Something went wrong. Give it another shot.</div>
       ) : items.length === 0 ? (
-        <div className={styles.empty}>Nothing here yet. Keep listening!</div>
+        <div className={styles.empty}>
+          {isGenre
+            ? 'Spotify has no genre data for your top artists yet.'
+            : 'Nothing here yet. Keep listening!'}
+        </div>
       ) : (
         <div className={styles.recapContainer}>
           <h2 className={styles.recapHeadline}>{TAB_HEADLINES[activeTab]}</h2>
