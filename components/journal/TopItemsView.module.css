@@ -424,18 +424,6 @@
 
 /* ─── Responsive Design ─── */
 @media (min-width: 768px) {
-  /* On desktop the rows are wide, so stop stretching the buttons
-     across the screen and let them size to their content. */
-  .tab {
-    flex: 0 0 auto;
-    padding: 0 16px;
-  }
-
-  .timeRangeBtn {
-    flex: 0 0 auto;
-    padding: 0 16px;
-  }
-
   .heroImageWrap {
     width: 300px;
     height: 300px;
