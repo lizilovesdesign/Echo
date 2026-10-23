@@ -1,4 +1,4 @@
-const CACHE_NAME = 'echo-v3';
+const CACHE_NAME = 'echo-v4';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -30,10 +30,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first keeps the app offline-capable, but it also pins stale bundles
-  // across deploys (the browser cache is bypassed by a hard refresh, this is
-  // not). Serve the cached copy immediately, then refresh it in the background
-  // so a new deploy always lands on the next load.
+  // Build output is content-hashed, so a network-first hop guarantees a new
+  // deploy is visible on the very first load while keeping an offline fallback.
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache-first keeps the app offline-capable for images, fonts and icons.
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)

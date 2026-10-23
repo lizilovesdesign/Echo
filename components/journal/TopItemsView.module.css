@@ -117,10 +117,36 @@
 .recapContainer {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  padding: 32px 16px;
+  gap: 24px;
+  padding: 24px 16px;
   border-radius: 12px;
   background-color: var(--color-surface-container);
+  background-image:
+    radial-gradient(
+      120% 90% at 50% -20%,
+      color-mix(in srgb, var(--color-primary) 22%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      90% 70% at 100% 0%,
+      color-mix(in srgb, var(--color-secondary) 12%, transparent),
+      transparent 60%
+    );
+  overflow: hidden;
+}
+
+.recapHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.headlineEmoji {
+  font-size: 28px;
+  line-height: 1;
+  animation: bob 3s ease-in-out infinite;
 }
 
 .recapHeadline {
@@ -132,9 +158,66 @@
   margin: 0;
 }
 
+.recapSubtitle {
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
+
+/* Little equaliser motif */
+.waveform {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 20px;
+  margin-top: 8px;
+}
+
+.waveBar {
+  width: 4px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  opacity: 0.8;
+  transform-origin: bottom;
+  animation: wave 1.4s ease-in-out infinite;
+}
+
+.waveBar:nth-child(1) {
+  height: 8px;
+  animation-delay: 0s;
+}
+
+.waveBar:nth-child(2) {
+  height: 14px;
+  animation-delay: 0.15s;
+}
+
+.waveBar:nth-child(3) {
+  height: 20px;
+  animation-delay: 0.3s;
+}
+
+.waveBar:nth-child(4) {
+  height: 12px;
+  animation-delay: 0.45s;
+}
+
+.waveBar:nth-child(5) {
+  height: 6px;
+  animation-delay: 0.6s;
+}
+
+/* ─── Hero ─── */
+
 .heroSection {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   animation: fadeSlideUp 0.5s ease-out both;
 }
 
@@ -144,7 +227,7 @@
   height: 240px;
   overflow: hidden;
   background-color: var(--color-surface-container-high);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .heroSquare {
@@ -159,12 +242,69 @@
   object-fit: cover;
 }
 
+.crownBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--color-surface-container-lowest) 60%, transparent);
+  font-size: 18px;
+  line-height: 1;
+  backdrop-filter: blur(4px);
+}
+
+.heroMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+.heroRank {
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.heroName {
+  max-width: 100%;
+  font-family: var(--font-headline-small-font-family);
+  font-size: var(--font-headline-small-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heroSubtitle {
+  max-width: 100%;
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ─── Ranked List ─── */
 
 .rankList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -174,20 +314,48 @@
 .rankItem {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   min-width: 0;
-  padding: 8px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
   animation: fadeSlideUp 0.4s ease-out both;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.rankItem:hover {
+  background-color: var(--color-surface-container-high);
+  transform: translateX(4px);
 }
 
 .rankNumber {
   flex-shrink: 0;
-  font-family: var(--font-headline-small-font-family);
-  font-size: var(--font-headline-small-font-size);
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--color-surface-container-high);
+  font-family: var(--font-label-large-font-family);
+  font-size: var(--font-label-large-font-size);
+  font-weight: 700;
   color: var(--color-on-surface-variant);
-  width: 32px;
-  text-align: right;
+}
+
+.rankFirst .rankNumber {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 22%, transparent);
+}
+
+.rankSecond .rankNumber {
+  background-color: color-mix(in srgb, var(--color-primary) 55%, var(--color-surface-container-high));
+  color: var(--color-on-surface);
+}
+
+.rankThird .rankNumber {
+  background-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-surface-container-high));
+  color: var(--color-on-surface);
 }
 
 .rankContent {
@@ -248,8 +416,25 @@
 
 /* ─── Bottom Collage Grid ─── */
 
+.collageBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.collageCaption {
+  font-family: var(--font-label-small-font-family);
+  font-size: var(--font-label-small-font-size);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
+
 .collageGrid {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 8px;
   animation: fadeSlideUp 0.6s ease-out both;
@@ -262,10 +447,53 @@
   height: 56px;
   border-radius: 8px;
   overflow: hidden;
+  transform: rotate(-6deg);
+  transition: transform 0.2s ease;
+  animation-delay: 400ms;
+}
+
+.collageItem:nth-child(even) {
+  transform: rotate(6deg);
+}
+
+@media (hover: hover) {
+  .collageItem:hover {
+    transform: rotate(0deg) scale(1.08);
+  }
 }
 
 .collageImage {
   object-fit: cover;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headlineEmoji,
+  .waveBar,
+  .rankItem,
+  .collageGrid,
+  .heroSection {
+    animation: none;
+  }
 }
 
 @keyframes fadeSlideUp {
@@ -424,6 +652,11 @@
 
 /* ─── Responsive Design ─── */
 @media (min-width: 768px) {
+  .recapContainer {
+    gap: 32px;
+    padding: 32px 24px;
+  }
+
   .heroImageWrap {
     width: 300px;
     height: 300px;

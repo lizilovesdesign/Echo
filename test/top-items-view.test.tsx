@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { TopItemsView } from '@/components/journal/TopItemsView';
@@ -38,10 +38,15 @@ describe('TopItemsView', () => {
     render(<TopItemsView />);
 
     expect(await screen.findByText('Your Top Artists')).toBeInTheDocument();
-    expect(screen.getByText('Artist One')).toBeInTheDocument();
-    expect(screen.getByText('Artist Two')).toBeInTheDocument();
-    expect(screen.getByText('1')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
+
+    const ranked = screen.getByRole('list', { name: 'Your top items' });
+    expect(within(ranked).getByText('Artist One')).toBeInTheDocument();
+    expect(within(ranked).getByText('Artist Two')).toBeInTheDocument();
+    expect(within(ranked).getByText('1')).toBeInTheDocument();
+    expect(within(ranked).getByText('2')).toBeInTheDocument();
+
+    // The number one pick is also celebrated as the hero.
+    expect(screen.getByText('No. 1')).toBeInTheDocument();
   });
 
   it('offers only Artists, Songs and Albums tabs', async () => {
@@ -71,8 +76,9 @@ describe('TopItemsView', () => {
     await user.click(screen.getByRole('tab', { name: /songs/i }));
 
     expect(await screen.findByText('Your Top Tracks')).toBeInTheDocument();
-    expect(screen.getByText('Track One')).toBeInTheDocument();
-    expect(screen.getByText('Artist One')).toBeInTheDocument();
+    const ranked = screen.getByRole('list', { name: 'Your top items' });
+    expect(within(ranked).getByText('Track One')).toBeInTheDocument();
+    expect(within(ranked).getByText('Artist One')).toBeInTheDocument();
   });
 
   it('shows the empty state when the API returns no items', async () => {
@@ -82,6 +88,6 @@ describe('TopItemsView', () => {
 
     render(<TopItemsView />);
 
-    expect(await screen.findByText('Nothing here yet. Keep listening!')).toBeInTheDocument();
+    expect(await screen.findByText('Nothing here yet. Go make some noise! 🎧')).toBeInTheDocument();
   });
 });

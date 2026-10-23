@@ -41,10 +41,11 @@ export function JournalPrompts() {
     <section className={styles.section} aria-label="Journal prompts">
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>Quick Journal</h2>
+        <span className={styles.sectionHint}>Pick a spark</span>
       </div>
 
-      <div className={styles.scrollContainer}>
-        <div className={styles.promptList}>
+      <div className={styles.promptPanel}>
+        <div className={styles.promptGrid}>
           {PROMPTS.map((prompt) => (
             <Link
               key={prompt.id}
@@ -55,8 +56,13 @@ export function JournalPrompts() {
               <span className={styles.emoji} aria-hidden="true">
                 {prompt.emoji}
               </span>
-              <h3 className={styles.promptTitle}>{prompt.title}</h3>
-              <p className={styles.promptQuestion}>{prompt.question}</p>
+              <div className={styles.promptBody}>
+                <h3 className={styles.promptTitle}>{prompt.title}</h3>
+                <p className={styles.promptQuestion}>{prompt.question}</p>
+              </div>
+              <span className={styles.promptArrow} aria-hidden="true">
+                →
+              </span>
             </Link>
           ))}
         </div>

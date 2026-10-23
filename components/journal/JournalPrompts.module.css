@@ -7,6 +7,7 @@
 .sectionHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 16px;
 }
 
@@ -18,47 +19,79 @@
   color: var(--color-on-background);
 }
 
-/* Horizontal scroll container — stays inside the page's content column so the
-   first card lines up with the headings and lists above. */
-.scrollContainer {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+.sectionHint {
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  color: var(--color-on-surface-variant);
 }
 
-.scrollContainer::-webkit-scrollbar {
-  display: none;
+/* Full-width panel — mirrors the Top Items recap card so both sections
+   share the exact same width and edge alignment. */
+.promptPanel {
+  padding: 12px;
+  border-radius: 12px;
+  background-color: var(--color-surface-container);
+  background-image: radial-gradient(
+    120% 100% at 0% 0%,
+    color-mix(in srgb, var(--color-primary) 14%, transparent),
+    transparent 62%
+  );
 }
 
-.promptList {
-  display: flex;
-  gap: 12px;
-  padding: 4px 0 16px;
-  width: max-content;
+.promptGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
 }
 
 /* Prompt card base */
 .promptCard {
-  --card-bg: var(--color-surface-container-low);
-  --card-text: #3D3835;
-  --card-muted: #756E69;
-
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 180px;
-  flex-shrink: 0;
-  padding: 20px 16px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 12px;
   border-radius: 12px;
+  background-color: var(--color-surface-container-high);
+  color: var(--color-on-surface);
   text-decoration: none;
-  background-color: var(--card-bg);
-  color: var(--card-text);
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, background-color 0.18s ease;
+}
+
+.promptCard:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface-container-high));
+}
+
+.promptCard:active {
+  transform: scale(0.98);
+}
+
+.promptCard:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .emoji {
-  font-size: 28px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background-color: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  font-size: 20px;
   line-height: 1;
+}
+
+.promptBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .promptTitle {
@@ -67,20 +100,38 @@
   font-weight: 700;
   letter-spacing: var(--font-label-large-letter-spacing);
   line-height: 1.2;
-  color: var(--card-text);
+  color: var(--color-on-surface);
 }
 
 .promptQuestion {
-  font-family: var(--font-body-medium-font-family);
-  font-size: var(--font-body-medium-font-size);
-  font-weight: var(--font-body-medium-font-weight);
-  letter-spacing: var(--font-body-medium-letter-spacing);
-  line-height: var(--font-body-medium-line-height);
-  flex: 1;
-  color: var(--card-muted);
+  font-family: var(--font-body-small-font-family);
+  font-size: var(--font-body-small-font-size);
+  font-weight: var(--font-body-small-font-weight);
+  letter-spacing: var(--font-body-small-letter-spacing);
+  line-height: 1.4;
+  color: var(--color-on-surface-variant);
 }
 
-.promptCard {
-  --card-text: #E0DDDB;
-  --card-muted: #9A9794;
+.promptArrow {
+  flex-shrink: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .promptPanel {
+    padding: 16px;
+  }
+
+  .promptGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .promptGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

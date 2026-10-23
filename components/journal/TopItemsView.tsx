@@ -139,6 +139,9 @@ export function TopItemsView() {
   const displayItems = items.map(toDisplayItem);
   const heroItem = displayItems.length > 0 ? displayItems[0] : null;
   const collageImages = displayItems.map((item) => item.image).filter(Boolean).slice(0, 5);
+  const activeTabConfig = TABS.find((tab) => tab.key === activeTab) ?? TABS[0];
+  const activeRangeLabel = TIME_RANGES.find((range) => range.key === timeRangeKey)?.label ?? '';
+  const itemNoun = activeTab === 'artists' ? 'artists' : activeTab === 'tracks' ? 'songs' : 'albums';
 
   return (
     <div className={styles.wrapper}>
@@ -197,18 +200,32 @@ export function TopItemsView() {
         <div className={styles.error}>Couldn&apos;t load your top items.</div>
       ) : displayItems.length === 0 ? (
         <div className={styles.empty}>
-          <p>Nothing here yet. Keep listening!</p>
+          <p>Nothing here yet. Go make some noise! 🎧</p>
         </div>
       ) : (
         <div className={styles.recapContainer}>
-          <h2 className={styles.recapHeadline}>{TAB_HEADLINES[activeTab]}</h2>
+          {/* Playful header */}
+          <div className={styles.recapHeader}>
+            <span className={styles.headlineEmoji} aria-hidden="true">
+              {activeTabConfig.emoji}
+            </span>
+            <h2 className={styles.recapHeadline}>{TAB_HEADLINES[activeTab]}</h2>
+            <p className={styles.recapSubtitle}>
+              {activeRangeLabel} · {displayItems.length} {itemNoun}
+            </p>
+            <div className={styles.waveform} aria-hidden="true">
+              <span className={styles.waveBar} />
+              <span className={styles.waveBar} />
+              <span className={styles.waveBar} />
+              <span className={styles.waveBar} />
+              <span className={styles.waveBar} />
+            </div>
+          </div>
 
           {/* Hero Recap */}
           {heroItem && (
             <div className={styles.heroSection}>
-              <div
-                className={`${styles.heroImageWrap} ${heroItem.isCircle ? styles.heroCircle : styles.heroSquare}`}
-              >
+              <div className={`${styles.heroImageWrap} ${heroItem.isCircle ? styles.heroCircle : styles.heroSquare}`}>
                 {heroItem.image && (
                   <Image
                     src={heroItem.image}
@@ -220,6 +237,14 @@ export function TopItemsView() {
                     unoptimized
                   />
                 )}
+                <span className={styles.crownBadge} aria-hidden="true">
+                  👑
+                </span>
+              </div>
+              <div className={styles.heroMeta}>
+                <span className={styles.heroRank}>No. 1</span>
+                <span className={styles.heroName}>{heroItem.name}</span>
+                {heroItem.subtitle && <span className={styles.heroSubtitle}>{heroItem.subtitle}</span>}
               </div>
             </div>
           )}
@@ -227,7 +252,13 @@ export function TopItemsView() {
           {/* Ranked List */}
           <ol className={styles.rankList} aria-label="Your top items">
             {displayItems.map((item, index) => (
-              <li key={item.id} className={styles.rankItem} style={{ animationDelay: `${index * 50 + 150}ms` }}>
+              <li
+                key={item.id}
+                className={`${styles.rankItem} ${index === 0 ? styles.rankFirst : ''} ${
+                  index === 1 ? styles.rankSecond : ''
+                } ${index === 2 ? styles.rankThird : ''}`}
+                style={{ animationDelay: `${index * 50 + 150}ms` }}
+              >
                 <div className={styles.rankNumber}>{index + 1}</div>
                 <div className={styles.rankContent}>
                   <div
@@ -255,19 +286,22 @@ export function TopItemsView() {
 
           {/* Bottom Collage Grid */}
           {collageImages.length > 0 && (
-            <div className={styles.collageGrid} aria-hidden="true">
-              {collageImages.map((img, idx) => (
-                <div key={`collage-${idx}`} className={styles.collageItem}>
-                  <Image
-                    src={img}
-                    alt=""
-                    width={64}
-                    height={64}
-                    className={styles.collageImage}
-                    unoptimized
-                  />
-                </div>
-              ))}
+            <div className={styles.collageBlock}>
+              <p className={styles.collageCaption}>On repeat lately</p>
+              <div className={styles.collageGrid} aria-hidden="true">
+                {collageImages.map((img, idx) => (
+                  <div key={`collage-${idx}`} className={styles.collageItem}>
+                    <Image
+                      src={img}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className={styles.collageImage}
+                      unoptimized
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
