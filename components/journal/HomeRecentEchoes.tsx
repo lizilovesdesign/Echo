@@ -7,15 +7,9 @@ import { useQuery } from '@tanstack/react-query';
 import { MusicNote02Icon } from 'hugeicons-react';
 import { EchoEntryData } from '@/components/journal/EchoEntryCard';
 import { formatEntryDate } from '@/lib/formatDate';
+import { getMoodConfig } from '@/lib/moods';
 import { Spinner } from '@/components/ui/Spinner';
 import styles from './HomeRecentEchoes.module.css';
-
-const moodEmojis: Record<string, string> = {
-  Nostalgic: '🍂',
-  Energetic: '⚡',
-  Melancholic: '🌧️',
-  Calm: '🌊',
-};
 
 export function HomeRecentEchoes() {
   const { data: entries = [], isLoading, error } = useQuery<EchoEntryData[]>({
@@ -29,7 +23,7 @@ export function HomeRecentEchoes() {
     staleTime: 60_000,
   });
 
-  const recent = entries.slice(0, 3);
+  const recent = entries.filter((entry) => !entry.hidden).slice(0, 3);
 
   return (
     <section className={styles.section} aria-label="Recent echoes">
@@ -55,10 +49,20 @@ export function HomeRecentEchoes() {
       {!isLoading && !error && recent.length === 0 && (
         <div className={styles.emptyState}>
           <MusicNote02Icon className={styles.emptyIcon} size={32} />
-          <p className={styles.emptyText}>Your first Echo is waiting to be created.</p>
-          <Link href="/create" className={styles.emptyLink}>
-            Start now →
-          </Link>
+          <p className={styles.emptyText}>
+            {entries.length > 0
+              ? 'Your recent memories are hidden right now.'
+              : 'Your first Echo is waiting to be created.'}
+          </p>
+          {entries.length > 0 ? (
+            <Link href="/timeline" className={styles.emptyLink}>
+              Open timeline →
+            </Link>
+          ) : (
+            <Link href="/create" className={styles.emptyLink}>
+              Start now →
+            </Link>
+          )}
         </div>
       )}
 
@@ -90,7 +94,7 @@ export function HomeRecentEchoes() {
               </div>
               <div className={styles.entryMeta}>
                 <span className={styles.moodEmoji} aria-label={entry.moodTag}>
-                  {moodEmojis[entry.moodTag] ?? '🎵'}
+                  {getMoodConfig(entry.moodTag)?.emoji ?? '🎵'}
                 </span>
                 <span className={styles.timestamp}>
                   {formatEntryDate(entry.createdAt)}

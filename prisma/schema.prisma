@@ -25,6 +25,11 @@ enum MoodTag {
   Energetic
   Melancholic
   Calm
+  Happy
+  Hopeful
+  Dreamy
+  Loved
+  Anxious
 }
 
 model EchoEntry {
@@ -41,6 +46,7 @@ model EchoEntry {
   moodTag        MoodTag  @map("mood_tag")
   note           String   @db.VarChar(500)
   stickers       String[] @default([])
+  hidden         Boolean  @default(false) @map("hidden")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 

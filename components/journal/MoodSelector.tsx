@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { MoodTag } from '@/lib/validators/echoEntry';
+import { MOOD_ORDER } from '@/lib/moods';
 import { MoodBubble } from './MoodBubble';
 import styles from './MoodSelector.module.css';
 
@@ -10,14 +11,12 @@ interface MoodSelectorProps {
   onSelectMood: (mood: MoodTag) => void;
 }
 
-const moods: MoodTag[] = ['Calm', 'Melancholic', 'Nostalgic', 'Energetic'];
-
 export function MoodSelector({ selectedMood, onSelectMood }: MoodSelectorProps) {
   return (
     <div className={styles.container}>
       <span className={styles.label}>How does this song make you feel?</span>
       <div className={styles.grid}>
-        {moods.map((mood) => (
+        {MOOD_ORDER.map((mood) => (
           <MoodBubble
             key={mood}
             mood={mood}

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { CreateEchoSchema, MoodTagSchema } from '@/lib/validators/echoEntry';
+import { CreateEchoSchema, MoodTagSchema, UpdateEchoSchema } from '@/lib/validators/echoEntry';
+import { MOOD_ORDER } from '@/lib/moods';
 
 describe('Echo entry API validation', () => {
   const validPayload = {
@@ -56,5 +57,25 @@ describe('Echo entry API validation', () => {
       albumArtUrl: 'not-a-url',
     });
     expect(result.success).toBe(false);
+  });
+
+  it('accepts every mood that is offered in the UI', () => {
+    MOOD_ORDER.forEach((mood) => {
+      const result = CreateEchoSchema.safeParse({ ...validPayload, moodTag: mood });
+      expect(result.success, `mood ${mood} should be accepted`).toBe(true);
+    });
+  });
+
+  it('keeps the mood list in sync with the validator enum', () => {
+    expect([...MOOD_ORDER].sort()).toEqual([...MoodTagSchema.options].sort());
+  });
+
+  it('accepts a visibility-only update payload', () => {
+    expect(UpdateEchoSchema.safeParse({ hidden: true }).success).toBe(true);
+    expect(UpdateEchoSchema.safeParse({ hidden: false }).success).toBe(true);
+  });
+
+  it('rejects a non-boolean hidden flag', () => {
+    expect(UpdateEchoSchema.safeParse({ hidden: 'yes' }).success).toBe(false);
   });
 });

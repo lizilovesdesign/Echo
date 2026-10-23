@@ -1,6 +1,16 @@
 import { z } from 'zod';
 
-export const MoodTagSchema = z.enum(['Nostalgic', 'Energetic', 'Melancholic', 'Calm']);
+export const MoodTagSchema = z.enum([
+  'Nostalgic',
+  'Energetic',
+  'Melancholic',
+  'Calm',
+  'Happy',
+  'Hopeful',
+  'Dreamy',
+  'Loved',
+  'Anxious',
+]);
 export type MoodTag = z.infer<typeof MoodTagSchema>;
 
 export const CreateEchoSchema = z.object({
@@ -18,3 +28,10 @@ export const CreateEchoSchema = z.object({
 });
 
 export type CreateEchoInput = z.infer<typeof CreateEchoSchema>;
+
+// PATCH payload: any create field, plus the visibility toggle.
+export const UpdateEchoSchema = CreateEchoSchema.partial().extend({
+  hidden: z.boolean().optional(),
+});
+
+export type UpdateEchoInput = z.infer<typeof UpdateEchoSchema>;

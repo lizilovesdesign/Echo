@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { Delete01Icon } from 'hugeicons-react';
+import { Delete01Icon, ViewIcon, ViewOffIcon } from 'hugeicons-react';
 import { formatEntryDate } from '@/lib/formatDate';
 import { MoodTag } from '@/lib/validators/echoEntry';
 import { useEntryStore } from '@/lib/stores/entryStore';
@@ -26,6 +26,7 @@ export interface EchoEntryData {
   moodTag: MoodTag;
   note: string;
   stickers: string[];
+  hidden: boolean;
   createdAt: string;
 }
 
@@ -47,6 +48,23 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
       });
       if (!res.ok) {
         throw new Error('Failed to delete Echo entry');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['echoes'] });
+    },
+  });
+
+  const visibilityMutation = useMutation({
+    mutationFn: async (nextHidden: boolean) => {
+      const res = await fetch(`/api/echoes/${entry.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hidden: nextHidden }),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to update memory visibility');
       }
       return res.json();
     },
@@ -78,6 +96,11 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
     setShowDeleteConfirm(true);
   };
 
+  const handleToggleHidden = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    visibilityMutation.mutate(!entry.hidden);
+  };
+
   const confirmDelete = () => {
     setShowDeleteConfirm(false);
     deleteMutation.mutate();
@@ -101,11 +124,14 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
 
   return (
     <Card
-      className={`${styles.card} ${deleteMutation.isPending ? styles.deleting : ''}`}
+      className={`${styles.card} ${entry.hidden ? styles.cardHidden : ''} ${deleteMutation.isPending ? styles.deleting : ''}`}
       onClick={handleCardClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') handleCardClick(); }}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'Enter' || e.key === ' ') handleCardClick();
+      }}
     >
       <div className={styles.header}>
         <div className={styles.songInfo}>
@@ -143,14 +169,25 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
             )}
           </div>
         </div>
-        <button
-          onClick={handleDelete}
-          className={styles.deleteButton}
-          disabled={deleteMutation.isPending}
-          aria-label="Delete entry"
-        >
-          <Delete01Icon size={16} />
-        </button>
+        <div className={styles.actionButtons}>
+          <button
+            onClick={handleToggleHidden}
+            className={styles.iconButton}
+            disabled={visibilityMutation.isPending}
+            aria-label={entry.hidden ? 'Unhide memory' : 'Hide memory'}
+            title={entry.hidden ? 'Unhide memory' : 'Hide memory'}
+          >
+            {entry.hidden ? <ViewIcon size={16} /> : <ViewOffIcon size={16} />}
+          </button>
+          <button
+            onClick={handleDelete}
+            className={`${styles.iconButton} ${styles.deleteButton}`}
+            disabled={deleteMutation.isPending}
+            aria-label="Delete entry"
+          >
+            <Delete01Icon size={16} />
+          </button>
+        </div>
       </div>
 
       <div className={styles.metaRow}>
@@ -159,6 +196,7 @@ export function EchoEntryCard({ entry }: EchoEntryCardProps) {
             <span key={idx} className={styles.stickerEmoji}>{st}</span>
           ))}
         </div>
+        {entry.hidden && <span className={styles.hiddenBadge}>Hidden</span>}
         <span className={styles.timestamp}>{formattedDate}</span>
       </div>
 

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { CreateEchoInput } from '@/lib/validators/echoEntry';
+import { CreateEchoInput, UpdateEchoInput } from '@/lib/validators/echoEntry';
 
 export interface EchoEntryRecord {
   id: string;
@@ -15,6 +15,7 @@ export interface EchoEntryRecord {
   moodTag: string;
   note: string;
   stickers: string[];
+  hidden: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,7 +24,7 @@ export interface IEchoEntryRepository {
   findByUserId(userId: string, limit?: number): Promise<EchoEntryRecord[]>;
   findById(id: string): Promise<EchoEntryRecord | null>;
   create(userId: string, email: string, input: CreateEchoInput): Promise<EchoEntryRecord>;
-  update(id: string, data: Partial<CreateEchoInput>): Promise<EchoEntryRecord>;
+  update(id: string, data: UpdateEchoInput): Promise<EchoEntryRecord>;
   delete(id: string): Promise<void>;
 }
 
@@ -91,7 +92,7 @@ class PrismaEchoEntryRepository implements IEchoEntryRepository {
     });
   }
 
-  async update(id: string, data: Partial<CreateEchoInput>): Promise<EchoEntryRecord> {
+  async update(id: string, data: UpdateEchoInput): Promise<EchoEntryRecord> {
     return prisma.echoEntry.update({ where: { id }, data });
   }
 

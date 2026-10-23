@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
+import { ViewOffIcon } from 'hugeicons-react';
 import { EchoEntryCard, EchoEntryData } from './EchoEntryCard';
 import { MoodTag } from '@/lib/validators/echoEntry';
 import { MOOD_ORDER, getMoodConfig } from '@/lib/moods';
@@ -10,10 +11,10 @@ import { Spinner } from '../ui/Spinner';
 import { Button } from '../ui/Button';
 import styles from './TimelineFeed.module.css';
 
-type Filter = 'All' | MoodTag;
+type Filter = 'All' | MoodTag | 'Hidden';
 type TypeFilter = 'all' | 'song' | 'album';
 
-const filters: Filter[] = ['All', ...MOOD_ORDER];
+const filters: Filter[] = ['All', 'Hidden', ...MOOD_ORDER];
 
 const typeTabs: { key: TypeFilter; label: string }[] = [
   { key: 'all', label: 'All entries' },
@@ -38,12 +39,17 @@ export function TimelineFeed() {
   });
 
   const filtered = useMemo(() => {
-    let result = entries;
+    // Hidden memories are kept out of the normal feed; the "Hidden" view is
+    // the only place they surface, so they can always be restored.
+    let result = activeFilter === 'Hidden'
+      ? entries.filter((e) => e.hidden)
+      : entries.filter((e) => !e.hidden);
+
+    if (activeFilter !== 'All' && activeFilter !== 'Hidden') {
+      result = result.filter((e) => e.moodTag === activeFilter);
+    }
     if (typeFilter !== 'all') {
       result = result.filter((e) => e.entryType === typeFilter);
-    }
-    if (activeFilter !== 'All') {
-      result = result.filter((e) => e.moodTag === activeFilter);
     }
     return result;
   }, [entries, activeFilter, typeFilter]);
@@ -104,16 +110,23 @@ export function TimelineFeed() {
       <div className={styles.filterRow}>
         {filters.map((f) => {
           const isActive = activeFilter === f;
-          const moodConfig = f === 'All' ? null : getMoodConfig(f);
+          const isHiddenView = f === 'Hidden';
+          const moodConfig = f === 'All' || isHiddenView ? null : getMoodConfig(f);
           const pillStyle = f === 'All'
             ? isActive
               ? { backgroundColor: 'var(--color-primary)', color: 'var(--color-on-primary)' }
               : {}
-            : {
-                backgroundColor: isActive ? moodConfig!.pillActiveBg : moodConfig!.pillInactiveBg,
-                color: isActive ? moodConfig!.pillActiveColor : moodConfig!.pillInactiveColor,
-                opacity: isActive ? 1 : 0.7,
-              };
+            : isHiddenView
+              ? {
+                  backgroundColor: 'var(--color-surface-container-high)',
+                  color: 'var(--color-on-surface-variant)',
+                  opacity: isActive ? 1 : 0.7,
+                }
+              : {
+                  backgroundColor: isActive ? moodConfig?.pillActiveBg : moodConfig?.pillInactiveBg,
+                  color: isActive ? moodConfig?.pillActiveColor : moodConfig?.pillInactiveColor,
+                  opacity: isActive ? 1 : 0.7,
+                };
 
           return (
             <button
@@ -123,7 +136,8 @@ export function TimelineFeed() {
               style={pillStyle}
             >
               {moodConfig && <span>{moodConfig.emoji}</span>}
-              <span>{moodConfig ? moodConfig.label : f}</span>
+              {isHiddenView && <ViewOffIcon size={14} />}
+              <span>{moodConfig ? moodConfig.label : isHiddenView ? 'Hidden' : f}</span>
             </button>
           );
         })}
@@ -131,7 +145,11 @@ export function TimelineFeed() {
 
       {filtered.length === 0 ? (
         <div className={styles.emptyState}>
-          <p className={styles.emptySubtitle}>No entries match this mood.</p>
+          <p className={styles.emptySubtitle}>
+            {activeFilter === 'Hidden'
+              ? 'Nothing hidden right now. Memories you hide will wait here.'
+              : 'No entries match this filter.'}
+          </p>
         </div>
       ) : (
         <div className={styles.moodEntries}>

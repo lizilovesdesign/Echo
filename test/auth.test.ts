@@ -67,10 +67,15 @@ describe('MoodTag enum validation', () => {
     expect(MoodTagSchema.parse('Energetic')).toBe('Energetic');
     expect(MoodTagSchema.parse('Melancholic')).toBe('Melancholic');
     expect(MoodTagSchema.parse('Calm')).toBe('Calm');
+    expect(MoodTagSchema.parse('Happy')).toBe('Happy');
+    expect(MoodTagSchema.parse('Hopeful')).toBe('Hopeful');
+    expect(MoodTagSchema.parse('Dreamy')).toBe('Dreamy');
+    expect(MoodTagSchema.parse('Loved')).toBe('Loved');
+    expect(MoodTagSchema.parse('Anxious')).toBe('Anxious');
   });
 
   it('rejects invalid mood tags', () => {
-    expect(() => MoodTagSchema.parse('Happy')).toThrow();
+    expect(() => MoodTagSchema.parse('Excited')).toThrow();
     expect(() => MoodTagSchema.parse('')).toThrow();
   });
 });

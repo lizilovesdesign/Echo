@@ -18,9 +18,9 @@
   color: var(--color-on-background);
 }
 
-/* Horizontal scroll container — bleeds past padding so cards appear full-width */
+/* Horizontal scroll container — stays inside the page's content column so the
+   first card lines up with the headings and lists above. */
 .scrollContainer {
-  margin: 0 -16px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -33,17 +33,8 @@
 .promptList {
   display: flex;
   gap: 12px;
-  padding: 4px 16px 16px;
+  padding: 4px 0 16px;
   width: max-content;
-}
-
-@media (min-width: 1024px) {
-  .scrollContainer {
-    margin: 0 -40px;
-  }
-  .promptList {
-    padding: 4px 40px 16px;
-  }
 }
 
 /* Prompt card base */

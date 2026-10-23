@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuthSession } from '@/lib/auth';
 import { echoEntryRepository } from '@/lib/repositories/echoEntry.repository';
-import { CreateEchoSchema, MoodTag } from '@/lib/validators/echoEntry';
+import { CreateEchoSchema, MoodTag, UpdateEchoSchema } from '@/lib/validators/echoEntry';
 import { checkCsrfOrigin } from '@/lib/csrf';
 import { logger } from '@/lib/logger';
 
@@ -70,7 +70,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
 
     const body = await request.json();
 
-    const validation = CreateEchoSchema.partial().safeParse(body);
+    const validation = UpdateEchoSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(
         {
@@ -99,6 +99,7 @@ export async function PATCH(request: NextRequest, { params }: Context) {
       moodTag: (input.moodTag ?? entry.moodTag) as MoodTag,
       note: input.note ?? entry.note,
       stickers: input.stickers ?? entry.stickers,
+      hidden: input.hidden ?? entry.hidden,
     });
 
     logger.info('echoes.updated', { userId: session.userId, entryId });
