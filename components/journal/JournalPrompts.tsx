@@ -60,9 +60,6 @@ export function JournalPrompts() {
                 <h3 className={styles.promptTitle}>{prompt.title}</h3>
                 <p className={styles.promptQuestion}>{prompt.question}</p>
               </div>
-              <span className={styles.promptArrow} aria-hidden="true">
-                →
-              </span>
             </Link>
           ))}
         </div>

@@ -13,12 +13,7 @@ import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import styles from './EchoEntryForm.module.css';
 
-const STICKER_EMOJIS = [
-  '🌟', '❤️', '💔', '😢', '🌧️', '🥀', '🩹', '🎶', '💭', '🔥', '✨', '🌸',
-  '🌙', '☀️', '🌈', '🌊', '🍂', '🍃', '🦋', '🌻', '🌹', '💫', '⭐', '🎧',
-  '🎵', '🎤', '🥁', '🎹', '🎸', '💌', '💖', '🫶', '😌', '😭', '😄', '😔',
-  '🌌', '🕯️', '🪐', '🌅', '❄️', '☕',
-];
+const STICKER_EMOJIS = ['🌟', '❤️', '💔', '😢', '🌧️', '🥀', '🩹', '🎶', '💭', '🔥', '✨', '🌸'];
 
 const PROMPT_QUESTIONS: Record<string, string> = {
   reflect: 'What song has been living in your head today?',
@@ -190,18 +185,6 @@ export function EchoEntryForm() {
         <MoodSelector selectedMood={selectedMood} onSelectMood={setSelectedMood} />
 
         <div className={styles.stickyNote}>
-          {isPromptHelper && (
-            <div className={styles.promptHelperBar}>
-              <span className={styles.promptHelperLabel}>Prompt loaded</span>
-              <button
-                type="button"
-                className={styles.promptHelperClear}
-                onClick={clearPromptHelper}
-              >
-                Clear to write
-              </button>
-            </div>
-          )}
           {stickers.length > 0 && (
             <div className={styles.stickersContainer}>
               {stickers.map((st, idx) => (
@@ -214,6 +197,7 @@ export function EchoEntryForm() {
             placeholder="What memories does this song bring up? How do you feel right now?"
             value={note}
             onChange={handleNoteChange}
+            onFocus={clearPromptHelper}
             readOnly={isPromptHelper}
             aria-readonly={isPromptHelper}
             maxLength={500}

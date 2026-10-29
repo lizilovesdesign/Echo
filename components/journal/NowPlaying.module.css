@@ -44,11 +44,42 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 12px;
-  background-color: var(--color-surface-container);
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(var(--color-surface-container), var(--color-surface-container)),
+    linear-gradient(
+      100deg,
+      var(--color-outline-variant) 0%,
+      var(--color-primary) 45%,
+      var(--color-outline-variant) 70%,
+      var(--color-outline-variant) 100%
+    );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: shimmerBorder 4s linear infinite;
   font-family: var(--font-body-medium-font-family);
   font-size: var(--font-body-medium-font-size);
   color: var(--color-on-surface);
   min-height: 44px;
+}
+
+@keyframes shimmerBorder {
+  from {
+    background-position: 0 0, 200% 0;
+  }
+  to {
+    background-position: 0 0, -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listeningBar {
+    animation: none;
+    background-image:
+      linear-gradient(var(--color-surface-container), var(--color-surface-container)),
+      linear-gradient(var(--color-primary), var(--color-primary));
+  }
 }
 
 .indicators {
