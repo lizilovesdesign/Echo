@@ -44,25 +44,23 @@ export function JournalPrompts() {
         <span className={styles.sectionHint}>Pick a spark</span>
       </div>
 
-      <div className={styles.promptPanel}>
-        <div className={styles.promptGrid}>
-          {PROMPTS.map((prompt) => (
-            <Link
-              key={prompt.id}
-              href={`/create?prompt=${prompt.id}`}
-              className={styles.promptCard}
-              aria-label={`Start: ${prompt.title}`}
-            >
-              <span className={styles.emoji} aria-hidden="true">
-                {prompt.emoji}
-              </span>
-              <div className={styles.promptBody}>
-                <h3 className={styles.promptTitle}>{prompt.title}</h3>
-                <p className={styles.promptQuestion}>{prompt.question}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className={styles.promptGrid}>
+        {PROMPTS.map((prompt) => (
+          <Link
+            key={prompt.id}
+            href={`/create?prompt=${prompt.id}`}
+            className={styles.promptCard}
+            aria-label={`Start: ${prompt.title}`}
+          >
+            <span className={styles.emoji} aria-hidden="true">
+              {prompt.emoji}
+            </span>
+            <div className={styles.promptBody}>
+              <h3 className={styles.promptTitle}>{prompt.title}</h3>
+              <p className={styles.promptQuestion}>{prompt.question}</p>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

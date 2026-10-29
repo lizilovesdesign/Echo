@@ -25,13 +25,7 @@
   color: var(--color-on-surface-variant);
 }
 
-/* Full-width panel — mirrors the Top Items recap card so both sections
-   share the exact same width and edge alignment. */
-.promptPanel {
-  padding: 12px;
-  border-radius: 12px;
-}
-
+/* Cards align flush with the "Quick Journal" header text. */
 .promptGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -109,10 +103,6 @@
 
 
 @media (min-width: 768px) {
-  .promptPanel {
-    padding: 16px;
-  }
-
   .promptGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

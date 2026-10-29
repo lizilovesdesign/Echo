@@ -225,6 +225,9 @@ export function TopItemsView() {
           {/* Hero Recap */}
           {heroItem && (
             <div className={styles.heroSection}>
+              <span className={styles.heroWatermark} aria-hidden="true">
+                {activeTabConfig.emoji}
+              </span>
               <div className={`${styles.heroImageWrap} ${heroItem.isCircle ? styles.heroCircle : styles.heroSquare}`}>
                 {heroItem.image && (
                   <Image
