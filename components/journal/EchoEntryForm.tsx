@@ -13,7 +13,12 @@ import { Button } from '../ui/Button';
 import { Spinner } from '../ui/Spinner';
 import styles from './EchoEntryForm.module.css';
 
-const STICKER_EMOJIS = ['🌟', '❤️', '💔', '😢', '🌧️', '🥀', '🩹', '🎶', '💭', '🔥', '✨', '🌸'];
+const STICKER_EMOJIS = [
+  '🌟', '❤️', '💔', '😢', '🌧️', '🥀', '🩹', '🎶', '💭', '🔥', '✨', '🌸',
+  '🌙', '☀️', '🌈', '🌊', '🍂', '🍃', '🦋', '🌻', '🌹', '💫', '⭐', '🎧',
+  '🎵', '🎤', '🥁', '🎹', '🎸', '💌', '💖', '🫶', '😌', '😭', '😄', '😔',
+  '🌌', '🕯️', '🪐', '🌅', '❄️', '☕',
+];
 
 const PROMPT_QUESTIONS: Record<string, string> = {
   reflect: 'What song has been living in your head today?',
@@ -24,6 +29,7 @@ const PROMPT_QUESTIONS: Record<string, string> = {
 
 export function EchoEntryForm() {
   const [note, setNote] = useState('');
+  const [isPromptHelper, setIsPromptHelper] = useState(false);
   const [selectedMood, setSelectedMood] = useState<MoodTag | null>(null);
   const [stickers, setStickers] = useState<string[]>([]);
   const [validationError, setValidationError] = useState('');
@@ -40,7 +46,10 @@ export function EchoEntryForm() {
   const clearEntry = useEntryStore((state) => state.clearEntry);
 
   useEffect(() => {
-    if (storeNote) setNote(storeNote);
+    if (storeNote) {
+      setNote(storeNote);
+      setIsPromptHelper(false);
+    }
     if (storeMoodTag) setSelectedMood(storeMoodTag);
     if (storeStickers.length > 0) setStickers(storeStickers);
   }, [storeNote, storeMoodTag, storeStickers]);
@@ -48,6 +57,7 @@ export function EchoEntryForm() {
   useEffect(() => {
     if (promptId && PROMPT_QUESTIONS[promptId] && !storeNote) {
       setNote(PROMPT_QUESTIONS[promptId]);
+      setIsPromptHelper(true);
     }
   }, [promptId, storeNote]);
 
@@ -115,13 +125,23 @@ export function EchoEntryForm() {
       return;
     }
 
-    mutation.mutate({ moodTag: selectedMood, note });
+    mutation.mutate({ moodTag: selectedMood, note: isPromptHelper ? '' : note });
   };
 
   const handleCancel = () => {
     stop();
     clearEntry();
     router.push('/home');
+  };
+
+  const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (isPromptHelper) return;
+    setNote(e.target.value.slice(0, 500));
+  };
+
+  const clearPromptHelper = () => {
+    setIsPromptHelper(false);
+    setNote('');
   };
 
   const addSticker = (emoji: string) => {
@@ -170,6 +190,18 @@ export function EchoEntryForm() {
         <MoodSelector selectedMood={selectedMood} onSelectMood={setSelectedMood} />
 
         <div className={styles.stickyNote}>
+          {isPromptHelper && (
+            <div className={styles.promptHelperBar}>
+              <span className={styles.promptHelperLabel}>Prompt loaded</span>
+              <button
+                type="button"
+                className={styles.promptHelperClear}
+                onClick={clearPromptHelper}
+              >
+                Clear to write
+              </button>
+            </div>
+          )}
           {stickers.length > 0 && (
             <div className={styles.stickersContainer}>
               {stickers.map((st, idx) => (
@@ -178,13 +210,15 @@ export function EchoEntryForm() {
             </div>
           )}
           <textarea
-            className={styles.noteTextarea}
+            className={`${styles.noteTextarea} ${isPromptHelper ? styles.noteTextareaHelper : ''}`}
             placeholder="What memories does this song bring up? How do you feel right now?"
             value={note}
-            onChange={(e) => setNote(e.target.value.slice(0, 500))}
+            onChange={handleNoteChange}
+            readOnly={isPromptHelper}
+            aria-readonly={isPromptHelper}
             maxLength={500}
           />
-          <div className={styles.counter}>{note.length} / 500</div>
+          {!isPromptHelper && <div className={styles.counter}>{note.length} / 500</div>}
         </div>
 
         <div className={styles.stickersSection}>

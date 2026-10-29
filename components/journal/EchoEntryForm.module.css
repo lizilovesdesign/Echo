@@ -62,6 +62,39 @@
   flex-shrink: 0;
 }
 
+.promptHelperBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.promptHelperLabel {
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
+}
+
+.promptHelperClear {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-label-medium-font-family);
+  font-size: var(--font-label-medium-font-size);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.promptHelperClear:hover {
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
 .stickersContainer {
   display: flex;
   gap: 4px;
@@ -102,6 +135,12 @@
 .noteTextarea::placeholder {
   color: var(--color-on-surface-variant);
   opacity: 0.5;
+}
+
+.noteTextareaHelper {
+  color: var(--color-on-surface-variant);
+  cursor: default;
+  caret-color: transparent;
 }
 
 .counter {
@@ -227,11 +266,14 @@
 
 .stickersRow {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  overflow-x: auto;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  max-height: 216px;
+  padding-right: 4px;
 }
 
 .stickersRow::-webkit-scrollbar {
@@ -243,13 +285,6 @@
   font-size: var(--font-label-medium-font-size);
   font-weight: 500;
   color: var(--color-on-surface);
-}
-
-.stickersRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
 }
 
 .stickerBtn {
