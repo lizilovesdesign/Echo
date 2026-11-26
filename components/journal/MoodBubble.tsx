@@ -14,8 +14,13 @@ interface MoodBubbleProps {
 export function MoodBubble({ mood, isSelected, onSelect }: MoodBubbleProps) {
   const config = getMoodConfig(mood);
 
-  const bg = isSelected ? config?.bubbleBgHover : config?.bubbleBg;
-  const color = config?.bubbleText ?? 'inherit';
+  const inlineStyle: React.CSSProperties = isSelected
+    ? {
+        borderColor: config?.bubbleBgHover ?? 'currentColor',
+        color: config?.bubbleText ?? 'inherit',
+        backgroundColor: config?.bubbleBg ?? 'transparent',
+      }
+    : {};
 
   return (
     <button
@@ -23,7 +28,7 @@ export function MoodBubble({ mood, isSelected, onSelect }: MoodBubbleProps) {
       className={styles.bubble}
       onClick={() => onSelect(mood)}
       aria-pressed={isSelected}
-      style={{ backgroundColor: bg, color, opacity: isSelected ? 1 : 0.85 }}
+      style={inlineStyle}
     >
       <span className={styles.emoji}>{config?.emoji}</span>
       <span>{config?.label}</span>

@@ -47,8 +47,8 @@
   align-items: center;
   gap: 8px;
   padding: 32px 16px;
-  border-radius: 12px;
-  background-color: var(--color-surface-container);
+  border-radius: 0;
+  background-color: transparent;
   text-align: center;
 }
 
@@ -130,10 +130,10 @@
   font-family: var(--font-label-small-font-family);
   font-size: var(--font-label-small-font-size);
   font-weight: 600;
-  color: var(--color-primary);
-  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
-  padding: 1px 6px;
-  border-radius: 4px;
+  color: var(--color-on-surface-variant);
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
   margin-top: 2px;
   align-self: flex-start;
 }
