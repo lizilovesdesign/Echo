@@ -53,10 +53,10 @@
 .stickyNote {
   position: relative;
   width: 100%;
-  border-radius: 0;
-  padding: 16px 0 12px;
-  background-color: transparent;
-  border-bottom: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-container, 12px);
+  padding: 20px 20px 12px;
+  background-color: var(--color-surface-container-low);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -127,11 +127,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
-  border-radius: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-interactive, 8px);
   border: none;
-  border-bottom: 1px solid var(--color-outline-variant);
-  background-color: transparent;
+  background-color: var(--color-surface-container-low);
 }
 
 .trackArt {
@@ -172,9 +171,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--color-outline-variant);
-  background: transparent;
-  color: var(--color-on-surface-variant);
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -197,7 +196,7 @@
   height: 32px;
   border-radius: 50%;
   border: none;
-  background: transparent;
+  background: var(--color-surface-container-high);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -205,11 +204,11 @@
   font-size: 18px;
   color: var(--color-on-surface-variant);
   flex-shrink: 0;
-  transition: color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .clearTrack:hover {
-  color: var(--color-on-surface);
+  background: var(--color-surface-container-highest);
 }
 
 .error {
@@ -218,9 +217,9 @@
   font-family: var(--font-body-medium-font-family);
   font-size: var(--font-body-medium-font-size);
   margin: 12px 0;
-  padding: 0;
-  background-color: transparent;
-  border-radius: 0;
+  padding: 8px 16px;
+  background-color: var(--color-error-container);
+  border-radius: var(--radius-interactive, 8px);
 }
 
 .stickersSection {
@@ -249,18 +248,19 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: none;
-  background: transparent;
+  border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface);
   font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .stickerBtn:hover:not(:disabled) {
-  transform: scale(1.2);
+  background: var(--color-surface-container-low);
+  transform: scale(1.15);
 }
 
 .stickerBtn:disabled {
@@ -291,15 +291,6 @@
   border-radius: 28px;
   font-size: 16px;
   font-weight: 600;
-  background-color: transparent;
-  border: 1.5px solid var(--color-on-surface);
-  color: var(--color-on-surface);
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.saveBtn:hover:not(:disabled) {
-  background-color: var(--color-on-surface);
-  color: var(--color-background);
 }
 
 @media (min-width: 768px) {

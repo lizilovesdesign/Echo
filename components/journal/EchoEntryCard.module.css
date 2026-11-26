@@ -1,7 +1,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   position: relative;
   border: none;
   cursor: pointer;
@@ -23,23 +23,23 @@
 
 .header {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .songInfo {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   flex: 1;
   min-width: 0;
 }
 
 .albumArtBtn {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   overflow: hidden;
   border: none;
@@ -114,10 +114,10 @@
   font-family: var(--font-label-small-font-family);
   font-size: var(--font-label-small-font-size);
   font-weight: 600;
-  color: var(--color-on-surface-variant);
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  padding: 2px 8px;
+  border-radius: 4px;
   margin-top: 4px;
   align-self: flex-start;
 }
@@ -125,9 +125,8 @@
 .actionButtons {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 4px;
   flex-shrink: 0;
-  margin-left: auto;
 }
 
 .iconButton {
@@ -135,19 +134,19 @@
   border: none;
   cursor: pointer;
   color: var(--color-on-surface-variant);
-  opacity: 0.5;
-  min-height: 32px;
-  min-width: 32px;
+  opacity: 0.6;
+  min-height: 44px;
+  min-width: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: opacity 0.2s, color 0.2s;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
 }
 
 .iconButton:hover:not(:disabled) {
   opacity: 1;
-  background-color: transparent;
+  background-color: var(--color-surface-container-low);
 }
 
 .iconButton:disabled {
@@ -162,7 +161,7 @@
 .metaRow {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .stickersRow {
@@ -175,9 +174,9 @@
   font-size: var(--font-label-small-font-size);
   font-weight: 600;
   color: var(--color-on-surface-variant);
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
+  background-color: var(--color-surface-container-high);
+  padding: 2px 8px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
@@ -197,22 +196,28 @@
   font-family: var(--font-body-medium-font-family);
   font-size: var(--font-body-medium-font-size);
   line-height: var(--font-body-medium-line-height);
-  color: var(--color-on-surface-variant);
+  color: var(--color-on-surface);
   white-space: pre-wrap;
   word-break: break-word;
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  margin-top: 0;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  background-color: var(--color-surface-container-low);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 4px;
+  /* Mobile: let long memories be read by scrolling the note itself. */
+  max-height: 45vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @media (min-width: 768px) {
   .note {
+    /* Desktop: keep the compact two-line preview. */
+    max-height: none;
+    overflow: hidden;
+    display: -webkit-box;
     -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 
@@ -235,7 +240,7 @@
   padding: 0 20px;
   border: 1px solid var(--color-outline-variant);
   border-radius: 8px;
-  background: transparent;
+  background: var(--color-surface);
   color: var(--color-on-surface);
   font-family: var(--font-label-medium-font-family);
   font-size: var(--font-label-medium-font-size);
@@ -246,10 +251,10 @@
 .confirmBtn {
   min-height: 44px;
   padding: 0 20px;
-  border: 1px solid var(--color-error);
+  border: none;
   border-radius: 8px;
-  background: transparent;
-  color: var(--color-error);
+  background: var(--color-error);
+  color: var(--color-on-error);
   font-family: var(--font-label-medium-font-family);
   font-size: var(--font-label-medium-font-size);
   font-weight: 500;

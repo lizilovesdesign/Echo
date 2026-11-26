@@ -27,10 +27,9 @@
   width: 100%;
   min-height: 48px;
   padding: 12px 40px 12px 44px;
-  border-radius: 0;
-  border: none;
-  border-bottom: 1px solid var(--color-outline-variant);
-  background-color: transparent;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  background-color: var(--color-surface-container-low);
   color: var(--color-on-surface);
   font-family: var(--font-body-large-font-family);
   font-size: var(--font-body-large-font-size);
@@ -38,9 +37,9 @@
 }
 
 .input:focus {
-  border-color: var(--color-on-surface);
-  box-shadow: none;
-  background-color: transparent;
+  border-color: var(--color-primary);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 2px var(--color-primary-container);
 }
 
 .clearButton {
@@ -50,18 +49,18 @@
   height: 24px;
   border-radius: 50%;
   border: none;
-  background: transparent;
+  background: var(--color-surface-container-high);
   color: var(--color-on-surface-variant);
   font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .clearButton:hover {
-  color: var(--color-on-surface);
+  background: var(--color-surface-container-highest);
 }
 
 .loadingWrapper {
