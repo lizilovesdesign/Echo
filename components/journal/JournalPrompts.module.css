@@ -25,32 +25,34 @@
   color: var(--color-on-surface-variant);
 }
 
-/* Cards align flush with the "Quick Journal" header text. */
+/* Cards align flush with the "Quick Journal" header text in a 2x2 grid on mobile. */
 .promptGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
-/* Prompt card base */
+/* Prompt card base — matches memories card style without border */
 .promptCard {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   min-width: 0;
   min-height: 44px;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: var(--radius-container, 12px);
   border: none;
-  background-color: var(--color-surface-container-high);
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   color: var(--color-on-surface);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.18s ease, background-color 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .promptCard:hover {
-  background-color: var(--color-surface-container-highest);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .promptCard:active {
@@ -66,10 +68,9 @@
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
+  justify-content: flex-start;
+  width: 28px;
+  height: 28px;
   background-color: transparent;
   font-size: 20px;
   line-height: 1;
@@ -101,12 +102,6 @@
   color: var(--color-on-surface-variant);
 }
 
-
-@media (min-width: 768px) {
-  .promptGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 
 @media (min-width: 1024px) {
   .promptGrid {
